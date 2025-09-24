@@ -1,0 +1,325 @@
+.gvm-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(206, 28, 28, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(206, 28, 28, 0.05) 0%, transparent 50%);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.gvm-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(206, 28, 28, 0.02) 2px,
+      rgba(206, 28, 28, 0.02) 4px
+    );
+  pointer-events: none;
+}
+
+.gvm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.gvm-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gvm-image {
+  margin-bottom: 30px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Instrument Placeholders */
+.instrument-placeholder {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.instrument-placeholder:hover {
+  transform: translateY(-5px);
+}
+
+.dan-tranh-placeholder .instrument-body {
+  width: 180px;
+  height: 50px;
+  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dan-tranh-placeholder .instrument-strings {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  right: 15px;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    #333 0px,
+    #333 2px,
+    transparent 2px,
+    transparent 8px
+  );
+  transform: translateY(-50%);
+}
+
+.dan-tranh-placeholder .instrument-bridges {
+  position: absolute;
+  top: 45%;
+  left: 25px;
+  right: 25px;
+  height: 3px;
+  background: #8b4513;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.dan-nguyet-placeholder .instrument-body {
+  width: 70px;
+  height: 100px;
+  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
+  border-radius: 50px 50px 20px 20px;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dan-nguyet-placeholder .instrument-neck {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 60px;
+  background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+  border-radius: 3px;
+}
+
+.dan-nguyet-placeholder .instrument-head {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25px;
+  height: 15px;
+  background: #8b4513;
+  border-radius: 12px 12px 5px 5px;
+}
+
+.dan-nguyet-placeholder .instrument-strings {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.5px;
+  height: 55px;
+  background: #333;
+  border-radius: 1px;
+}
+
+.dan-tyba-placeholder .instrument-body {
+  width: 60px;
+  height: 90px;
+  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
+  border-radius: 30px 30px 15px 15px;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dan-tyba-placeholder .instrument-neck {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 50px;
+  background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+  border-radius: 2px;
+}
+
+.dan-tyba-placeholder .instrument-head {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 12px;
+  background: #8b4513;
+  border-radius: 10px 10px 5px 5px;
+}
+
+.dan-tyba-placeholder .instrument-strings {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 45px;
+  background: #333;
+  border-radius: 1px;
+}
+
+.gvm-banner {
+  background-color: #ce1c1c;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(206, 28, 28, 0.3);
+  transition: all 0.3s ease;
+}
+
+.gvm-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(206, 28, 28, 0.4);
+}
+
+.gvm-banner span {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.gvm-description {
+  max-width: 300px;
+}
+
+.gvm-description p {
+  font-size: 15px;
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .gvm-container {
+    gap: 40px;
+  }
+  
+  .gvm-image {
+    height: 180px;
+  }
+  
+  .dan-tranh-placeholder .instrument-body {
+    width: 160px;
+    height: 45px;
+  }
+  
+  .dan-nguyet-placeholder .instrument-body {
+    width: 60px;
+    height: 85px;
+  }
+  
+  .dan-tyba-placeholder .instrument-body {
+    width: 50px;
+    height: 75px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gvm-section {
+    padding: 80px 0;
+  }
+  
+  .gvm-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+  .gvm-image {
+    height: 160px;
+  }
+  
+  .gvm-description {
+    max-width: 500px;
+  }
+  
+  .gvm-description p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gvm-section {
+    padding: 60px 0;
+  }
+  
+  .gvm-container {
+    padding: 0 15px;
+    gap: 40px;
+  }
+  
+  .gvm-image {
+    height: 140px;
+  }
+  
+  .dan-tranh-placeholder .instrument-body {
+    width: 140px;
+    height: 40px;
+  }
+  
+  .dan-nguyet-placeholder .instrument-body {
+    width: 50px;
+    height: 70px;
+  }
+  
+  .dan-tyba-placeholder .instrument-body {
+    width: 45px;
+    height: 65px;
+  }
+  
+  .gvm-banner {
+    padding: 10px 20px;
+  }
+  
+  .gvm-banner span {
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gvm-column:nth-child(1) {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.gvm-column:nth-child(2) {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.gvm-column:nth-child(3) {
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}

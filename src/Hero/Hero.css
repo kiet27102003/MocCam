@@ -1,0 +1,333 @@
+.hero {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(206, 28, 28, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(206, 28, 28, 0.05) 0%, transparent 50%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.hero-left {
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.hero-text {
+  max-width: 500px;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #6c757d;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.hero-title {
+  font-size: 64px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 30px 0;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.hero-description {
+  font-size: 16px;
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  max-width: 450px;
+}
+
+.download-btn {
+  background-color: #ce1c1c;
+  color: white;
+  border: none;
+  padding: 15px 160px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: right;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(206, 28, 28, 0.3);
+}
+
+.download-btn:hover {
+  background-color: #a01717;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(206, 28, 28, 0.4);
+}
+
+.download-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hero-right {
+  position: relative;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instruments-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Đàn Nguyệt */
+.dan-nguyet {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  z-index: 2;
+}
+
+.dan-nguyet .instrument-body {
+  width: 80px;
+  height: 120px;
+  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
+  border-radius: 50px 50px 20px 20px;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dan-nguyet .instrument-neck {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 80px;
+  background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+  border-radius: 4px;
+}
+
+.dan-nguyet .instrument-head {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 20px;
+  background: #8b4513;
+  border-radius: 15px 15px 5px 5px;
+}
+
+.dan-nguyet .instrument-strings {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 70px;
+  background: #333;
+  border-radius: 1px;
+}
+
+/* Đàn Tranh */
+.dan-tranh {
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  z-index: 1;
+  transform: rotate(-15deg);
+}
+
+.dan-tranh .instrument-body {
+  width: 200px;
+  height: 60px;
+  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dan-tranh .instrument-strings {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    #333 0px,
+    #333 2px,
+    transparent 2px,
+    transparent 8px
+  );
+  transform: translateY(-50%);
+}
+
+.dan-tranh .instrument-bridges {
+  position: absolute;
+  top: 45%;
+  left: 20px;
+  right: 20px;
+  height: 3px;
+  background: #8b4513;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+/* Decoration elements */
+.decoration-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.music-note {
+  position: absolute;
+  font-size: 24px;
+  color: rgba(206, 28, 28, 0.3);
+  animation: float 3s ease-in-out infinite;
+}
+
+.note-1 {
+  top: 20%;
+  right: 10%;
+  animation-delay: 0s;
+}
+
+.note-2 {
+  top: 60%;
+  left: 10%;
+  animation-delay: 1s;
+}
+
+.note-3 {
+  top: 40%;
+  right: 30%;
+  animation-delay: 2s;
+}
+
+.floating-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(206, 28, 28, 0.1);
+  animation: float 4s ease-in-out infinite;
+}
+
+.circle-1 {
+  width: 60px;
+  height: 60px;
+  top: 30%;
+  right: 5%;
+  animation-delay: 0.5s;
+}
+
+.circle-2 {
+  width: 40px;
+  height: 40px;
+  top: 70%;
+  left: 5%;
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .hero-container {
+    gap: 40px;
+  }
+  
+  .hero-title {
+    font-size: 48px;
+  }
+  
+  .hero-right {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 40px;
+  }
+  
+  .hero-description {
+    max-width: 100%;
+  }
+  
+  .hero-right {
+    height: 300px;
+    order: -1;
+  }
+  
+  .dan-nguyet {
+    left: 10%;
+  }
+  
+  .dan-tranh {
+    right: 10%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 0;
+  }
+  
+  .hero-container {
+    padding: 0 15px;
+  }
+  
+  .hero-title {
+    font-size: 32px;
+  }
+  
+  .hero-subtitle {
+    font-size: 14px;
+  }
+  
+  .hero-description {
+    font-size: 14px;
+  }
+  
+  .download-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
