@@ -26,27 +26,20 @@ const Hero = () => {
         <div className="hero-right">
           <div className="instruments-container">
             <div className="instrument dan-nguyet">
-              <div className="instrument-body">
-                <div className="instrument-neck"></div>
-                <div className="instrument-head"></div>
-                <div className="instrument-strings"></div>
-              </div>
+              <img src="/nguyệt.png" alt="Đàn Nguyệt" className="instrument-image" />
             </div>
             
             <div className="instrument dan-tranh">
-              <div className="instrument-body">
-                <div className="instrument-strings"></div>
-                <div className="instrument-bridges"></div>
-              </div>
+              <img src="/tranh.png" alt="Đàn Tranh" className="instrument-image" />
             </div>
 
-            <div className="decoration-elements">
+            {/* <div className="decoration-elements">
               <div className="music-note note-1">♪</div>
               <div className="music-note note-2">♫</div>
               <div className="music-note note-3">♪</div>
               <div className="floating-circle circle-1"></div>
               <div className="floating-circle circle-2"></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

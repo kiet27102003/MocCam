@@ -99,102 +99,47 @@
   height: 100%;
 }
 
-/* Đàn Nguyệt */
 .dan-nguyet {
   position: absolute;
-  top: 20%;
-  left: 20%;
-  z-index: 2;
+  top: 15%;
+  left: 25%;
+  z-index: 3;
 }
 
-.dan-nguyet .instrument-body {
-  width: 80px;
-  height: 120px;
-  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
-  border-radius: 50px 50px 20px 20px;
-  position: relative;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+.dan-nguyet .instrument-image {
+  width: 200px;
+  height: auto;
+  max-height: 350px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
 }
 
-.dan-nguyet .instrument-neck {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 80px;
-  background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
-  border-radius: 4px;
+.dan-nguyet .instrument-image:hover {
+  transform: scale(1.05);
 }
 
-.dan-nguyet .instrument-head {
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 20px;
-  background: #8b4513;
-  border-radius: 15px 15px 5px 5px;
-}
-
-.dan-nguyet .instrument-strings {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 70px;
-  background: #333;
-  border-radius: 1px;
-}
-
-/* Đàn Tranh */
 .dan-tranh {
   position: absolute;
-  top: 10%;
-  right: 15%;
-  z-index: 1;
-  transform: rotate(-15deg);
+  top: 15%;
+  right: 10%;
+  z-index: 2;
+  transform: rotate(12deg);
 }
 
-.dan-tranh .instrument-body {
-  width: 200px;
-  height: 60px;
-  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
-  border-radius: 8px;
-  position: relative;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+.dan-tranh .instrument-image {
+  width: 220px;
+  height: auto;
+  max-height: 350px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
 }
 
-.dan-tranh .instrument-strings {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  right: 10px;
-  height: 1px;
-  background: repeating-linear-gradient(
-    to right,
-    #333 0px,
-    #333 2px,
-    transparent 2px,
-    transparent 8px
-  );
-  transform: translateY(-50%);
+.dan-tranh .instrument-image:hover {
+  transform: scale(1.08) rotate(-12deg);
 }
 
-.dan-tranh .instrument-bridges {
-  position: absolute;
-  top: 45%;
-  left: 20px;
-  right: 20px;
-  height: 3px;
-  background: #8b4513;
-  border-radius: 2px;
-  transform: translateY(-50%);
-}
-
-/* Decoration elements */
 .decoration-elements {
   position: absolute;
   top: 0;

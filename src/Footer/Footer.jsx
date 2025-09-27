@@ -1,6 +1,7 @@
 import React from 'react';
-import { CheckCircleFilled, TwitterOutlined, InstagramOutlined, FacebookFilled } from '@ant-design/icons';
+import { TwitterOutlined, InstagramOutlined, FacebookFilled } from '@ant-design/icons';
 import './Footer.css';
+import mainLogo from '/mainLogo.png';
 
 const Footer = () => {
   return (
@@ -21,9 +22,9 @@ const Footer = () => {
           
           <div className="footer-content">
             <div className="footer-left">
-              <div className="footer-icon">
-                <CheckCircleFilled style={{ fontSize: 24 }} />
-              </div>
+            <div className="logo">
+              <img src={mainLogo} alt="Logo" />
+            </div>
               <div className="footer-text">
                 <h3>CHẠM VÀO HƯ KHÔNG,<br />GÂY NÊN GIAI ĐIỆU</h3>
               </div>

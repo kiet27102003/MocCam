@@ -7,12 +7,7 @@ const GoalsVisionMission = () => {
       <div className="gvm-container">
         <div className="gvm-column">
           <div className="gvm-image">
-            <div className="instrument-placeholder dan-tranh-placeholder">
-              <div className="instrument-body">
-                <div className="instrument-strings"></div>
-                <div className="instrument-bridges"></div>
-              </div>
-            </div>
+            <img src="/tranh.png" alt="Đàn Tranh" className="instrument-image" />
           </div>
           <div className="gvm-banner goal-banner">
             <span>GOAL</span>
@@ -27,13 +22,7 @@ const GoalsVisionMission = () => {
 
         <div className="gvm-column">
           <div className="gvm-image">
-            <div className="instrument-placeholder dan-nguyet-placeholder">
-              <div className="instrument-body">
-                <div className="instrument-neck"></div>
-                <div className="instrument-head"></div>
-                <div className="instrument-strings"></div>
-              </div>
-            </div>
+            <img src="/nguyệt.png" alt="Đàn Nguyệt" className="instrument-image" />
           </div>
           <div className="gvm-banner vision-banner">
             <span>VISION</span>
@@ -48,13 +37,7 @@ const GoalsVisionMission = () => {
 
         <div className="gvm-column">
           <div className="gvm-image">
-            <div className="instrument-placeholder dan-tyba-placeholder">
-              <div className="instrument-body">
-                <div className="instrument-neck"></div>
-                <div className="instrument-head"></div>
-                <div className="instrument-strings"></div>
-              </div>
-            </div>
+            <img src="/tỳ_bà.png" alt="Tỳ Bà" className="instrument-image" />
           </div>
           <div className="gvm-banner mission-banner">
             <span>MISSION</span>

@@ -52,134 +52,19 @@
   justify-content: center;
 }
 
-/* Instrument Placeholders */
-.instrument-placeholder {
-  position: relative;
+/* Instrument Images */
+.instrument-image {
+  width: 100%;
+  height: 100%;
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.15));
   transition: transform 0.3s ease;
 }
 
-.instrument-placeholder:hover {
-  transform: translateY(-5px);
-}
-
-.dan-tranh-placeholder .instrument-body {
-  width: 180px;
-  height: 50px;
-  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
-  border-radius: 8px;
-  position: relative;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.dan-tranh-placeholder .instrument-strings {
-  position: absolute;
-  top: 50%;
-  left: 15px;
-  right: 15px;
-  height: 1px;
-  background: repeating-linear-gradient(
-    to right,
-    #333 0px,
-    #333 2px,
-    transparent 2px,
-    transparent 8px
-  );
-  transform: translateY(-50%);
-}
-
-.dan-tranh-placeholder .instrument-bridges {
-  position: absolute;
-  top: 45%;
-  left: 25px;
-  right: 25px;
-  height: 3px;
-  background: #8b4513;
-  border-radius: 2px;
-  transform: translateY(-50%);
-}
-
-.dan-nguyet-placeholder .instrument-body {
-  width: 70px;
-  height: 100px;
-  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
-  border-radius: 50px 50px 20px 20px;
-  position: relative;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.dan-nguyet-placeholder .instrument-neck {
-  position: absolute;
-  top: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 60px;
-  background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
-  border-radius: 3px;
-}
-
-.dan-nguyet-placeholder .instrument-head {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 25px;
-  height: 15px;
-  background: #8b4513;
-  border-radius: 12px 12px 5px 5px;
-}
-
-.dan-nguyet-placeholder .instrument-strings {
-  position: absolute;
-  top: -45px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1.5px;
-  height: 55px;
-  background: #333;
-  border-radius: 1px;
-}
-
-.dan-tyba-placeholder .instrument-body {
-  width: 60px;
-  height: 90px;
-  background: linear-gradient(135deg, #d4a574 0%, #c19a6b 100%);
-  border-radius: 30px 30px 15px 15px;
-  position: relative;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.dan-tyba-placeholder .instrument-neck {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 5px;
-  height: 50px;
-  background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
-  border-radius: 2px;
-}
-
-.dan-tyba-placeholder .instrument-head {
-  position: absolute;
-  top: -45px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 12px;
-  background: #8b4513;
-  border-radius: 10px 10px 5px 5px;
-}
-
-.dan-tyba-placeholder .instrument-strings {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  height: 45px;
-  background: #333;
-  border-radius: 1px;
+.instrument-image:hover {
+  transform: translateY(-5px) scale(1.05);
 }
 
 .gvm-banner {
@@ -224,19 +109,9 @@
     height: 180px;
   }
   
-  .dan-tranh-placeholder .instrument-body {
-    width: 160px;
-    height: 45px;
-  }
-  
-  .dan-nguyet-placeholder .instrument-body {
-    width: 60px;
-    height: 85px;
-  }
-  
-  .dan-tyba-placeholder .instrument-body {
-    width: 50px;
-    height: 75px;
+  .instrument-image {
+    max-width: 180px;
+    max-height: 180px;
   }
 }
 
@@ -277,19 +152,9 @@
     height: 140px;
   }
   
-  .dan-tranh-placeholder .instrument-body {
-    width: 140px;
-    height: 40px;
-  }
-  
-  .dan-nguyet-placeholder .instrument-body {
-    width: 50px;
-    height: 70px;
-  }
-  
-  .dan-tyba-placeholder .instrument-body {
-    width: 45px;
-    height: 65px;
+  .instrument-image {
+    max-width: 140px;
+    max-height: 140px;
   }
   
   .gvm-banner {
