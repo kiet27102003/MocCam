@@ -3,7 +3,7 @@ import './GoalsVisionMission.css';
 
 const GoalsVisionMission = () => {
   return (
-    <section className="gvm-section">
+    <section id="vision" className="gvm-section">
       <div className="gvm-container">
         <div className="gvm-column">
           <div className="gvm-image">

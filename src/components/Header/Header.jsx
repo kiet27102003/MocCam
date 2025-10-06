@@ -18,7 +18,7 @@ const Header = () => {
           </nav>
 
           <div className="social-icons">
-            <a href="#" className="social-link" aria-label="Twitter" style={{ color: "#ce1c1c", fontSize: "24px" }}
+            <a href="https://byvn.net/5fwj" className="social-link" aria-label="Twitter" style={{ color: "#ce1c1c", fontSize: "24px" }}
               >
                 <TwitterOutlined />
               </a>

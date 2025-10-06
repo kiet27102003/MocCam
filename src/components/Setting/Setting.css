@@ -1,0 +1,115 @@
+/* Nền mờ xung quanh */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  /* Hộp nội dung chính */
+  .modal-content {
+    position: relative;
+    background: #fffaf4;
+    border-radius: 12px;
+    padding: 24px 32px;
+    width: 360px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.25s ease;
+  }
+  
+  /* Nút đóng (X) */
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  /* Tiêu đề */
+  .modal-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #4b2e05;
+  }
+  
+  /* Thanh trượt */
+  .settings-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 12px 0;
+  }
+  
+  .settings-group label {
+    font-size: 14px;
+    color: #4b2e05;
+    width: 90px;
+  }
+  
+  /* Input range */
+  .settings-group input[type="range"] {
+    width: 200px;
+    height: 6px;
+    border-radius: 5px;
+    background: #f1e2c6;
+    outline: none;
+    appearance: none;
+  }
+  
+  .settings-group input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #8b0000;
+    cursor: pointer;
+  }
+  
+  /* Nút thoát */
+  .btn-exit {
+    display: block;
+    margin: 20px auto 0;
+    background-color: #8b0000;
+    color: white;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .btn-exit:hover {
+    background-color: #a00000;
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideDown {
+    from {
+      transform: translateY(-15px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  

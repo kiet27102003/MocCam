@@ -1,23 +1,23 @@
-import Header from "./Header/Header";
-import Hero from "./Hero/Hero";
-import Quote from "./Quote/Quote";
-import AboutUs from "./AboutUs/AboutUs";
-import GoalsVisionMission from "./Vision/GoalsVisionMission";
-import Footer from "./Footer/Footer";
-import "./App.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import InstrumentSelect from "./pages/InstrumentSelect/InstrumentSelect";
+import DanTranh from "./pages/DanTranh/DanTranh";
 
-const App = () => {
-
+function App() {
   return (
-    <div>
-      <Header />
-      <Hero />
-      <Quote />
-      <AboutUs />
-      <GoalsVisionMission />
-      <Footer />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/instrument-select" element={<InstrumentSelect />} />
+        <Route path="/dan-tranh" element={<DanTranh />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App
+export default App;

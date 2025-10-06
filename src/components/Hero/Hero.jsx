@@ -1,5 +1,5 @@
 import React from 'react';
-import { DownloadOutlined } from '@ant-design/icons';
+import { LoginOutlined } from '@ant-design/icons';
 import './Hero.css';
 
 const Hero = () => {
@@ -16,9 +16,9 @@ const Hero = () => {
               sound recognition to provide real-time feedback, helping users improve their 
               technique and accuracy.
             </p>
-            <a href="/logo1.png" download className="download-btn">
-              <span>DOWNLOAD</span>
-              <DownloadOutlined style={{ fontSize: "16px" }} />
+            <a href="/login" className="download-btn">
+              <span>GET STARTED</span>
+              <LoginOutlined style={{ fontSize: "16px" }} />
             </a>
           </div>
         </div>
