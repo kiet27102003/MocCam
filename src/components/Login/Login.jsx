@@ -10,7 +10,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Xử lý đăng nhập ở đây
-    navigate("/instrument-select"); //giả lập
+    navigate("/home"); //giả lập
     console.log("Đăng nhập thành công!");
   };
 
