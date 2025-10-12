@@ -1,58 +1,100 @@
-import React from "react";
-import "./Register.css";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF, FaXTwitter } from "react-icons/fa6";
+import axios from "axios";
+import "./Register.css";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  // Ngăn reload khi submit
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    full_name: "",
+    phone_number: "",
+    role: "customer", // mặc định là customer
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
-    // Xử lý đăng nhập ở đây
-    console.log("Đăng nhập thành công!");
+    setError("");
+    setSuccess("");
+
+    try {
+      const res = await axios.post("api/auth/register/customer", formData);
+      console.log("Đăng ký thành công:", res.data);
+
+      setSuccess("Tạo tài khoản thành công! Bạn có thể đăng nhập ngay.");
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (err) {
+      console.error("Lỗi đăng ký:", err);
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Đăng ký thất bại! Vui lòng thử lại.");
+      }
+    }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-      <h2 className="login-title">
-        CHÀO MỪNG BẠN ĐẾN VỚI{" "}
-        <span className="highlight">MỘC CẦM!</span>
-      </h2>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <input type="text" placeholder="Tài khoản" />
-          <input type="password" placeholder="Mật khẩu" />
-          <input type="RePassword" placeholder="Xác nhận mật khẩu" />
+    <div className="register-container">
+      <div className="register-box">
+        <h2 className="register-title">Đăng ký tài khoản mới</h2>
 
-          <button type="submit" className="btn-login">
+        <form className="register-form" onSubmit={handleRegister}>
+          <input
+            type="text"
+            name="full_name"
+            placeholder="Họ và tên"
+            value={formData.full_name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Mật khẩu"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="tel"
+            name="phone_number"
+            placeholder="Số điện thoại"
+            value={formData.phone_number}
+            onChange={handleChange}
+            required
+          />
+
+          {error && <p className="error-text">{error}</p>}
+          {success && <p className="success-text">{success}</p>}
+
+          <button type="submit" className="btn-register">
             Đăng ký
           </button>
-
-          <div className="options">
-            <label className="remember">
-              <input type="checkbox" /> Ghi nhớ mật khẩu
-            </label>
-          </div>
-
-          <div className="social-login">
-            <button type="button" className="social-btn"><FaGoogle /></button>
-            <button type="button" className="social-btn"><FaFacebookF /></button>
-            <button type="button" className="social-btn"><FaXTwitter /></button>
-          </div>
-
-          <div className="register">
-            Bạn đã có tài khoản? <a href="/login">Đăng nhập</a>
-          </div>
         </form>
 
-        <button
-          type="button"
-          className="btn-back"
-          onClick={() => navigate("/home")}
-        >
-          Quay lại
-        </button>
+        <div className="login-link">
+          Đã có tài khoản? <a href="/login">Đăng nhập</a>
+        </div>
       </div>
     </div>
   );
