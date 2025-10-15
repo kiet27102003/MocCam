@@ -1,44 +1,146 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import { FaGoogle, FaFacebookF, FaXTwitter } from "react-icons/fa6";
+import { FaGoogle, FaFacebookF, FaXTwitter, FaEye, FaEyeSlash } from "react-icons/fa6";
+import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import Footer from "../Footer/Footer";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (error) setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+
+    // Validation
+    if (!formData.email || !formData.password) {
+      setError("Vui lòng nhập đầy đủ thông tin!");
+      setLoading(false);
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setError("Email không hợp lệ!");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const res = await axios.post("api/auth/login", {
-        email,
-        password,
+      const response = await axios.post("/api/auth/login", {
+        email: formData.email,
+        password: formData.password,
       });
 
-      console.log("Đăng nhập thành công:", res.data);
+      console.log("Đăng nhập thành công:", response.data);
 
-      // Nếu backend trả về token hoặc user info → lưu lại
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        
+        // Remember me functionality
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", formData.email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
       }
 
-      navigate("/home"); // Chuyển sang trang chủ
+      navigate("/home");
     } catch (err) {
       console.error("Lỗi đăng nhập:", err);
-      if (err.response && err.response.data && err.response.data.message) {
+      
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
-      } else {
+      } else if (err.response?.status === 401) {
         setError("Sai tài khoản hoặc mật khẩu!");
+      } else if (err.response?.status === 429) {
+        setError("Quá nhiều lần thử đăng nhập. Vui lòng thử lại sau!");
+      } else {
+        setError("Có lỗi xảy ra. Vui lòng thử lại!");
       }
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      setError("");
+      
+      const token = credentialResponse.credential;
+
+      // Gửi token Google sang backend để xác thực
+      const response = await axios.post("/api/auth/google-login", { token });
+
+      console.log("Đăng nhập Google thành công:", response.data);
+
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        
+        // Show success message for new users
+        if (response.data.isNewUser) {
+          console.log("Tài khoản mới được tạo qua Google!");
+        }
+      }
+
+      navigate("/home");
+    } catch (err) {
+      console.error("Lỗi đăng nhập Google:", err);
+      
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.response?.status === 401) {
+        setError("Token Google không hợp lệ!");
+      } else {
+        setError("Không thể đăng nhập bằng Google. Vui lòng thử lại!");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError("Đăng nhập Google thất bại. Vui lòng thử lại!");
+    setLoading(false);
+  };
+
+  // Load remembered email on component mount
+  React.useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    if (rememberedEmail) {
+      setFormData(prev => ({ ...prev, email: rememberedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     <div className="login-container">
@@ -48,45 +150,91 @@ const Login = () => {
         </h2>
 
         <form className="login-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Tài khoản (Email)"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <div className="input-group">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email của bạn"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              autoComplete="email"
+              className={error && !formData.email ? "error" : ""}
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Mật khẩu"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Mật khẩu"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              autoComplete="current-password"
+              className={error && !formData.password ? "error" : ""}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
 
           {error && <p className="error-text">{error}</p>}
 
-          <button type="submit" className="btn-login">
-            Đăng nhập
+          <button 
+            type="submit" 
+            className={`btn-login ${loading ? "loading" : ""}`}
+            disabled={loading}
+          >
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
 
           <div className="options">
             <label className="remember">
-              <input type="checkbox" /> Ghi nhớ mật khẩu
+              <input 
+                type="checkbox" 
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              /> 
+              Ghi nhớ tài khoản
             </label>
             <a href="#" className="forgot">
               Quên mật khẩu?
             </a>
           </div>
 
+          <div className="divider">
+            <span>Hoặc đăng nhập bằng</span>
+          </div>
+
           <div className="social-login">
-            <button type="button" className="social-btn"><FaGoogle /></button>
-            <button type="button" className="social-btn"><FaFacebookF /></button>
-            <button type="button" className="social-btn"><FaXTwitter /></button>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              size="large"
+              width="100%"
+              text="continue_with"
+              shape="rectangular"
+              logo_alignment="left"
+              disabled={loading}
+            />
+
+            {/* Placeholder cho các social login khác */}
+            <button type="button" className="social-btn disabled" disabled>
+              <FaFacebookF />
+            </button>
+            <button type="button" className="social-btn disabled" disabled>
+              <FaXTwitter />
+            </button>
           </div>
 
           <div className="register">
-            Bạn chưa có tài khoản? <a href="/register">Đăng ký</a>
+            Bạn chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
           </div>
         </form>
 
@@ -94,10 +242,13 @@ const Login = () => {
           type="button"
           className="btn-back"
           onClick={() => navigate("/home")}
+          disabled={loading}
         >
-          Quay lại
+          Quay lại trang chủ
         </button>
       </div>
+
+      <Footer />
     </div>
   );
 };

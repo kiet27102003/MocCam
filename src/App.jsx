@@ -8,6 +8,8 @@ import DanTranh from "./pages/DanTranh/DanTranh";
 import SongList from "./pages/DanTranh/ListTranh/SongList";
 import BangXepHang from "./pages/DanTranh/Ranking/BangXepHang";
 import HoSo from "./pages/DanTranh/Profile/HoSo";
+import Subscription from "./pages/Subscription/Subscription";
+import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/song-list" element={<SongList />} />
         <Route path="/bangxephang" element={<BangXepHang />} />
         <Route path="/HoSo" element={<HoSo />} />
+        <Route path="/subscription" element={<Subscription />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
       </Routes>
     </Router>
   );
