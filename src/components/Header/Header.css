@@ -168,6 +168,15 @@
   color: #666;
 }
 
+.user-role {
+  font-size: 0.75rem;
+  color: #a61c1c;
+  font-weight: 600;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .dropdown-divider {
   border-top: 1px solid #f0f0f0;
   margin: 8px 0;

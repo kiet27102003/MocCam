@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF, FaXTwitter, FaEye, FaEyeSlash } from "react-icons/fa6";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useRole } from "../../hooks/useRole";
 import Footer from "../Footer/Footer";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { updateUserRole } = useRole();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -64,6 +66,9 @@ const Login = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         
+        // Update role context
+        updateUserRole(response.data.user.role || 'customer', response.data.user);
+        
         // Remember me functionality
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", formData.email);
@@ -72,7 +77,20 @@ const Login = () => {
         }
       }
 
-      navigate("/home");
+      // Navigate to default route based on user role
+      const userRole = response.data.user.role || 'customer';
+      let defaultRoute = '/home'; // Default fallback
+      
+      if (userRole === 'admin') {
+        defaultRoute = '/admin';
+      } else if (userRole === 'employee') {
+        defaultRoute = '/employee';
+      } else {
+        defaultRoute = '/home';
+      }
+      
+      console.log('Redirecting to:', defaultRoute, 'for role:', userRole);
+      navigate(defaultRoute);
     } catch (err) {
       console.error("Lỗi đăng nhập:", err);
       
@@ -106,13 +124,29 @@ const Login = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         
+        // Update role context
+        updateUserRole(response.data.user.role || 'customer', response.data.user);
+        
         // Show success message for new users
         if (response.data.isNewUser) {
           console.log("Tài khoản mới được tạo qua Google!");
         }
       }
 
-      navigate("/home");
+      // Navigate to default route based on user role
+      const userRole = response.data.user.role || 'customer';
+      let defaultRoute = '/home'; // Default fallback
+      
+      if (userRole === 'admin') {
+        defaultRoute = '/admin';
+      } else if (userRole === 'employee') {
+        defaultRoute = '/employee';
+      } else {
+        defaultRoute = '/home';
+      }
+      
+      console.log('Redirecting to:', defaultRoute, 'for role:', userRole);
+      navigate(defaultRoute);
     } catch (err) {
       console.error("Lỗi đăng nhập Google:", err);
       

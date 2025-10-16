@@ -8,15 +8,24 @@ import {
   SettingOutlined,
   HomeOutlined,
   SoundOutlined,
-  TrophyOutlined
+  TrophyOutlined,
+  DashboardOutlined,
+  TeamOutlined,
+  BookOutlined,
+  DollarOutlined,
+  BarChartOutlined,
+  SafetyOutlined,
+  GiftOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useRole } from '../../hooks/useRole';
 import './Header.css';
-import mainLogo from '/mainLogo.png'; // Thay bằng đường dẫn logo của bạn
+import mainLogo from '/mainLogo.png';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { userRole, getUserRoutes, hasPermission, clearUserRole } = useRole();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
@@ -43,19 +52,76 @@ const Header = () => {
   }, [isUserMenuOpen]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    clearUserRole();
     setUser(null);
     navigate("/");
     setIsUserMenuOpen(false);
     setIsMenuOpen(false);
   };
 
-  const navItems = [
-    { label: 'Trang chủ', path: '/', icon: <HomeOutlined /> },
-    { label: 'Chọn nhạc cụ', path: '/home', icon: <SoundOutlined /> },
-    { label: 'Bảng xếp hạng', path: '/bangxephang', icon: <TrophyOutlined /> },
-  ];
+  // Get navigation items based on user role
+  const getNavigationItems = () => {
+    const baseItems = [
+      { label: 'Trang chủ', path: '/', icon: <HomeOutlined /> },
+      { label: 'Chọn nhạc cụ', path: '/home', icon: <SoundOutlined /> },
+      { label: 'Bảng xếp hạng', path: '/bangxephang', icon: <TrophyOutlined /> },
+    ];
+
+    // Add role-specific items
+    if (userRole === 'admin') {
+      baseItems.push(
+        { label: 'Dashboard', path: '/admin', icon: <DashboardOutlined /> },
+        { label: 'Người dùng', path: '/admin/users', icon: <TeamOutlined /> },
+        { label: 'Khóa học', path: '/admin/courses', icon: <BookOutlined /> },
+        { label: 'Thanh toán', path: '/admin/payments', icon: <DollarOutlined /> },
+        { label: 'Voucher', path: '/admin/vouchers', icon: <GiftOutlined /> },
+        { label: 'Báo cáo', path: '/admin/reports', icon: <BarChartOutlined /> }
+      );
+    } else if (userRole === 'employee') {
+      baseItems.push(
+        { label: 'Dashboard', path: '/employee', icon: <DashboardOutlined /> },
+        { label: 'Khóa học', path: '/employee/courses', icon: <BookOutlined /> },
+        { label: 'Người dùng', path: '/employee/users', icon: <TeamOutlined /> },
+        { label: 'Báo cáo', path: '/employee/reports', icon: <BarChartOutlined /> }
+      );
+    }
+
+    return baseItems;
+  };
+
+  // Get user menu items based on role
+  const getUserMenuItems = () => {
+    const baseItems = [
+      { label: 'Hồ sơ cá nhân', path: '/HoSo', icon: <SettingOutlined /> },
+      { label: 'Gói đăng ký', path: '/subscription', icon: <CrownOutlined /> },
+      { label: 'Bảng xếp hạng', path: '/bangxephang', icon: <TrophyOutlined /> },
+    ];
+
+    // Add role-specific menu items
+    if (userRole === 'admin') {
+      baseItems.unshift(
+        { label: 'Admin Dashboard', path: '/admin', icon: <DashboardOutlined /> },
+        { label: 'Quản lý người dùng', path: '/admin/users', icon: <TeamOutlined /> },
+        { label: 'Quản lý khóa học', path: '/admin/courses', icon: <BookOutlined /> },
+        { label: 'Quản lý thanh toán', path: '/admin/payments', icon: <DollarOutlined /> },
+        { label: 'Quản lý Voucher', path: '/admin/vouchers', icon: <GiftOutlined /> },
+        { label: 'Báo cáo', path: '/admin/reports', icon: <BarChartOutlined /> },
+        { label: 'Cài đặt hệ thống', path: '/admin/settings', icon: <SafetyOutlined /> }
+      );
+    } else if (userRole === 'employee') {
+      baseItems.unshift(
+        { label: 'Employee Dashboard', path: '/employee', icon: <DashboardOutlined /> },
+        { label: 'Khóa học', path: '/employee/courses', icon: <BookOutlined /> },
+        { label: 'Người dùng', path: '/employee/users', icon: <TeamOutlined /> },
+        { label: 'Báo cáo', path: '/employee/reports', icon: <BarChartOutlined /> }
+      );
+    }
+
+    return baseItems;
+  };
+
+  const navItems = getNavigationItems();
+  const userMenuItems = getUserMenuItems();
 
   return (
     <header className="header">
@@ -89,10 +155,13 @@ const Header = () => {
 
         {/* Actions */}
         <div className="header-actions">
-          <button className="upgrade-button" onClick={() => navigate(user ? '/subscription' : '/login')}>
-            <CrownOutlined />
-            <span>Nâng cấp</span>
-          </button>
+          {/* Only show upgrade button for customers */}
+          {userRole === 'customer' && (
+            <button className="upgrade-button" onClick={() => navigate('/subscription')}>
+              <CrownOutlined />
+              <span>Nâng cấp</span>
+            </button>
+          )}
 
           {user ? (
             <div className="user-menu-container" ref={userMenuRef} onClick={() => setIsUserMenuOpen(prev => !prev)}>
@@ -112,21 +181,23 @@ const Header = () => {
                     <div>
                       <div className="user-name-large">{user.name || 'Người dùng'}</div>
                       <div className="user-email">{user.email}</div>
+                      <div className="user-role">{userRole?.toUpperCase()}</div>
                     </div>
                   </div>
                   <div className="dropdown-divider" />
-                  <button onClick={() => { navigate('/HoSo'); setIsUserMenuOpen(false); }} className="dropdown-item">
-                    <SettingOutlined />
-                    <span>Hồ sơ cá nhân</span>
-                  </button>
-                  <button onClick={() => { navigate('/subscription'); setIsUserMenuOpen(false); }} className="dropdown-item">
-                    <CrownOutlined />
-                    <span>Gói đăng ký</span>
-                  </button>
-                  <button onClick={() => { navigate('/bangxephang'); setIsUserMenuOpen(false); }} className="dropdown-item">
-                    <TrophyOutlined />
-                    <span>Bảng xếp hạng</span>
-                  </button>
+                  {userMenuItems.map((item, index) => (
+                    <button 
+                      key={index}
+                      onClick={() => { 
+                        navigate(item.path); 
+                        setIsUserMenuOpen(false); 
+                      }} 
+                      className="dropdown-item"
+                    >
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
                   <div className="dropdown-divider" />
                   <button onClick={handleLogout} className="dropdown-item logout">
                     <LogoutOutlined />
