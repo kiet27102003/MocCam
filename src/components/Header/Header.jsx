@@ -15,21 +15,30 @@ import {
   DollarOutlined,
   BarChartOutlined,
   SafetyOutlined,
-  GiftOutlined
+  GiftOutlined,
+  BellOutlined,
+  LoadingOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useRole } from '../../hooks/useRole';
+import { notificationService } from '../../services/notificationService';
 import './Header.css';
 import mainLogo from '/mainLogo.png';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userRole, getUserRoutes, hasPermission, clearUserRole } = useRole();
+  const { userRole, clearUserRole } = useRole();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
+  const [notificationError, setNotificationError] = useState(null);
   const userMenuRef = useRef(null);
+  const notificationRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -38,18 +47,52 @@ const Header = () => {
       setUser(JSON.parse(userData));
     } else {
       setUser(null);
+      setNotifications([]);
+      setUnreadCount(0);
     }
   }, [location]);
+
+  // Fetch notifications when user is logged in and has customer role
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (user && userRole === 'customer') {
+        setIsLoadingNotifications(true);
+        setNotificationError(null);
+        try {
+          const response = await notificationService.getNotifications();
+          // Assuming the API returns notifications in response.data or response.notifications
+          const notificationData = response.data || response.notifications || response;
+          setNotifications(notificationData);
+          
+          // Count unread notifications
+          const unread = notificationData.filter(notification => !notification.isRead).length;
+          setUnreadCount(unread);
+        } catch (error) {
+          console.error('Error fetching notifications:', error);
+          setNotificationError('Không thể tải thông báo');
+          setNotifications([]);
+          setUnreadCount(0);
+        } finally {
+          setIsLoadingNotifications(false);
+        }
+      }
+    };
+
+    fetchNotifications();
+  }, [user, userRole]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (isUserMenuOpen && userMenuRef.current && !userMenuRef.current.contains(e.target)) {
         setIsUserMenuOpen(false);
       }
+      if (isNotificationOpen && notificationRef.current && !notificationRef.current.contains(e.target)) {
+        setIsNotificationOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isUserMenuOpen]);
+  }, [isUserMenuOpen, isNotificationOpen]);
 
   const handleLogout = () => {
     clearUserRole();
@@ -57,6 +100,57 @@ const Header = () => {
     navigate("/");
     setIsUserMenuOpen(false);
     setIsMenuOpen(false);
+  };
+
+  // Mark notification as read
+  const markNotificationAsRead = async (notificationId) => {
+    try {
+      await notificationService.updateNotification(notificationId, { isRead: true });
+      // Update local state
+      setNotifications(prev => 
+        prev.map(notification => 
+          notification.id === notificationId 
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+      // Update unread count
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  // Mark all notifications as read
+  const markAllAsRead = async () => {
+    try {
+      const unreadNotifications = notifications.filter(notification => !notification.isRead);
+      await Promise.all(
+        unreadNotifications.map(notification => 
+          notificationService.updateNotification(notification.id, { isRead: true })
+        )
+      );
+      // Update local state
+      setNotifications(prev => 
+        prev.map(notification => ({ ...notification, isRead: true }))
+      );
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
+  };
+
+  // Format time ago
+  const formatTimeAgo = (dateString) => {
+    const now = new Date();
+    const notificationDate = new Date(dateString);
+    const diffInSeconds = Math.floor((now - notificationDate) / 1000);
+    
+    if (diffInSeconds < 60) return 'Vừa xong';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} phút trước`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} giờ trước`;
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} ngày trước`;
+    return notificationDate.toLocaleDateString('vi-VN');
   };
 
   // Get navigation items based on user role
@@ -155,6 +249,73 @@ const Header = () => {
 
         {/* Actions */}
         <div className="header-actions">
+          {/* Notification bell for users */}
+          {user && userRole === 'customer' && (
+            <div className="notification-container" ref={notificationRef}>
+              <button 
+                className="notification-button" 
+                onClick={() => setIsNotificationOpen(prev => !prev)}
+              >
+                <BellOutlined />
+                {unreadCount > 0 && (
+                  <span className="notification-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                )}
+              </button>
+              
+              {isNotificationOpen && (
+                <div className="notification-dropdown">
+                  <div className="notification-header">
+                    <h4>Thông báo</h4>
+                    {unreadCount > 0 && (
+                      <button className="mark-all-read" onClick={markAllAsRead}>
+                        Đánh dấu tất cả đã đọc
+                      </button>
+                    )}
+                  </div>
+                  <div className="notification-list">
+                    {isLoadingNotifications ? (
+                      <div className="notification-loading">
+                        <LoadingOutlined />
+                        <span>Đang tải thông báo...</span>
+                      </div>
+                    ) : notificationError ? (
+                      <div className="notification-error">
+                        <span>{notificationError}</span>
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      <div className="notification-empty">
+                        <span>Không có thông báo nào</span>
+                      </div>
+                    ) : (
+                      notifications.slice(0, 5).map((notification) => (
+                        <div 
+                          key={notification.id}
+                          className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
+                          onClick={() => !notification.isRead && markNotificationAsRead(notification.id)}
+                        >
+                          <div className="notification-content">
+                            <div className="notification-title">{notification.title}</div>
+                            <div className="notification-message">{notification.message}</div>
+                            <div className="notification-time">
+                              {formatTimeAgo(notification.createdAt || notification.created_at)}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  {notifications.length > 5 && (
+                    <div className="notification-footer">
+                      <button className="view-all-notifications">
+                        Xem tất cả thông báo ({notifications.length})
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Only show upgrade button for customers */}
           {userRole === 'customer' && (
             <button className="upgrade-button" onClick={() => navigate('/subscription')}>

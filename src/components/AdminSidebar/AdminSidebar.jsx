@@ -8,6 +8,7 @@ import {
   BarChartOutlined,
   SettingOutlined,
   GiftOutlined,
+  BellOutlined,
   LogoutOutlined,
   MenuOutlined,
   CloseOutlined
@@ -62,6 +63,12 @@ const AdminSidebar = () => {
       icon: <GiftOutlined />,
       label: 'Quản lý voucher',
       path: '/admin/vouchers'
+    },
+    {
+      key: '/admin/notifications',
+      icon: <BellOutlined />,
+      label: 'Quản lý thông báo',
+      path: '/admin/notifications'
     },
     {
       key: '/admin/reports',

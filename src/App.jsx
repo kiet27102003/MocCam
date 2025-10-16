@@ -18,6 +18,7 @@ import VoucherManagement from "./pages/Admin/VoucherManagement/VoucherManagement
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import PaymentManagement from "./pages/Admin/PaymentManagement/PaymentManagement";
+import NotificationManagement from "./pages/Admin/NotificationManagement/NotificationManagement";
 import "./pages/Admin/AdminPlaceholder/AdminPlaceholder.css";
 
 // Placeholder components for admin and employee dashboards
@@ -56,6 +57,7 @@ function App() {
           <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><Layout><AdminReports /></Layout></ProtectedRoute>} />
           <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><Layout><AdminSettings /></Layout></ProtectedRoute>} />
           <Route path="/admin/vouchers" element={<ProtectedRoute requiredRole="admin"><Layout><VoucherManagement /></Layout></ProtectedRoute>} />
+          <Route path="/admin/notifications" element={<ProtectedRoute requiredRole="admin"><Layout><NotificationManagement /></Layout></ProtectedRoute>} />
           
           {/* Employee Routes */}
           <Route path="/employee" element={<ProtectedRoute requiredRole="employee"><EmployeeDashboard /></ProtectedRoute>} />
