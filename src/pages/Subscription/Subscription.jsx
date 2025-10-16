@@ -91,7 +91,7 @@ const Subscription = () => {
       setError("Vui lòng đăng nhập để mua gói!");
       return;
     }
-    const { safePackageData } = packageData;
+    const { icon, ...safePackageData } = packageData;
     // Navigate to order confirmation page with package data
     navigate("/order-confirmation", {
       state: {

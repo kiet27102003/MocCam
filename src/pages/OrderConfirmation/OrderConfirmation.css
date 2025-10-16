@@ -1,39 +1,41 @@
 /* Order Confirmation Page Styles */
 .order-confirmation-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #fafafa;
   display: flex;
   flex-direction: column;
 }
 
 /* Header Section */
 .order-header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 1rem 2rem;
+  background: #ffffff;
+  padding: 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  gap: 2rem;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .back-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  color: #666;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .back-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+  background: #f8f8f8;
+  border-color: #d0d0d0;
+  color: #333;
 }
 
 .back-button:disabled {
@@ -46,17 +48,18 @@
 }
 
 .order-title {
-  color: white;
-  font-size: 2rem;
-  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 2.5rem;
+  font-weight: 300;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
 }
 
 .order-subtitle {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1rem;
+  color: #888;
+  font-size: 1.1rem;
   margin: 0.5rem 0 0 0;
+  font-weight: 400;
 }
 
 /* Error Banner */
@@ -73,45 +76,45 @@
 /* Main Content */
 .order-content {
   flex: 1;
-  padding: 2rem;
-  max-width: 1200px;
+  padding: 3rem 2rem;
+  max-width: 1000px;
   margin: 0 auto;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
 }
 
 /* Order Summary */
 .order-summary {
-  grid-column: 1;
+  order: 1;
 }
 
 .summary-card {
   background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
 }
 
 .summary-card h3 {
-  color: #1f2937;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 1.5rem 0;
-  border-bottom: 2px solid #f3f4f6;
-  padding-bottom: 0.75rem;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin: 0 0 2rem 0;
+  letter-spacing: -0.01em;
 }
 
 .package-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 12px;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #fafafa;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
 }
 
 .package-icon {
@@ -122,38 +125,39 @@
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .package-details h4 {
-  color: #1f2937;
-  font-size: 1.1rem;
-  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 1.3rem;
+  font-weight: 400;
   margin: 0 0 0.25rem 0;
 }
 
 .package-details p {
-  color: #6b7280;
-  font-size: 0.9rem;
+  color: #888;
+  font-size: 1rem;
   margin: 0;
 }
 
 .price-breakdown {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 2rem;
 }
 
 .price-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0;
+  padding: 1rem 0;
   font-size: 1rem;
+  color: #666;
 }
 
 .price-item:not(:last-child) {
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .price-item.discount {
@@ -162,37 +166,38 @@
 }
 
 .price-item.total {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1f2937;
-  background: #f9fafb;
-  margin: 0 -1rem;
-  padding: 1rem;
-  border-radius: 8px;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: #1a1a1a;
+  background: #fafafa;
+  margin: 0 -2rem;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
 }
 
 /* Voucher Section */
 .voucher-section {
-  grid-column: 2;
+  order: 2;
 }
 
 .voucher-card {
   background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  height: fit-content;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
 }
 
 .voucher-card h3 {
-  color: #1f2937;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 1.5rem 0;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin: 0 0 2rem 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  letter-spacing: -0.01em;
 }
 
 .voucher-input-group {
@@ -202,35 +207,36 @@
 
 .voucher-input-group input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s ease;
+  background: #fafafa;
 }
 
 .voucher-input-group input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #d0d0d0;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .apply-voucher-btn {
-  background: #3b82f6;
+  background: #1a1a1a;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 1rem 2rem;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .apply-voucher-btn:hover:not(:disabled) {
-  background: #2563eb;
-  transform: translateY(-1px);
+  background: #333;
 }
 
 .apply-voucher-btn:disabled {
@@ -279,26 +285,26 @@
 
 /* Payment Section */
 .payment-section {
-  grid-column: 1 / -1;
-  margin-top: 1rem;
+  order: 3;
 }
 
 .payment-card {
   background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
 }
 
 .payment-card h3 {
-  color: #1f2937;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 1.5rem 0;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin: 0 0 2rem 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  letter-spacing: -0.01em;
 }
 
 .payment-methods {
@@ -356,13 +362,13 @@
 /* Footer */
 .order-footer {
   background: white;
-  border-top: 1px solid #e5e7eb;
-  padding: 1.5rem 2rem;
+  border-top: 1px solid #f0f0f0;
+  padding: 2rem;
   margin-top: auto;
 }
 
 .footer-content {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -374,36 +380,36 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: #1a1a1a;
 }
 
 .amount {
-  font-size: 1.5rem;
-  color: #059669;
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  font-weight: 300;
 }
 
 .proceed-payment-btn {
-  background: linear-gradient(135deg, #059669, #047857);
+  background: #1a1a1a;
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 12px;
+  padding: 1.2rem 3rem;
+  border-radius: 16px;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .proceed-payment-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #047857, #065f46);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+  background: #333;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .proceed-payment-btn:disabled {
@@ -441,9 +447,9 @@
   align-items: center;
   justify-content: center;
   height: 200px;
-  color: white;
+  color: #888;
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* Responsive Design */

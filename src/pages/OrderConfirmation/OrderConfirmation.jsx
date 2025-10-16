@@ -15,6 +15,7 @@ const OrderConfirmation = () => {
   const [voucherCode, setVoucherCode] = useState("");
   const [voucherApplied, setVoucherApplied] = useState(false);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [voucherId, setVoucherId] = useState(null);
   const [finalPrice, setFinalPrice] = useState(0);
 
   // Check authentication and get package data
@@ -47,8 +48,17 @@ const OrderConfirmation = () => {
   };
 
   const handleVoucherApply = async () => {
+    console.log("🔍 Starting voucher apply process...");
+    console.log("Voucher code:", voucherCode);
+    console.log("Selected package:", selectedPackage);
+    
     if (!voucherCode.trim()) {
       setError("Vui lòng nhập mã voucher!");
+      return;
+    }
+
+    if (!selectedPackage) {
+      setError("Không tìm thấy thông tin gói đăng ký!");
       return;
     }
 
@@ -56,40 +66,86 @@ const OrderConfirmation = () => {
     setError("");
 
     try {
-      // Call API to validate voucher
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "http://localhost:3000/api/vouchers/validate",
-        {
-          voucher_code: voucherCode,
-          plan_id: selectedPackage.id
-        },
+      console.log("🔑 Token available:", !!token);
+      
+      console.log("📤 Making GET request to:", `http://localhost:3000/api/vouchers/check/${voucherCode}`);
+      
+      const response = await axios.get(
+        `http://localhost:3000/api/vouchers/check/${voucherCode}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${token}`
           }
         }
       );
 
-      if (response.data.valid) {
+      console.log("✅ Voucher validation response:", response.data);
+      const data = response.data;
+
+      // Check multiple possible response formats
+      const isValid = data.valid === true || 
+                     data.isValid === true || 
+                     data.status === 'valid' ||
+                     (data.discount_amount && data.discount_amount > 0) ||
+                     (data.discount && data.discount > 0) ||
+                     (data.discount_value && data.discount_value > 0);
+
+      console.log("🔍 Voucher validation check:");
+      console.log("- data.valid:", data.valid);
+      console.log("- data.isValid:", data.isValid);
+      console.log("- data.status:", data.status);
+      console.log("- data.discount_amount:", data.discount_amount);
+      console.log("- data.discount:", data.discount);
+      console.log("- data.discount_value:", data.discount_value);
+      console.log("- Final isValid result:", isValid);
+
+      if (isValid) {
+        const discountAmount = data.discount_amount || data.discount || data.discount_value || 0;
+        const newFinalPrice = Math.max(0, selectedPackage.price - discountAmount);
+        const voucherIdValue = data.voucher_id || data.id;
+        
+        console.log("💰 Applying discount:");
+        console.log("- Original price:", selectedPackage.price);
+        console.log("- Discount amount:", discountAmount);
+        console.log("- Final price:", newFinalPrice);
+        console.log("- Voucher ID:", voucherIdValue);
+        
         setVoucherApplied(true);
-        setVoucherDiscount(response.data.discount_amount || 0);
-        setFinalPrice(selectedPackage.price - (response.data.discount_amount || 0));
+        setVoucherDiscount(discountAmount);
+        setVoucherId(voucherIdValue);
+        setFinalPrice(newFinalPrice);
         setError("");
+        
+        console.log("✅ Voucher applied successfully!");
       } else {
-        setError(response.data.message || "Mã voucher không hợp lệ!");
+        const errorMsg = data.message || data.error || "Mã voucher không hợp lệ!";
+        console.log("❌ Voucher invalid:", errorMsg);
+        setError(errorMsg);
       }
     } catch (err) {
-      console.error("Error validating voucher:", err);
-      
-      if (err.response?.data?.message) {
+      console.error("💥 Error checking voucher:", err);
+      console.error("Error details:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: err.message,
+        url: err.config?.url
+      });
+
+      if (err.response?.status === 401) {
+        setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/login");
+      } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError("Không thể kiểm tra mã voucher. Vui lòng thử lại!");
       }
     } finally {
       setLoading(false);
+      console.log("🏁 Voucher apply process finished");
     }
   };
 
@@ -97,16 +153,25 @@ const OrderConfirmation = () => {
     setVoucherCode("");
     setVoucherApplied(false);
     setVoucherDiscount(0);
+    setVoucherId(null);
     setFinalPrice(selectedPackage.price);
     setError("");
   };
 
   const handleProceedToPayment = async () => {
+    console.log("💳 Starting payment process...");
+    console.log("📦 Selected package:", selectedPackage);
+    console.log("🎫 Voucher applied:", voucherApplied);
+    console.log("🎫 Voucher code:", voucherCode);
+    console.log("🎫 Voucher ID:", voucherId);
+    console.log("💰 Final price:", finalPrice);
+    
     setLoading(true);
     setError("");
 
     try {
       const token = localStorage.getItem("token");
+      console.log("🔑 Token available:", !!token);
       
       // Prepare request body
       const requestBody = {
@@ -114,9 +179,13 @@ const OrderConfirmation = () => {
       };
       
       // Add voucher_id if applied
-      if (voucherApplied && voucherCode) {
-        requestBody.voucher_id = voucherCode;
+      if (voucherApplied && voucherId) {
+        requestBody.voucher_id = voucherId;
+        console.log("🎫 Adding voucher ID to request:", voucherId);
       }
+      
+      console.log("📤 Payment request body:", requestBody);
+      console.log("📤 Making POST request to: http://localhost:3000/api/payments/payos/create");
       
       const response = await axios.post(
         "http://localhost:3000/api/payments/payos/create",
@@ -129,30 +198,48 @@ const OrderConfirmation = () => {
         }
       );
 
-      console.log("Payment link created:", response.data);
+      console.log("✅ Payment response received:");
+      console.log("Status:", response.status);
+      console.log("Data:", response.data);
 
       if (response.data.checkoutUrl) {
+        console.log("🔗 Checkout URL:", response.data.checkoutUrl);
+        console.log("🔄 Redirecting to PayOS...");
         // Redirect to PayOS payment page
         window.location.href = response.data.checkoutUrl;
       } else {
+        console.log("❌ No checkout URL in response");
         setError("Không thể tạo link thanh toán. Vui lòng thử lại!");
       }
 
     } catch (err) {
-      console.error("Error creating payment:", err);
-      
+      console.error("💥 Error creating payment:", err);
+      console.error("Error details:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: err.message,
+        url: err.config?.url,
+        method: err.config?.method,
+        requestBody: err.config?.data
+      });
+
       if (err.response?.status === 401) {
+        console.log("🔒 Unauthorized - redirecting to login");
         setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         navigate("/login");
       } else if (err.response?.data?.message) {
+        console.log("📝 Server error message:", err.response.data.message);
         setError(err.response.data.message);
       } else {
+        console.log("❓ Unknown error occurred");
         setError("Có lỗi xảy ra khi tạo thanh toán. Vui lòng thử lại!");
       }
     } finally {
       setLoading(false);
+      console.log("🏁 Payment process finished");
     }
   };
 
