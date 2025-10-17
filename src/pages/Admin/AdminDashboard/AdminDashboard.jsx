@@ -50,7 +50,6 @@ const AdminDashboard = () => {
       title: 'Tổng người dùng',
       value: stats.totalUsers,
       icon: <UserOutlined />,
-      color: '#4f46e5',
       change: '+12%',
       trend: 'up'
     },
@@ -58,7 +57,6 @@ const AdminDashboard = () => {
       title: 'Khóa học',
       value: stats.totalCourses,
       icon: <BookOutlined />,
-      color: '#059669',
       change: '+5%',
       trend: 'up'
     },
@@ -66,7 +64,6 @@ const AdminDashboard = () => {
       title: 'Doanh thu',
       value: formatCurrency(stats.totalRevenue),
       icon: <DollarOutlined />,
-      color: '#dc2626',
       change: '+18%',
       trend: 'up'
     },
@@ -74,7 +71,6 @@ const AdminDashboard = () => {
       title: 'Voucher',
       value: stats.totalVouchers,
       icon: <GiftOutlined />,
-      color: '#7c3aed',
       change: '+3%',
       trend: 'up'
     },
@@ -82,7 +78,6 @@ const AdminDashboard = () => {
       title: 'Người dùng hoạt động',
       value: stats.activeUsers,
       icon: <EyeOutlined />,
-      color: '#0891b2',
       change: '+8%',
       trend: 'up'
     },
@@ -90,7 +85,6 @@ const AdminDashboard = () => {
       title: 'Khóa học hoàn thành',
       value: stats.completedCourses,
       icon: <BarChartOutlined />,
-      color: '#ea580c',
       change: '+15%',
       trend: 'up'
     }
@@ -153,7 +147,7 @@ const AdminDashboard = () => {
       <div className="stats-grid">
         {statCards.map((card, index) => (
           <div key={index} className="stat-card">
-            <div className="stat-icon" style={{ backgroundColor: card.color }}>
+            <div className="stat-icon">
               {card.icon}
             </div>
             <div className="stat-content">

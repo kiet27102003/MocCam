@@ -174,7 +174,7 @@ const UserManagement = () => {
     return (
       <span 
         className="role-badge"
-        style={{ backgroundColor: config.color }}
+        style={{ color: config.color }}
       >
         {config.label}
       </span>
@@ -419,7 +419,7 @@ const UserManagement = () => {
             </div>
           </div>
         ) : (
-          <div className="users-table">
+          <div className="users-table-wrapper">
             {filteredUsers.length === 0 ? (
               <div className="empty-state">
                 <UserOutlined />
@@ -427,65 +427,78 @@ const UserManagement = () => {
                 <p>Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
               </div>
             ) : (
-              filteredUsers.map((user) => (
-                <div key={user.id} className="user-card">
-                  <div className="user-avatar">
-                    {user.picture ? (
-                      <img src={user.picture} alt={user.full_name} />
-                    ) : (
-                      <UserOutlined />
-                    )}
-                  </div>
-                  
-                  <div className="user-info">
-                    <div className="user-name">
-                      <h4>{user.full_name || 'Chưa cập nhật'}</h4>
-                      {getRoleBadge(user.role)}
-                    </div>
-                    
-                    <div className="user-details">
-                      <div className="detail-item">
-                        <MailOutlined />
-                        <span>{user.email}</span>
-                      </div>
-                      <div className="detail-item">
-                        <PhoneOutlined />
-                        <span>{user.phone_number || 'Chưa cập nhật'}</span>
-                      </div>
-                      <div className="detail-item">
-                        <CalendarOutlined />
-                        <span>{formatDate(user.date_of_birth)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="user-actions">
-                    <button 
-                      className="action-btn view-btn"
-                      onClick={() => handleViewUser(user)}
-                      title="Xem chi tiết"
-                    >
-                      <EyeOutlined />
-                    </button>
-                    <button 
-                      className="action-btn edit-btn"
-                      onClick={() => handleEditUser(user)}
-                      title="Chỉnh sửa"
-                    >
-                      <EditOutlined />
-                    </button>
-                    {hasRole(ROLES.ADMIN) && (
-                      <button 
-                        className="action-btn delete-btn"
-                        onClick={() => handleDeleteUser(user)}
-                        title="Xóa"
-                      >
-                        <DeleteOutlined />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))
+              <table className="users-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Họ và tên</th>
+                    <th>Vai trò</th>
+                    <th>Số điện thoại</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id || user.user_id} className="user-row">
+                      <td className="user-id">
+                        <span className="id-badge">
+                          #{user.user_id || user.id || 'N/A'}
+                        </span>
+                      </td>
+                      <td className="user-name">
+                        <div className="name-cell">
+                          <div className="user-avatar">
+                            {user.picture ? (
+                              <img src={user.picture} alt={user.full_name} />
+                            ) : (
+                              <UserOutlined />
+                            )}
+                          </div>
+                          <div className="name-info">
+                            <span className="name">{user.full_name || 'Chưa cập nhật'}</span>
+                            <span className="email">{user.email}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="user-role">
+                        {getRoleBadge(user.role)}
+                      </td>
+                      <td className="user-phone">
+                        <span className="phone-number">
+                          {user.phone_number || 'Chưa cập nhật'}
+                        </span>
+                      </td>
+                      <td className="user-actions">
+                        <div className="action-buttons">
+                          <button 
+                            className="action-btn view-btn"
+                            onClick={() => handleViewUser(user)}
+                            title="Xem chi tiết"
+                          >
+                            <EyeOutlined />
+                          </button>
+                          <button 
+                            className="action-btn edit-btn"
+                            onClick={() => handleEditUser(user)}
+                            title="Chỉnh sửa"
+                          >
+                            <EditOutlined />
+                          </button>
+                          {hasRole(ROLES.ADMIN) && (
+                            <button 
+                              className="action-btn delete-btn"
+                              onClick={() => handleDeleteUser(user)}
+                              title="Xóa"
+                            >
+                              <DeleteOutlined />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   DashboardOutlined,
@@ -15,23 +15,10 @@ import {
 } from '@ant-design/icons';
 import './AdminSidebar.css';
 
-const AdminSidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const menuItems = [
     {
@@ -95,7 +82,7 @@ const AdminSidebar = () => {
     if (isMobile) {
       setIsOpen(!isOpen);
     } else {
-      setCollapsed(!collapsed);
+      onToggle && onToggle();
     }
   };
 

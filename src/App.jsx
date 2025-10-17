@@ -21,14 +21,19 @@ import PaymentManagement from "./pages/Admin/PaymentManagement/PaymentManagement
 import NotificationManagement from "./pages/Admin/NotificationManagement/NotificationManagement";
 import "./pages/Admin/AdminPlaceholder/AdminPlaceholder.css";
 
-// Placeholder components for admin and employee dashboards
-const EmployeeDashboard = () => <div className="dashboard-container"><h1>Employee Dashboard</h1><p>Chức năng nhân viên đang được phát triển...</p></div>;
+// Employee components
+import EmployeeDashboard from "./pages/Employee/EmployeeDashboard/EmployeeDashboard";
+import EmployeeCourses from "./pages/Employee/EmployeeCourses/EmployeeCourses";
+import EmployeeUsers from "./pages/Employee/EmployeeUsers/EmployeeUsers";
+import EmployeeReports from "./pages/Employee/EmployeeReports/EmployeeReports";
+import EmployeeTasks from "./pages/Employee/EmployeeTasks/EmployeeTasks";
+import EmployeeTeam from "./pages/Employee/EmployeeTeam/EmployeeTeam";
+import EmployeeLayout from "./components/EmployeeLayout/EmployeeLayout";
+
+// Placeholder components for admin
 const AdminCourses = () => <div className="dashboard-container"><h1>Quản lý khóa học</h1><p>Chức năng quản lý khóa học đang được phát triển...</p></div>;
 const AdminReports = () => <div className="dashboard-container"><h1>Báo cáo</h1><p>Chức năng báo cáo đang được phát triển...</p></div>;
 const AdminSettings = () => <div className="dashboard-container"><h1>Cài đặt hệ thống</h1><p>Chức năng cài đặt đang được phát triển...</p></div>;
-const EmployeeCourses = () => <div className="dashboard-container"><h1>Khóa học</h1><p>Chức năng khóa học đang được phát triển...</p></div>;
-const EmployeeUsers = () => <div className="dashboard-container"><h1>Người dùng</h1><p>Chức năng người dùng đang được phát triển...</p></div>;
-const EmployeeReports = () => <div className="dashboard-container"><h1>Báo cáo</h1><p>Chức năng báo cáo đang được phát triển...</p></div>;
 
 function App() {
   return (
@@ -60,10 +65,12 @@ function App() {
           <Route path="/admin/notifications" element={<ProtectedRoute requiredRole="admin"><Layout><NotificationManagement /></Layout></ProtectedRoute>} />
           
           {/* Employee Routes */}
-          <Route path="/employee" element={<ProtectedRoute requiredRole="employee"><EmployeeDashboard /></ProtectedRoute>} />
-          <Route path="/employee/courses" element={<ProtectedRoute requiredRole="employee"><EmployeeCourses /></ProtectedRoute>} />
-          <Route path="/employee/users" element={<ProtectedRoute requiredRole="employee"><EmployeeUsers /></ProtectedRoute>} />
-          <Route path="/employee/reports" element={<ProtectedRoute requiredRole="employee"><EmployeeReports /></ProtectedRoute>} />
+          <Route path="/employee" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeDashboard /></EmployeeLayout></ProtectedRoute>} />
+          <Route path="/employee/courses" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeCourses /></EmployeeLayout></ProtectedRoute>} />
+          <Route path="/employee/users" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeUsers /></EmployeeLayout></ProtectedRoute>} />
+          <Route path="/employee/reports" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeReports /></EmployeeLayout></ProtectedRoute>} />
+          <Route path="/employee/tasks" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeTasks /></EmployeeLayout></ProtectedRoute>} />
+          <Route path="/employee/team" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeTeam /></EmployeeLayout></ProtectedRoute>} />
         </Routes>
       </Router>
     </RoleProvider>

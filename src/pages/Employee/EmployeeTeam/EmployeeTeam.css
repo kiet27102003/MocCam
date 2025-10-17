@@ -1,0 +1,99 @@
+.employee-team {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.team-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.team-header h1 {
+  color: #1a202c;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.team-header p {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.coming-soon-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.coming-soon h2 {
+  color: #1a202c;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.coming-soon p {
+  color: #4a5568;
+  font-size: 1rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.coming-soon ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  max-width: 400px;
+}
+
+.coming-soon li {
+  color: #4a5568;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.coming-soon li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #059669;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .employee-team {
+    padding: 1rem;
+  }
+  
+  .team-header h1 {
+    font-size: 2rem;
+  }
+  
+  .coming-soon {
+    padding: 2rem;
+  }
+  
+  .coming-soon-icon {
+    font-size: 3rem;
+  }
+}
