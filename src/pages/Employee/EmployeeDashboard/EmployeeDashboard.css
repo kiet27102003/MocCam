@@ -2,6 +2,7 @@
   padding: 2rem;
   min-height: 100vh;
   width: 100%;
+  max-width: none;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
@@ -141,9 +142,11 @@
 /* Dashboard Content */
 .dashboard-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: none;
 }
 
 .recent-activities,
@@ -333,51 +336,9 @@
   color: #2f855a;
 }
 
-/* Quick Actions */
-.quick-actions {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-.actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.action-btn {
-  background: #ffffff;
-  border: 2px solid #e2e8f0;
-  color: #4f46e5;
-  padding: 1rem;
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.action-btn:hover {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-  border-color: transparent;
-}
-
-.action-btn svg {
-  font-size: 1.5rem;
-}
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .dashboard-content {
     grid-template-columns: 1fr;
   }
@@ -424,9 +385,6 @@
     padding: 1rem;
   }
   
-  .actions-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 480px) {
@@ -452,10 +410,6 @@
   
   .activity-item,
   .task-item {
-    padding: 0.75rem;
-  }
-  
-  .action-btn {
     padding: 0.75rem;
   }
 }

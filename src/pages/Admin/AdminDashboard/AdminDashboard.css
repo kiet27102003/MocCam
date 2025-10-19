@@ -133,13 +133,12 @@
 
 /* Dashboard Content */
 .dashboard-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
+  justify-content: center;
   gap: 2rem;
 }
 
-.recent-activities,
-.quick-actions {
+.recent-activities {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 20px;
@@ -147,10 +146,11 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 800px;
 }
 
-.recent-activities:hover,
-.quick-actions:hover {
+.recent-activities:hover {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
@@ -158,16 +158,28 @@
 .section-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.section-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .section-header h2 {
   color: #1a1a1a;
   font-size: 1.25rem;
   font-weight: 600;
+  margin: 0;
+}
+
+.section-header p {
+  color: #718096;
+  font-size: 0.9rem;
   margin: 0;
 }
 
@@ -250,46 +262,12 @@
   white-space: nowrap;
 }
 
-/* Quick Actions */
-.actions-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.action-btn {
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(102, 126, 234, 0.2);
-  color: #4f46e5;
-  padding: 1rem;
-  border-radius: 16px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.action-btn:hover {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #ffffff;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  border-color: transparent;
-}
-
-.action-btn svg {
-  font-size: 1.5rem;
-}
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .dashboard-content {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: center;
   }
   
   .stats-grid {
@@ -325,13 +303,8 @@
     gap: 1rem;
   }
   
-  .recent-activities,
-  .quick-actions {
+  .recent-activities {
     padding: 1rem;
-  }
-  
-  .actions-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -357,10 +330,6 @@
   }
   
   .activity-item {
-    padding: 0.75rem;
-  }
-  
-  .action-btn {
     padding: 0.75rem;
   }
 }

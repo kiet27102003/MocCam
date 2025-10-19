@@ -449,3 +449,41 @@
     right: 4px;
   }
 }
+
+/* Customer header styles */
+.customer-header {
+  background-color: #ffffff !important;
+}
+
+.customer-header .brand-name {
+  color: #000000 !important;
+}
+
+.customer-header .brand-tagline {
+  color: #666666 !important;
+}
+
+.customer-header .nav-link {
+  color: #000000 !important;
+}
+
+.customer-header .nav-link.active,
+.customer-header .nav-link:hover {
+  color: #1890ff !important;
+}
+
+.customer-header .user-name {
+  color: #000000 !important;
+}
+
+.customer-header .login-button {
+  color: #000000 !important;
+}
+
+.customer-header .upgrade-button {
+  color: #000000 !important;
+}
+
+.customer-header .notification-button .anticon {
+  color: #000000 !important;
+}

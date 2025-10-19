@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   UserOutlined, 
   BookOutlined, 
@@ -13,31 +13,15 @@ import {
 import './EmployeeDashboard.css';
 
 const EmployeeDashboard = () => {
-  const [stats, setStats] = useState({
-    totalStudents: 0,
-    activeCourses: 0,
-    completedLessons: 0,
-    pendingTasks: 0,
-    monthlyRevenue: 0,
-    studentSatisfaction: 0
+  const [stats] = useState({
+    totalStudents: 156,
+    activeCourses: 8,
+    completedLessons: 234,
+    pendingTasks: 12,
+    monthlyRevenue: 45000000,
+    studentSatisfaction: 4.8
   });
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setStats({
-        totalStudents: 156,
-        activeCourses: 8,
-        completedLessons: 234,
-        pendingTasks: 12,
-        monthlyRevenue: 45000000,
-        studentSatisfaction: 4.8
-      });
-      setLoading(false);
-    }, 1000);
-  }, []);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -143,22 +127,6 @@ const EmployeeDashboard = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="employee-dashboard">
-        <div className="dashboard-header">
-          <h1>Dashboard Nhân viên</h1>
-        </div>
-        <div className="loading-container">
-          <div className="loading-spinner">
-            <div className="spinner"></div>
-            <p>Đang tải dữ liệu...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="employee-dashboard">
       <div className="dashboard-header">
@@ -239,30 +207,6 @@ const EmployeeDashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="quick-actions">
-        <div className="section-header">
-          <h2>Thao tác nhanh</h2>
-        </div>
-        <div className="actions-grid">
-          <button className="action-btn">
-            <BookOutlined />
-            <span>Tạo bài học</span>
-          </button>
-          <button className="action-btn">
-            <UserOutlined />
-            <span>Xem học viên</span>
-          </button>
-          <button className="action-btn">
-            <BarChartOutlined />
-            <span>Xem báo cáo</span>
-          </button>
-          <button className="action-btn">
-            <ClockCircleOutlined />
-            <span>Nhiệm vụ</span>
-          </button>
-        </div>
-      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import { ROLES, PERMISSIONS, ROLE_ROUTES } from '../constants/roleConstants';
 
 // Context
@@ -6,38 +6,27 @@ const RoleContext = createContext();
 
 // Provider Component
 export const RoleProvider = ({ children }) => {
-  const [userRole, setUserRole] = useState(null);
-  const [userPermissions, setUserPermissions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load user role from localStorage on mount
-  useEffect(() => {
-    const loadUserRole = () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userData = localStorage.getItem('user');
-        
-        if (token && userData) {
-          const user = JSON.parse(userData);
-          const role = user.role || ROLES.CUSTOMER;
-          
-          setUserRole(role);
-          setUserPermissions(PERMISSIONS[role] || []);
-        } else {
-          setUserRole(null);
-          setUserPermissions([]);
-        }
-      } catch (error) {
-        console.error('Error loading user role:', error);
-        setUserRole(null);
-        setUserPermissions([]);
-      } finally {
-        setIsLoading(false);
+  // Load user role immediately from localStorage
+  const loadInitialRole = () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('user');
+      
+      if (token && userData) {
+        const user = JSON.parse(userData);
+        const role = user.role || ROLES.CUSTOMER;
+        return { role, permissions: PERMISSIONS[role] || [] };
       }
-    };
+    } catch (error) {
+      console.error('Error loading user role:', error);
+    }
+    return { role: null, permissions: [] };
+  };
 
-    loadUserRole();
-  }, []);
+  const { role: initialRole, permissions: initialPermissions } = loadInitialRole();
+  const [userRole, setUserRole] = useState(initialRole);
+  const [userPermissions, setUserPermissions] = useState(initialPermissions);
+  const [isLoading] = useState(false);
 
   // Update user role and permissions
   const updateUserRole = (role, userData) => {

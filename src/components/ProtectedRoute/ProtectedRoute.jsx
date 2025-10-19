@@ -10,20 +10,8 @@ const ProtectedRoute = ({
   fallbackPath = '/login',
   showUnauthorized = true 
 }) => {
-  const { userRole, hasPermission, hasRole, isLoading } = useRole();
+  const { userRole, hasPermission, hasRole } = useRole();
   const location = useLocation();
-
-  // Show loading spinner while checking authentication
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Đang kiểm tra quyền truy cập...</p>
-        </div>
-      </div>
-    );
-  }
 
   // Check if user is authenticated
   if (!userRole) {

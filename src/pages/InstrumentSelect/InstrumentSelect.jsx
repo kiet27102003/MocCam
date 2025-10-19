@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { ToastContainer, toast } from "react-toastify";
-import { FaMusic, FaClock, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 
 const instruments = [
@@ -53,16 +53,6 @@ const InstrumentSelect = () => {
     }
   };
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "available":
-        return <FaMusic className="status-icon available" />;
-      case "coming_soon":
-        return <FaClock className="status-icon coming-soon" />;
-      default:
-        return null;
-    }
-  };
 
   const getStatusText = (status) => {
     switch (status) {
@@ -97,7 +87,6 @@ const InstrumentSelect = () => {
               onClick={() => handleSelect(instrument)}
             >
               <div className="card-header">
-                {getStatusIcon(instrument.status)}
                 <span className="status-text">{getStatusText(instrument.status)}</span>
               </div>
 

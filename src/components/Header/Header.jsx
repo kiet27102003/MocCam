@@ -218,7 +218,7 @@ const Header = () => {
   const userMenuItems = getUserMenuItems();
 
   return (
-    <header className="header">
+    <header className={`header ${userRole === 'customer' ? 'customer-header' : ''}`}>
       <div className="header-container">
         {/* Logo */}
         <div className="logo" onClick={() => navigate("/")}>
