@@ -98,95 +98,102 @@ const Register = () => {
 
   return (
     <div className="register-container">
-      <div className="register-box">
-        <h2 className="register-title">
-          TẠO TÀI KHOẢN MỚI CHO <span className="highlight">MỘC CẦM!</span>
-        </h2>
+      <div className="register-form-container">
+        <div className="register-header">
+          <h2 className="register-title">
+            TẠO TÀI KHOẢN MỚI CHO <span className="highlight">MỘC CẦM!</span>
+          </h2>
+        </div>
 
         <form className="register-form" onSubmit={handleRegister}>
-          <div className="input-group">
-            <input
-              type="text"
-              name="full_name"
-              placeholder="Họ và tên"
-              value={formData.full_name}
-              onChange={handleInputChange}
-              required
-              autoComplete="name"
-              className={error && !formData.full_name ? "error" : ""}
-            />
+          <div className="form-fields">
+            <div className="input-group">
+              <input
+                type="text"
+                name="full_name"
+                placeholder="Họ và tên"
+                value={formData.full_name}
+                onChange={handleInputChange}
+                required
+                autoComplete="name"
+                className={error && !formData.full_name ? "error" : ""}
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email của bạn"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                autoComplete="email"
+                className={error && !formData.email ? "error" : ""}
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Mật khẩu"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                autoComplete="new-password"
+                className={error && !formData.password ? "error" : ""}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
+            <div className="input-group">
+              <input
+                type="tel"
+                name="phone_number"
+                placeholder="Số điện thoại"
+                value={formData.phone_number}
+                onChange={handleInputChange}
+                required
+                autoComplete="tel"
+                className={error && !formData.phone_number ? "error" : ""}
+              />
+            </div>
+
+            {error && <p className="error-text">{error}</p>}
+            {success && <p className="success-text">{success}</p>}
           </div>
 
-          <div className="input-group">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email của bạn"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              autoComplete="email"
-              className={error && !formData.email ? "error" : ""}
-            />
-          </div>
-
-          <div className="input-group">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Mật khẩu"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              autoComplete="new-password"
-              className={error && !formData.password ? "error" : ""}
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
+          <div className="form-actions">
+            <button 
+              type="submit" 
+              className={`btn-register ${loading ? "loading" : ""}`}
+              disabled={loading}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {loading ? "Đang tạo tài khoản..." : "Đăng ký"}
             </button>
-          </div>
 
-          <div className="input-group">
-            <input
-              type="tel"
-              name="phone_number"
-              placeholder="Số điện thoại"
-              value={formData.phone_number}
-              onChange={handleInputChange}
-              required
-              autoComplete="tel"
-              className={error && !formData.phone_number ? "error" : ""}
-            />
-          </div>
-
-          {error && <p className="error-text">{error}</p>}
-          {success && <p className="success-text">{success}</p>}
-
-          <button 
-            type="submit" 
-            className={`btn-register ${loading ? "loading" : ""}`}
-            disabled={loading}
-          >
-            {loading ? "Đang tạo tài khoản..." : "Đăng ký"}
-          </button>
-
-          <div className="login-link">
-            Đã có tài khoản? <a href="/login">Đăng nhập ngay</a>
+            <div className="form-links">
+              <div className="login-link">
+                Đã có tài khoản? <a href="/login">Đăng nhập ngay</a>
+              </div>
+              <button
+                type="button"
+                className="btn-back"
+                onClick={() => navigate("/home")}
+                disabled={loading}
+              >
+                Quay lại trang chủ
+              </button>
+            </div>
           </div>
         </form>
-
-        <button
-          type="button"
-          className="btn-back"
-          onClick={() => navigate("/home")}
-          disabled={loading}
-        >
-          Quay lại trang chủ
-        </button>
       </div>
 
       <Footer />

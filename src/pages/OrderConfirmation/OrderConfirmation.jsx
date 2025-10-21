@@ -69,10 +69,10 @@ const OrderConfirmation = () => {
       const token = localStorage.getItem("token");
       console.log("🔑 Token available:", !!token);
       
-      console.log("📤 Making GET request to:", `http://localhost:3000/api/vouchers/check/${voucherCode}`);
+      console.log("📤 Making GET request to:", `/api/vouchers/check/${voucherCode}`);
       
       const response = await axios.get(
-        `http://localhost:3000/api/vouchers/check/${voucherCode}`,
+        `/api/vouchers/check/${voucherCode}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -185,10 +185,10 @@ const OrderConfirmation = () => {
       }
       
       console.log("📤 Payment request body:", requestBody);
-      console.log("📤 Making POST request to: http://localhost:3000/api/payments/payos/create");
+      console.log("📤 Making POST request to: /api/payments/payos/create");
       
       const response = await axios.post(
-        "http://localhost:3000/api/payments/payos/create",
+        "/api/payments/payos/create",
         requestBody,
         {
           headers: {

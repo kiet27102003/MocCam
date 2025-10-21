@@ -67,7 +67,7 @@ const UserManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch('/api/users', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ const UserManagement = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/users/create', {
+      const response = await fetch('/api/users/create', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -253,7 +253,7 @@ const UserManagement = () => {
         updateData.password = editUser.password;
       }
 
-      const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -318,7 +318,7 @@ const UserManagement = () => {
       const token = localStorage.getItem('token');
       const userId = userToDelete.user_id || userToDelete.id;
       
-      const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
