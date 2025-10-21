@@ -196,7 +196,15 @@ const Login = () => {
 
   const handleGoogleError = (error) => {
     debugLog("❌ Google login error callback triggered", error);
-    setError("Đăng nhập Google thất bại. Vui lòng thử lại!");
+    
+    // Handle specific COOP errors
+    if (error.error === 'popup_failed_to_open' || 
+        error.error === 'popup_closed_by_user' ||
+        error.message?.includes('Cross-Origin-Opener-Policy')) {
+      setError("Không thể mở cửa sổ đăng nhập. Vui lòng kiểm tra trình duyệt và thử lại!");
+    } else {
+      setError("Đăng nhập Google thất bại. Vui lòng thử lại!");
+    }
     setLoading(false);
   };
 
@@ -294,6 +302,9 @@ const Login = () => {
               shape="rectangular"
               logo_alignment="left"
               disabled={loading}
+              useOneTap={false}
+              auto_select={false}
+              flow="auth-code"
             />
 
             {/* Placeholder cho các social login khác */}
