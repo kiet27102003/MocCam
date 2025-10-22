@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import Footer from "../Footer/Footer";
 import "./Register.css";
 
 const Register = () => {
@@ -186,7 +185,7 @@ const Register = () => {
               <button
                 type="button"
                 className="btn-back"
-                onClick={() => navigate("/home")}
+                onClick={() => navigate("/")}
                 disabled={loading}
               >
                 Quay lại trang chủ
@@ -195,8 +194,6 @@ const Register = () => {
           </div>
         </form>
       </div>
-
-      <Footer />
     </div>
   );
 };

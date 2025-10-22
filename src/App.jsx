@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { RoleProvider } from "./contexts/RoleContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Layout from "./components/Layout/Layout";
@@ -19,6 +20,8 @@ import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
 import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import PaymentManagement from "./pages/Admin/PaymentManagement/PaymentManagement";
 import NotificationManagement from "./pages/Admin/NotificationManagement/NotificationManagement";
+import SubscriptionManagement from "./pages/Admin/SubscriptionManagement/SubscriptionManagement";
+import LessonManagement from "./pages/Admin/LessonManagement/LessonManagement";
 import "./pages/Admin/AdminPlaceholder/AdminPlaceholder.css";
 
 // Employee components
@@ -35,10 +38,32 @@ const AdminCourses = () => <div className="dashboard-container"><h1>Quản lý k
 const AdminReports = () => <div className="dashboard-container"><h1>Báo cáo</h1><p>Chức năng báo cáo đang được phát triển...</p></div>;
 const AdminSettings = () => <div className="dashboard-container"><h1>Cài đặt hệ thống</h1><p>Chức năng cài đặt đang được phát triển...</p></div>;
 
+// Create MUI theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#667eea',
+    },
+    secondary: {
+      main: '#764ba2',
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+        },
+      },
+    },
+  },
+});
+
 function App() {
   return (
-    <RoleProvider>
-      <Router>
+    <ThemeProvider theme={theme}>
+      <RoleProvider>
+        <Router>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
@@ -57,11 +82,12 @@ function App() {
           {/* Admin Routes */}
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Layout><AdminDashboard /></Layout></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><Layout><UserManagement /></Layout></ProtectedRoute>} />
-          <Route path="/admin/courses" element={<ProtectedRoute requiredRole="admin"><Layout><AdminCourses /></Layout></ProtectedRoute>} />
           <Route path="/admin/payments" element={<ProtectedRoute requiredRole="admin"><Layout><PaymentManagement /></Layout></ProtectedRoute>} />
           <Route path="/admin/reports" element={<ProtectedRoute requiredRole="admin"><Layout><AdminReports /></Layout></ProtectedRoute>} />
           <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><Layout><AdminSettings /></Layout></ProtectedRoute>} />
           <Route path="/admin/vouchers" element={<ProtectedRoute requiredRole="admin"><Layout><VoucherManagement /></Layout></ProtectedRoute>} />
+          <Route path="/admin/subscriptions" element={<ProtectedRoute requiredRole="admin"><Layout><SubscriptionManagement /></Layout></ProtectedRoute>} />
+        <Route path="/admin/lessons" element={<ProtectedRoute requiredRole="admin"><Layout><LessonManagement /></Layout></ProtectedRoute>} />
           <Route path="/admin/notifications" element={<ProtectedRoute requiredRole="admin"><Layout><NotificationManagement /></Layout></ProtectedRoute>} />
           
           {/* Employee Routes */}
@@ -72,8 +98,9 @@ function App() {
           <Route path="/employee/tasks" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeTasks /></EmployeeLayout></ProtectedRoute>} />
           <Route path="/employee/team" element={<ProtectedRoute requiredRole="employee"><EmployeeLayout><EmployeeTeam /></EmployeeLayout></ProtectedRoute>} />
         </Routes>
-      </Router>
-    </RoleProvider>
+        </Router>
+      </RoleProvider>
+    </ThemeProvider>
   );
 }
 

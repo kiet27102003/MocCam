@@ -5,7 +5,6 @@ import { FaGoogle, FaFacebookF, FaXTwitter, FaEye, FaEyeSlash } from "react-icon
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useRole } from "../../hooks/useRole";
-import Footer from "../Footer/Footer";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -324,14 +323,12 @@ const Login = () => {
         <button
           type="button"
           className="btn-back"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/")}
           disabled={loading}
         >
           Quay lại trang chủ
         </button>
       </div>
-
-      <Footer />
     </div>
   );
 };

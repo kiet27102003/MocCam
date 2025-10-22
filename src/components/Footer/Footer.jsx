@@ -63,23 +63,11 @@ const Footer = () => {
       color: '#e4405f'
     },
     {
-      name: 'YouTube',
-      icon: <YoutubeOutlined />,
-      url: '#',
-      color: '#ff0000'
-    },
-    {
       name: 'GitHub',
       icon: <GithubOutlined />,
       url: '#',
       color: '#333'
     },
-    {
-      name: 'LinkedIn',
-      icon: <LinkedinOutlined />,
-      url: '#',
-      color: '#0077b5'
-    }
   ];
 
   const handleLinkClick = (path) => {
@@ -114,7 +102,7 @@ const Footer = () => {
               </div>
               <div className="contact-item">
                 <PhoneOutlined className="contact-icon" />
-                <span>+84 123 456 789</span>
+                <span>+84 764 050 147</span>
               </div>
               <div className="contact-item">
                 <EnvironmentOutlined className="contact-icon" />

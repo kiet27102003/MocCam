@@ -11,7 +11,8 @@ import {
   BellOutlined,
   LogoutOutlined,
   MenuOutlined,
-  CloseOutlined
+  CloseOutlined,
+  CreditCardOutlined
 } from '@ant-design/icons';
 import './AdminSidebar.css';
 
@@ -34,12 +35,6 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
       path: '/admin/users'
     },
     {
-      key: '/admin/courses',
-      icon: <BookOutlined />,
-      label: 'Quản lý khóa học',
-      path: '/admin/courses'
-    },
-    {
       key: '/admin/payments',
       icon: <DollarOutlined />,
       label: 'Quản lý thanh toán',
@@ -50,6 +45,18 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
       icon: <GiftOutlined />,
       label: 'Quản lý voucher',
       path: '/admin/vouchers'
+    },
+    {
+      key: '/admin/subscriptions',
+      icon: <CreditCardOutlined />,
+      label: 'Quản lý gói đăng ký',
+      path: '/admin/subscriptions'
+    },
+    {
+      key: '/admin/lessons',
+      icon: <BookOutlined />,
+      label: 'Quản lý khóa học',
+      path: '/admin/lessons'
     },
     {
       key: '/admin/notifications',

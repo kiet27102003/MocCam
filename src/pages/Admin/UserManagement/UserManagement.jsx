@@ -10,7 +10,6 @@ import {
   EyeOutlined,
   MailOutlined,
   PhoneOutlined,
-  CalendarOutlined,
   TeamOutlined,
   IdcardOutlined,
   ClockCircleOutlined,
@@ -40,9 +39,7 @@ const UserManagement = () => {
     password: '',
     full_name: '',
     phone_number: '',
-    role: 'customer',
-    date_of_birth: '',
-    picture: ''
+    role: 'customer'
   });
 
   // Form state for editing user
@@ -51,9 +48,7 @@ const UserManagement = () => {
     password: '',
     full_name: '',
     phone_number: '',
-    role: 'customer',
-    date_of_birth: '',
-    picture: ''
+    role: 'customer'
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -95,7 +90,6 @@ const UserManagement = () => {
     if (!newUser.password) errors.password = 'Mật khẩu là bắt buộc';
     if (!newUser.full_name) errors.full_name = 'Họ tên là bắt buộc';
     if (!newUser.phone_number) errors.phone_number = 'Số điện thoại là bắt buộc';
-    if (!newUser.date_of_birth) errors.date_of_birth = 'Ngày sinh là bắt buộc';
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -123,9 +117,7 @@ const UserManagement = () => {
           password: '',
           full_name: '',
           phone_number: '',
-          role: 'customer',
-          date_of_birth: '',
-          picture: ''
+          role: 'customer'
         });
         setFormErrors({});
       } else {
@@ -181,10 +173,6 @@ const UserManagement = () => {
     );
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Chưa cập nhật';
-    return new Date(dateString).toLocaleDateString('vi-VN');
-  };
 
   const formatDateTime = (dateString) => {
     if (!dateString) return 'Chưa cập nhật';
@@ -210,9 +198,7 @@ const UserManagement = () => {
       password: '', // Don't pre-fill password for security
       full_name: user.full_name || '',
       phone_number: user.phone_number || '',
-      role: user.role || 'customer',
-      date_of_birth: user.date_of_birth || '',
-      picture: user.picture || ''
+      role: user.role || 'customer'
     });
     setEditFormErrors({});
     setShowEditForm(true);
@@ -226,7 +212,6 @@ const UserManagement = () => {
     if (!editUser.email) errors.email = 'Email là bắt buộc';
     if (!editUser.full_name) errors.full_name = 'Họ tên là bắt buộc';
     if (!editUser.phone_number) errors.phone_number = 'Số điện thoại là bắt buộc';
-    if (!editUser.date_of_birth) errors.date_of_birth = 'Ngày sinh là bắt buộc';
 
     if (Object.keys(errors).length > 0) {
       setEditFormErrors(errors);
@@ -243,9 +228,7 @@ const UserManagement = () => {
         email: editUser.email,
         full_name: editUser.full_name,
         phone_number: editUser.phone_number,
-        role: editUser.role,
-        date_of_birth: editUser.date_of_birth,
-        picture: editUser.picture
+        role: editUser.role
       };
       
       // Only include password if it's not empty
@@ -274,9 +257,7 @@ const UserManagement = () => {
           password: '',
           full_name: '',
           phone_number: '',
-          role: 'customer',
-          date_of_birth: '',
-          picture: ''
+          role: 'customer'
         });
         setEditFormErrors({});
       } else {
@@ -448,11 +429,7 @@ const UserManagement = () => {
                       <td className="user-name">
                         <div className="name-cell">
                           <div className="user-avatar">
-                            {user.picture ? (
-                              <img src={user.picture} alt={user.full_name} />
-                            ) : (
-                              <UserOutlined />
-                            )}
+                            <UserOutlined />
                           </div>
                           <div className="name-info">
                             <span className="name">{user.full_name || 'Chưa cập nhật'}</span>
@@ -507,7 +484,7 @@ const UserManagement = () => {
       {/* Add User Modal */}
       {showAddForm && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content create-user-modal">
             <div className="modal-header">
               <h2>
                 <PlusOutlined />
@@ -521,40 +498,41 @@ const UserManagement = () => {
               </button>
             </div>
             
-            <form onSubmit={handleAddUser} className="add-user-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={newUser.email}
-                    onChange={handleInputChange}
-                    className={formErrors.email ? 'error' : ''}
-                    placeholder="Nhập email"
-                  />
-                  {formErrors.email && <span className="error-text">{formErrors.email}</span>}
-                </div>
-                
-                <div className="form-group">
-                  <label>Mật khẩu *</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={newUser.password}
-                    onChange={handleInputChange}
-                    className={formErrors.password ? 'error' : ''}
-                    placeholder="Nhập mật khẩu"
-                  />
-                  {formErrors.password && <span className="error-text">{formErrors.password}</span>}
-                </div>
+            <form onSubmit={handleAddUser} className="user-form">
+              <div className="form-group">
+                <label htmlFor="email">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={newUser.email}
+                  onChange={handleInputChange}
+                  className={formErrors.email ? 'error' : ''}
+                  placeholder="Nhập email"
+                />
+                {formErrors.email && <span className="error-text">{formErrors.email}</span>}
               </div>
-              
+
+              <div className="form-group">
+                <label htmlFor="password">Mật khẩu *</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={newUser.password}
+                  onChange={handleInputChange}
+                  className={formErrors.password ? 'error' : ''}
+                  placeholder="Nhập mật khẩu"
+                />
+                {formErrors.password && <span className="error-text">{formErrors.password}</span>}
+              </div>
+
               <div className="form-row">
                 <div className="form-group">
-                  <label>Họ và tên *</label>
+                  <label htmlFor="full_name">Họ và tên *</label>
                   <input
                     type="text"
+                    id="full_name"
                     name="full_name"
                     value={newUser.full_name}
                     onChange={handleInputChange}
@@ -565,9 +543,10 @@ const UserManagement = () => {
                 </div>
                 
                 <div className="form-group">
-                  <label>Số điện thoại *</label>
+                  <label htmlFor="phone_number">Số điện thoại *</label>
                   <input
                     type="tel"
+                    id="phone_number"
                     name="phone_number"
                     value={newUser.phone_number}
                     onChange={handleInputChange}
@@ -578,45 +557,21 @@ const UserManagement = () => {
                 </div>
               </div>
               
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Vai trò</label>
-                  <select
-                    name="role"
-                    value={newUser.role}
-                    onChange={handleInputChange}
-                  >
-                    <option value="customer">Customer</option>
-                    <option value="employee">Employee</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                
-                <div className="form-group">
-                  <label>Ngày sinh *</label>
-                  <input
-                    type="date"
-                    name="date_of_birth"
-                    value={newUser.date_of_birth}
-                    onChange={handleInputChange}
-                    className={formErrors.date_of_birth ? 'error' : ''}
-                  />
-                  {formErrors.date_of_birth && <span className="error-text">{formErrors.date_of_birth}</span>}
-                </div>
-              </div>
-              
               <div className="form-group">
-                <label>URL ảnh đại diện</label>
-                <input
-                  type="url"
-                  name="picture"
-                  value={newUser.picture}
+                <label htmlFor="role">Vai trò</label>
+                <select
+                  id="role"
+                  name="role"
+                  value={newUser.role}
                   onChange={handleInputChange}
-                  placeholder="Nhập URL ảnh đại diện (tùy chọn)"
-                />
+                >
+                  <option value="customer">Customer</option>
+                  <option value="employee">Employee</option>
+                  <option value="admin">Admin</option>
+                </select>
               </div>
               
-              <div className="form-actions">
+              <div className="modal-actions">
                 <button 
                   type="button" 
                   className="cancel-btn"
@@ -629,6 +584,7 @@ const UserManagement = () => {
                   className="submit-btn"
                   disabled={loading}
                 >
+                  <PlusOutlined />
                   {loading ? 'Đang tạo...' : 'Tạo người dùng'}
                 </button>
               </div>
@@ -656,11 +612,7 @@ const UserManagement = () => {
             
             <div className="user-detail-content">
               <div className="user-detail-avatar">
-                {selectedUser.picture ? (
-                  <img src={selectedUser.picture} alt={selectedUser.full_name} />
-                ) : (
-                  <UserOutlined />
-                )}
+                <UserOutlined />
               </div>
               
               <div className="user-detail-info">
@@ -689,14 +641,6 @@ const UserManagement = () => {
                     <div>
                       <label>Số điện thoại</label>
                       <span>{selectedUser.phone_number || 'Chưa cập nhật'}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="detail-item">
-                    <CalendarOutlined />
-                    <div>
-                      <label>Ngày sinh</label>
-                      <span>{formatDate(selectedUser.date_of_birth)}</span>
                     </div>
                   </div>
                   
@@ -744,7 +688,7 @@ const UserManagement = () => {
       {/* Edit User Modal */}
       {showEditForm && selectedUser && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content edit-user-modal">
             <div className="modal-header">
               <h2>
                 <EditOutlined />
@@ -758,39 +702,40 @@ const UserManagement = () => {
               </button>
             </div>
             
-            <form onSubmit={handleUpdateUser} className="add-user-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={editUser.email}
-                    onChange={handleEditInputChange}
-                    className={editFormErrors.email ? 'error' : ''}
-                    placeholder="Nhập email"
-                  />
-                  {editFormErrors.email && <span className="error-text">{editFormErrors.email}</span>}
-                </div>
-                
-                <div className="form-group">
-                  <label>Mật khẩu mới</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={editUser.password}
-                    onChange={handleEditInputChange}
-                    placeholder="Để trống nếu không muốn đổi mật khẩu"
-                  />
-                  <small className="form-hint">Để trống nếu không muốn thay đổi mật khẩu</small>
-                </div>
+            <form onSubmit={handleUpdateUser} className="user-form">
+              <div className="form-group">
+                <label htmlFor="edit_email">Email *</label>
+                <input
+                  type="email"
+                  id="edit_email"
+                  name="email"
+                  value={editUser.email}
+                  onChange={handleEditInputChange}
+                  className={editFormErrors.email ? 'error' : ''}
+                  placeholder="Nhập email"
+                />
+                {editFormErrors.email && <span className="error-text">{editFormErrors.email}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="edit_password">Mật khẩu mới</label>
+                <input
+                  type="password"
+                  id="edit_password"
+                  name="password"
+                  value={editUser.password}
+                  onChange={handleEditInputChange}
+                  placeholder="Để trống nếu không muốn đổi mật khẩu"
+                />
+                <small className="form-hint">Để trống nếu không muốn thay đổi mật khẩu</small>
               </div>
               
               <div className="form-row">
                 <div className="form-group">
-                  <label>Họ và tên *</label>
+                  <label htmlFor="edit_full_name">Họ và tên *</label>
                   <input
                     type="text"
+                    id="edit_full_name"
                     name="full_name"
                     value={editUser.full_name}
                     onChange={handleEditInputChange}
@@ -801,9 +746,10 @@ const UserManagement = () => {
                 </div>
                 
                 <div className="form-group">
-                  <label>Số điện thoại *</label>
+                  <label htmlFor="edit_phone_number">Số điện thoại *</label>
                   <input
                     type="tel"
+                    id="edit_phone_number"
                     name="phone_number"
                     value={editUser.phone_number}
                     onChange={handleEditInputChange}
@@ -814,45 +760,21 @@ const UserManagement = () => {
                 </div>
               </div>
               
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Vai trò</label>
-                  <select
-                    name="role"
-                    value={editUser.role}
-                    onChange={handleEditInputChange}
-                  >
-                    <option value="customer">Customer</option>
-                    <option value="employee">Employee</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                
-                <div className="form-group">
-                  <label>Ngày sinh *</label>
-                  <input
-                    type="date"
-                    name="date_of_birth"
-                    value={editUser.date_of_birth}
-                    onChange={handleEditInputChange}
-                    className={editFormErrors.date_of_birth ? 'error' : ''}
-                  />
-                  {editFormErrors.date_of_birth && <span className="error-text">{editFormErrors.date_of_birth}</span>}
-                </div>
-              </div>
-              
               <div className="form-group">
-                <label>URL ảnh đại diện</label>
-                <input
-                  type="url"
-                  name="picture"
-                  value={editUser.picture}
+                <label htmlFor="edit_role">Vai trò</label>
+                <select
+                  id="edit_role"
+                  name="role"
+                  value={editUser.role}
                   onChange={handleEditInputChange}
-                  placeholder="Nhập URL ảnh đại diện (tùy chọn)"
-                />
+                >
+                  <option value="customer">Customer</option>
+                  <option value="employee">Employee</option>
+                  <option value="admin">Admin</option>
+                </select>
               </div>
               
-              <div className="form-actions">
+              <div className="modal-actions">
                 <button 
                   type="button" 
                   className="cancel-btn"
@@ -865,6 +787,7 @@ const UserManagement = () => {
                   className="submit-btn"
                   disabled={loading}
                 >
+                  <EditOutlined />
                   {loading ? 'Đang cập nhật...' : 'Cập nhật'}
                 </button>
               </div>
@@ -895,11 +818,7 @@ const UserManagement = () => {
                 
                 <div className="user-to-delete">
                   <div className="user-avatar">
-                    {userToDelete.picture ? (
-                      <img src={userToDelete.picture} alt={userToDelete.full_name} />
-                    ) : (
-                      <UserOutlined />
-                    )}
+                    <UserOutlined />
                   </div>
                   <div className="user-info">
                     <h4>{userToDelete.full_name || 'Chưa cập nhật'}</h4>

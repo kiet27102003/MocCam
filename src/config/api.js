@@ -37,6 +37,22 @@ export const API_ENDPOINTS = {
   VOUCHERS: '/vouchers',
   VOUCHER_CHECK: '/vouchers/check',
   VOUCHER_CREATE: '/vouchers/create',
+
+  // Subcription endpoints
+  SUBSCRIPTIONS: '/subscription-plans',
+  SUBSCRIPTION_CREATE: '/subscription-plans/create',
+  SUBSCRIPTION_DETAIL: '/subscription-plans/{id}',
+  SUBSCRIPTION_UPDATE: '/subscription-plans/update/{id}',
+
+  // Lesson endpoints
+  LESSONS: '/lessons',
+  LESSON_CREATE: '/lessons/create',
+  LESSON_DETAIL: '/lessons/{id}',
+  LESSON_UPDATE: '/lessons/{id}',
+  LESSON_DELETE: '/lessons/{id}',
+
+  // Course endpoints
+  COURSES: '/courses',
   
   // Payment endpoints
   PAYMENTS: '/payments',
