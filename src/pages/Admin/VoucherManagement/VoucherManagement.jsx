@@ -323,20 +323,22 @@ const VoucherManagement = () => {
                               </span>
                             </td>
                             <td>
-                              <button
-                                className="action-btn edit-btn"
-                                onClick={() => handleEditVoucher(voucher)}
-                                title="Chỉnh sửa"
-                              >
-                                <EditOutlined />
-                              </button>
-                              <button
-                                className="action-btn delete-btn"
-                                onClick={() => handleDeleteVoucher(voucher.id)}
-                                title="Xóa"
-                              >
-                                <DeleteOutlined />
-                              </button>
+                              <div className="action-buttons-wrapper">
+                                <button
+                                  className="action-btn edit-btn"
+                                  onClick={() => handleEditVoucher(voucher)}
+                                  title="Chỉnh sửa"
+                                >
+                                  <EditOutlined />
+                                </button>
+                                <button
+                                  className="action-btn delete-btn"
+                                  onClick={() => handleDeleteVoucher(voucher.id)}
+                                  title="Xóa"
+                                >
+                                  <DeleteOutlined />
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         );

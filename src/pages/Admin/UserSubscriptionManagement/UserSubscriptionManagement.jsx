@@ -214,22 +214,24 @@ const UserSubscriptionManagement = () => {
                       </span>
                     </td>
                     <td>
-                      <button
-                        className="action-btn view-btn"
-                        onClick={() => handleViewDetails(subscription)}
-                        title="Xem chi tiết"
-                      >
-                        <EyeOutlined />
-                      </button>
-                      {subscription.status === 'active' && (
+                      <div className="action-buttons-wrapper">
                         <button
-                          className="action-btn cancel-btn"
-                          onClick={() => handleCancelSubscription(subscription)}
-                          title="Hủy gói đăng ký"
+                          className="action-btn view-btn"
+                          onClick={() => handleViewDetails(subscription)}
+                          title="Xem chi tiết"
                         >
-                          <StopOutlined />
+                          <EyeOutlined />
                         </button>
-                      )}
+                        {subscription.status === 'active' && (
+                          <button
+                            className="action-btn cancel-btn"
+                            onClick={() => handleCancelSubscription(subscription)}
+                            title="Hủy gói đăng ký"
+                          >
+                            <StopOutlined />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -292,10 +294,6 @@ const UserSubscriptionManagement = () => {
                     {getStatusInfo(selectedSubscription.status).icon} {getStatusInfo(selectedSubscription.status).text}
                   </span>
                 </div>
-              </div>
-
-              <div className="detail-section">
-                <h3>Thông tin hệ thống</h3>
                 <div className="detail-item">
                   <label>ID đăng ký:</label>
                   <span>{selectedSubscription.user_subscription_id}</span>

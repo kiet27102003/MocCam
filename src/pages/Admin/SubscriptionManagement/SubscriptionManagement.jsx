@@ -254,20 +254,22 @@ const SubscriptionManagement = () => {
                       </span>
                     </td>
                     <td>
-                      <button
-                        className="action-btn edit-btn"
-                        onClick={() => handleOpenEdit(subscription)}
-                        title="Chỉnh sửa"
-                      >
-                        <EditOutlined />
-                      </button>
-                      <button
-                        className="action-btn delete-btn"
-                        onClick={() => handleDelete(subscription)}
-                        title="Xóa"
-                      >
-                        <DeleteOutlined />
-                      </button>
+                      <div className="action-buttons-wrapper">
+                        <button
+                          className="action-btn edit-btn"
+                          onClick={() => handleOpenEdit(subscription)}
+                          title="Chỉnh sửa"
+                        >
+                          <EditOutlined />
+                        </button>
+                        <button
+                          className="action-btn delete-btn"
+                          onClick={() => handleDelete(subscription)}
+                          title="Xóa"
+                        >
+                          <DeleteOutlined />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
