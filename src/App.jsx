@@ -12,6 +12,7 @@ import DanTranh from "./pages/DanTranh/DanTranh";
 import SongList from "./pages/DanTranh/ListTranh/SongList";
 import BangXepHang from "./pages/DanTranh/Ranking/BangXepHang";
 import HoSo from "./pages/DanTranh/Profile/HoSo";
+import VirtualDanTranh from "./pages/DanTranh/VirtualDanTranh/VirtualDanTranh";
 import Subscription from "./pages/Subscription/Subscription";
 import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
@@ -76,6 +77,7 @@ function App() {
           {/* Customer Routes */}
           <Route path="/home" element={<InstrumentSelect />} />
           <Route path="/dan-tranh" element={<DanTranh />} />
+          <Route path="/virtual-dantranh" element={<VirtualDanTranh />} />
           <Route path="/song-list" element={<SongList />} />
           <Route path="/bangxephang" element={<BangXepHang />} />
           <Route path="/HoSo" element={<ProtectedRoute><HoSo /></ProtectedRoute>} />

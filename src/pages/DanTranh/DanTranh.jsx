@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./DanTranh.css";
 import { FaBook, FaMusic, FaTrophy, FaUser, FaSlidersH } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Sidebar from "../../components/Sidebar/Sidebar";
 
 export default function DanTranh() {
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   // Tự bật modal khi trang load
   useEffect(() => {
     setShowModal(true);
   }, []);
+
+  const handleStartLearning = () => {
+    window.open('/virtual-dantranh', '_blank');
+  };
 
   return (
     <div className={`dantranh-page ${showModal ? "blurred" : ""}`}>
@@ -73,6 +79,13 @@ export default function DanTranh() {
                   phát triển trong cả các sáng tác hiện đại.
                   </p>
                 </div>
+              </div>
+              
+              {/* Nút Bắt đầu học */}
+              <div className="modal-actions">
+                <button className="start-learning-btn" onClick={handleStartLearning}>
+                  🎵 Bắt đầu học đàn tranh ảo
+                </button>
               </div>
             </div>
           </div>

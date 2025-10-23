@@ -6,9 +6,24 @@
   padding: 0;
 }
 
-/* Admin Layout Styles */
-.layout.admin-layout {
+/* Customer Layout Styles */
+.layout.customer-layout {
   background-color: #ffffff;
+}
+
+.layout-content.customer-content {
+  margin-left: 280px;
+  background-color: #ffffff;
+}
+
+.layout-content.customer-content.sidebar-collapsed {
+  margin-left: 80px;
+}
+
+.main-content.customer-main {
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0;
 }
 
 .layout-content {
@@ -55,6 +70,14 @@
   .layout-content.admin-content.sidebar-collapsed {
     margin-left: 80px;
   }
+  
+  .layout-content.customer-content {
+    margin-left: 250px;
+  }
+  
+  .layout-content.customer-content.sidebar-collapsed {
+    margin-left: 80px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -67,6 +90,14 @@
   }
   
   .layout-content.admin-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  .layout-content.customer-content {
+    margin-left: 0;
+  }
+  
+  .layout-content.customer-content.sidebar-collapsed {
     margin-left: 0;
   }
   
@@ -83,6 +114,11 @@
     padding: 0;
     margin: 0;
   }
+  
+  .main-content.customer-main {
+    padding: 0;
+    margin: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -94,11 +130,20 @@
     margin-left: 0;
   }
   
+  .layout-content.customer-content {
+    margin-left: 0;
+  }
+  
   .main-content {
     padding: 1rem;
   }
   
   .main-content.admin-main {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .main-content.customer-main {
     padding: 0;
     margin: 0;
   }
@@ -120,30 +165,30 @@
   }
 }
 
-/* Admin sidebar responsive adjustments */
+/* Customer sidebar responsive adjustments */
 @media (max-width: 1200px) {
-  .admin-sidebar {
+  .customer-sidebar {
     width: 250px;
     min-width: 250px;
   }
   
-  .layout-content.admin-content {
+  .layout-content.customer-content {
     margin-left: 250px;
   }
 }
 
 @media (max-width: 768px) {
-  .admin-sidebar {
+  .customer-sidebar {
     transform: translateX(-100%);
     width: 100%;
     min-width: 100%;
   }
   
-  .admin-sidebar.show {
+  .customer-sidebar.show {
     transform: translateX(0);
   }
   
-  .layout-content.admin-content {
+  .layout-content.customer-content {
     margin-left: 0;
   }
 }

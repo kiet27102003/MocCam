@@ -3,6 +3,7 @@ import { useRole } from '../../hooks/useRole';
 import Sidebar from '../Sidebar/Sidebar';
 import Header from '../Header/Header';
 import AdminSidebar from '../AdminSidebar/AdminSidebar';
+import CustomerSidebar from '../CustomerSidebar/CustomerSidebar';
 import './Layout.css';
 
 const Layout = ({ children }) => {
@@ -13,6 +14,7 @@ const Layout = ({ children }) => {
   // Don't show header for admin pages
   const showHeader = userRole !== 'admin';
   const isAdmin = userRole === 'admin';
+  const isCustomer = userRole === 'customer';
 
   useEffect(() => {
     const checkMobile = () => {
@@ -30,9 +32,15 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className={`layout ${isAdmin ? 'admin-layout' : ''}`}>
+    <div className={`layout ${isAdmin ? 'admin-layout' : ''} ${isCustomer ? 'customer-layout' : ''}`}>
       {isAdmin ? (
         <AdminSidebar 
+          collapsed={sidebarCollapsed}
+          onToggle={handleSidebarToggle}
+          isMobile={isMobile}
+        />
+      ) : isCustomer ? (
+        <CustomerSidebar 
           collapsed={sidebarCollapsed}
           onToggle={handleSidebarToggle}
           isMobile={isMobile}
@@ -40,9 +48,9 @@ const Layout = ({ children }) => {
       ) : (
         <Sidebar />
       )}
-      <div className={`layout-content ${isAdmin ? 'admin-content' : ''} ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      <div className={`layout-content ${isAdmin ? 'admin-content' : ''} ${isCustomer ? 'customer-content' : ''} ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         {showHeader && <Header />}
-        <main className={`main-content ${!showHeader ? 'no-header' : ''} ${isAdmin ? 'admin-main' : ''}`}>
+        <main className={`main-content ${!showHeader ? 'no-header' : ''} ${isAdmin ? 'admin-main' : ''} ${isCustomer ? 'customer-main' : ''}`}>
           {children}
         </main>
       </div>

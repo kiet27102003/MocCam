@@ -56,8 +56,13 @@ export const ROLE_ROUTES = {
   ],
   [ROLES.CUSTOMER]: [
     { path: '/home', name: 'Trang chủ', icon: 'home' },
-    { path: '/profile', name: 'Hồ sơ', icon: 'profile' },
+    { path: '/instrument-select', name: 'Chọn nhạc cụ', icon: 'sound' },
+    { path: '/dan-tranh', name: 'Đàn Tranh', icon: 'play' },
+    { path: '/dan-tranh/songs', name: 'Danh sách bài hát', icon: 'book' },
+    { path: '/dan-tranh/ranking', name: 'Bảng xếp hạng', icon: 'trophy' },
+    { path: '/dan-tranh/profile', name: 'Hồ sơ cá nhân', icon: 'profile' },
     { path: '/subscription', name: 'Gói đăng ký', icon: 'subscription' },
-    { path: '/courses', name: 'Khóa học', icon: 'courses' }
+    { path: '/favorites', name: 'Yêu thích', icon: 'heart' },
+    { path: '/settings', name: 'Cài đặt', icon: 'settings' }
   ]
 };
