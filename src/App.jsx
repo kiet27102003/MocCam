@@ -21,6 +21,7 @@ import UserManagement from "./pages/Admin/UserManagement/UserManagement";
 import PaymentManagement from "./pages/Admin/PaymentManagement/PaymentManagement";
 import NotificationManagement from "./pages/Admin/NotificationManagement/NotificationManagement";
 import SubscriptionManagement from "./pages/Admin/SubscriptionManagement/SubscriptionManagement";
+import UserSubscriptionManagement from "./pages/Admin/UserSubscriptionManagement/UserSubscriptionManagement";
 import LessonManagement from "./pages/Admin/LessonManagement/LessonManagement";
 import "./pages/Admin/AdminPlaceholder/AdminPlaceholder.css";
 
@@ -87,6 +88,7 @@ function App() {
           <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><Layout><AdminSettings /></Layout></ProtectedRoute>} />
           <Route path="/admin/vouchers" element={<ProtectedRoute requiredRole="admin"><Layout><VoucherManagement /></Layout></ProtectedRoute>} />
           <Route path="/admin/subscriptions" element={<ProtectedRoute requiredRole="admin"><Layout><SubscriptionManagement /></Layout></ProtectedRoute>} />
+          <Route path="/admin/user-subscriptions" element={<ProtectedRoute requiredRole="admin"><Layout><UserSubscriptionManagement /></Layout></ProtectedRoute>} />
         <Route path="/admin/lessons" element={<ProtectedRoute requiredRole="admin"><Layout><LessonManagement /></Layout></ProtectedRoute>} />
           <Route path="/admin/notifications" element={<ProtectedRoute requiredRole="admin"><Layout><NotificationManagement /></Layout></ProtectedRoute>} />
           

@@ -12,7 +12,8 @@ import {
   LogoutOutlined,
   MenuOutlined,
   CloseOutlined,
-  CreditCardOutlined
+  CreditCardOutlined,
+  TeamOutlined
 } from '@ant-design/icons';
 import './AdminSidebar.css';
 
@@ -51,6 +52,12 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
       icon: <CreditCardOutlined />,
       label: 'Quản lý gói đăng ký',
       path: '/admin/subscriptions'
+    },
+    {
+      key: '/admin/user-subscriptions',
+      icon: <TeamOutlined />,
+      label: 'Gói đăng ký người dùng',
+      path: '/admin/user-subscriptions'
     },
     {
       key: '/admin/lessons',
