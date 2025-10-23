@@ -22,7 +22,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useRole } from '../../hooks/useRole';
 import { notificationService } from '../../services/notificationService';
-import './Header.css';
+import '../../components/HomeHeader/HomeHeader.css';
 import mainLogo from '/mainLogo.png';
 
 const Header = () => {
@@ -94,7 +94,6 @@ const Header = () => {
     setIsUserMenuOpen(false);
     setIsMenuOpen(false);
   };
-
 
   // Format time ago
   const formatTimeAgo = (dateString) => {
@@ -174,24 +173,24 @@ const Header = () => {
   const userMenuItems = getUserMenuItems();
 
   return (
-    <header className={`header ${userRole === 'customer' ? 'customer-header' : ''}`}>
-      <div className="header-container">
+    <header className="home-header">
+      <div className="home-header-container">
         {/* Logo */}
-        <div className="logo" onClick={() => navigate("/home")}>
+        <div className="home-logo" onClick={() => navigate("/home")}>
           <img src={mainLogo} alt="Logo" />
-          <div className="logo-text">
-            <span className="brand-name">Mộc Cầm</span>
-            <span className="brand-tagline">Âm nhạc truyền thống</span>
+          <div className="home-logo-text">
+            <span className="home-brand-name">Mộc Cầm</span>
+            <span className="home-brand-tagline">Âm nhạc truyền thống</span>
           </div>
         </div>
 
-        {/* Desktop Nav */}
-        <nav className="nav-menu desktop">
+        {/* Desktop Navigation */}
+        <nav className="home-nav-menu desktop">
           {navItems.map(item => (
             <a
               key={item.path}
               href={item.path}
-              className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+              className={`home-nav-link ${location.pathname === item.path ? 'active' : ''}`}
               onClick={(e) => {
                 e.preventDefault();
                 navigate(item.path);
@@ -204,7 +203,7 @@ const Header = () => {
         </nav>
 
         {/* Actions */}
-        <div className="header-actions">
+        <div className="home-header-actions">
           {/* Notification bell for users */}
           {user && userRole === 'customer' && (
             <div className="notification-container" ref={notificationRef}>
@@ -275,27 +274,27 @@ const Header = () => {
           )}
 
           {user ? (
-            <div className="user-menu-container" ref={userMenuRef} onClick={() => setIsUserMenuOpen(prev => !prev)}>
-              <div className="user-button">
-                <div className="user-avatar">
+            <div className="home-user-menu-container" ref={userMenuRef} onClick={() => setIsUserMenuOpen(prev => !prev)}>
+              <div className="home-user-button">
+                <div className="home-user-avatar">
                   {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <UserOutlined />}
                 </div>
-                <span className="user-name">{user.name || user.email}</span>
+                <span className="home-user-name">{user.name || user.email}</span>
               </div>
 
               {isUserMenuOpen && (
-                <div className="user-dropdown">
-                  <div className="user-info">
-                    <div className="user-avatar-large">
+                <div className="home-user-dropdown">
+                  <div className="home-user-info">
+                    <div className="home-user-avatar-large">
                       {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <UserOutlined />}
                     </div>
                     <div>
-                      <div className="user-name-large">{user.name || 'Người dùng'}</div>
-                      <div className="user-email">{user.email}</div>
-                      <div className="user-role">{userRole?.toUpperCase()}</div>
+                      <div className="home-user-name-large">{user.name || 'Người dùng'}</div>
+                      <div className="home-user-email">{user.email}</div>
+                      <div className="home-user-role">{userRole?.toUpperCase()}</div>
                     </div>
                   </div>
-                  <div className="dropdown-divider" />
+                  <div className="home-dropdown-divider" />
                   {userMenuItems.map((item, index) => (
                     <button 
                       key={index}
@@ -303,14 +302,14 @@ const Header = () => {
                         navigate(item.path); 
                         setIsUserMenuOpen(false); 
                       }} 
-                      className="dropdown-item"
+                      className="home-dropdown-item"
                     >
                       {item.icon}
                       <span>{item.label}</span>
                     </button>
                   ))}
-                  <div className="dropdown-divider" />
-                  <button onClick={handleLogout} className="dropdown-item logout">
+                  <div className="home-dropdown-divider" />
+                  <button onClick={handleLogout} className="home-dropdown-item logout">
                     <LogoutOutlined />
                     <span>Đăng xuất</span>
                   </button>
@@ -318,14 +317,14 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <button className="login-button" onClick={() => navigate('/login')}>
+            <button className="home-login-button" onClick={() => navigate('/login')}>
               <UserOutlined />
               <span>Đăng nhập</span>
             </button>
           )}
 
           {/* Mobile Menu Toggle */}
-          <button className="mobile-menu-button" onClick={() => setIsMenuOpen(prev => !prev)}>
+          <button className="home-mobile-menu-button" onClick={() => setIsMenuOpen(prev => !prev)}>
             {isMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
           </button>
         </div>
@@ -333,12 +332,12 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="mobile-menu">
+        <div className="home-mobile-menu">
           {navItems.map(item => (
             <a
               key={item.path}
               href={item.path}
-              className={`mobile-link ${location.pathname === item.path ? 'active' : ''}`}
+              className={`home-mobile-link ${location.pathname === item.path ? 'active' : ''}`}
               onClick={(e) => {
                 e.preventDefault();
                 navigate(item.path);
@@ -349,20 +348,20 @@ const Header = () => {
               <span>{item.label}</span>
             </a>
           ))}
-          <div className="dropdown-divider" />
+          <div className="home-dropdown-divider" />
           {user ? (
             <>
-              <button className="mobile-link" onClick={() => { navigate('/HoSo'); setIsMenuOpen(false); }}>
+              <button className="home-mobile-link" onClick={() => { navigate('/HoSo'); setIsMenuOpen(false); }}>
                 <SettingOutlined />
                 <span>Hồ sơ</span>
               </button>
-              <button className="mobile-link logout" onClick={handleLogout}>
+              <button className="home-mobile-link logout" onClick={handleLogout}>
                 <LogoutOutlined />
                 <span>Đăng xuất</span>
               </button>
             </>
           ) : (
-            <button className="mobile-link" onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>
+            <button className="home-mobile-link" onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>
               <UserOutlined />
               <span>Đăng nhập</span>
             </button>

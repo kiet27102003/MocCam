@@ -143,7 +143,7 @@ const Subscription = () => {
         <div className="subscription-header">
           <button 
             className="back-button"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}   
           >
             ← Quay lại trang chủ
           </button>
@@ -175,7 +175,7 @@ const Subscription = () => {
         <div className="subscription-header">
           <button 
             className="back-button"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             ← Quay lại trang chủ
           </button>
@@ -211,7 +211,7 @@ const Subscription = () => {
       <div className="subscription-header">
         <button 
           className="back-button"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
         >
           ← Quay lại trang chủ
         </button>

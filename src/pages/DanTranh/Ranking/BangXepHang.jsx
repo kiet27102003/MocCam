@@ -1,3 +1,5 @@
+// TEMPORARILY COMMENTED OUT - UNDER DEVELOPMENT
+const _originalCode = `
 import React from "react";
 import { Card, Avatar, List, Row, Col, Typography } from "antd";
 import { FireFilled } from "@ant-design/icons";
@@ -24,24 +26,18 @@ export default function BangXepHang() {
   return (
     <div className="bxh-layout">
       <Row className="bxh-row">
-        {/* Cột Sidebar (2 phần) */}
         <Col span={4} className="bxh-sidebar">
           <Sidebar active="bangxephang" />
         </Col>
-
-        {/* Cột nội dung chính (8 phần) */}
         <Col span={20} className="bxh-content">
           <Navbar />
-
           <main className="bxh-main">
             <Title level={3} className="bxh-title">
               Bảng xếp hạng
             </Title>
-
-            {/* Top 3 podium */}
             <Row justify="center" align="bottom" className="bxh-top3">
               {top3.map((user, index) => (
-                <Col key={user.name} className={`bxh-col bxh-${index}`}>
+                <Col key={user.name} className={\`bxh-col bxh-\${index}\`}>
                   <Card
                     className="bxh-card"
                     style={{
@@ -63,8 +59,6 @@ export default function BangXepHang() {
                 </Col>
               ))}
             </Row>
-
-            {/* Danh sách thứ hạng khác */}
             <Card className="bxh-list-card">
               <List
                 itemLayout="horizontal"
@@ -81,8 +75,6 @@ export default function BangXepHang() {
               />
             </Card>
           </main>
-
-          {/* Fire icon */}
           <div className="bxh-fire">
             <FireFilled style={{ color: "#A52317", fontSize: 20 }} />
             <span>10</span>
@@ -91,4 +83,12 @@ export default function BangXepHang() {
       </Row>
     </div>
   );
+}
+`;
+
+// PLACEHOLDER COMPONENT - UNDER DEVELOPMENT
+import BangXepHangPlaceholder from "./BangXepHangPlaceholder";
+
+export default function BangXepHang() {
+  return <BangXepHangPlaceholder />;
 }

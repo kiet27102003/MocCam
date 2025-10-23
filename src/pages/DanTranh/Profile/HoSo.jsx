@@ -1,3 +1,5 @@
+// TEMPORARILY COMMENTED OUT - UNDER DEVELOPMENT
+const _originalCode = `
 import React from "react";
 import { Card, Avatar, Row, Col, Button, Typography, Input } from "antd";
 import { FireFilled } from "@ant-design/icons";
@@ -23,28 +25,21 @@ export default function HoSo() {
   return (
     <div className="hoso-layout">
       <Row className="hoso-row">
-        {/* Sidebar */}
         <Col span={4} className="hoso-sidebar">
           <Sidebar active="hoso" />
         </Col>
-
-        {/* Nội dung chính */}
         <Col span={20} className="hoso-content">
           <Navbar />
-
           <main className="hoso-main">
             <Row gutter={[32, 32]}>
-              {/* Cột trái: thông tin hồ sơ */}
               <Col span={16}>
                 <div className="hoso-profile">
                   <Avatar size={96} style={{ backgroundColor: "#E7C49A" }} />
                   <Title level={4}>Tấn Phát</Title>
                   <Text>1 Đang theo dõi · 0 Người theo dõi</Text>
-
                   <Button type="primary" className="hoso-edit-btn">
                     Chỉnh sửa hồ sơ
                   </Button>
-
                   <div className="hoso-stats">
                     <Card className="hoso-stat-card">
                       <Title level={4}>10</Title>
@@ -63,7 +58,6 @@ export default function HoSo() {
                       <Text>Đã mở khóa</Text>
                     </Card>
                   </div>
-
                   <Title level={5} className="hoso-section-title">
                     Bạn bè đề xuất
                   </Title>
@@ -87,8 +81,6 @@ export default function HoSo() {
                   </Row>
                 </div>
               </Col>
-
-              {/* Cột phải: news */}
               <Col span={8}>
                 <div className="hoso-news">
                   <Title level={5}>News</Title>
@@ -105,7 +97,6 @@ export default function HoSo() {
               </Col>
             </Row>
           </main>
-
           <div className="hoso-fire">
             <FireFilled style={{ color: "#A52317", fontSize: 20 }} />
             <span>10</span>
@@ -114,4 +105,12 @@ export default function HoSo() {
       </Row>
     </div>
   );
+}
+`;
+
+// PLACEHOLDER COMPONENT - UNDER DEVELOPMENT
+import HoSoPlaceholder from "./HoSoPlaceholder";
+
+export default function HoSo() {
+  return <HoSoPlaceholder />;
 }
