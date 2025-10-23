@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebookF, FaXTwitter, FaEye, FaEyeSlash } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useRole } from "../../hooks/useRole";
+import passwordResetService from "../../services/passwordResetService";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,6 +29,17 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  
+  // Forgot password modal states
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [forgotPasswordData, setForgotPasswordData] = useState({
+    email: "",
+    newPassword: ""
+  });
+  const [forgotPasswordError, setForgotPasswordError] = useState("");
+  const [forgotPasswordSuccess, setForgotPasswordSuccess] = useState("");
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   // Validation functions
   const validateEmail = (email) => {
@@ -207,6 +220,90 @@ const Login = () => {
     setLoading(false);
   };
 
+  // Forgot password modal functions
+  const openForgotPasswordModal = () => {
+    setShowForgotPasswordModal(true);
+    setForgotPasswordError("");
+    setForgotPasswordSuccess("");
+    setForgotPasswordData({ email: "", newPassword: "" });
+    // Lock body scroll
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeForgotPasswordModal = () => {
+    setShowForgotPasswordModal(false);
+    setForgotPasswordError("");
+    setForgotPasswordSuccess("");
+    setForgotPasswordData({ email: "", newPassword: "" });
+    // Unlock body scroll
+    document.body.style.overflow = 'unset';
+  };
+
+  const handleForgotPasswordInputChange = (e) => {
+    const { name, value } = e.target;
+    setForgotPasswordData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (forgotPasswordError) setForgotPasswordError("");
+  };
+
+  const handleForgotPasswordSubmit = async (e) => {
+    e.preventDefault();
+    setForgotPasswordError("");
+    setForgotPasswordSuccess("");
+    setForgotPasswordLoading(true);
+
+    // Validation
+    if (!forgotPasswordData.email || !forgotPasswordData.newPassword) {
+      setForgotPasswordError("Vui lòng nhập đầy đủ thông tin!");
+      setForgotPasswordLoading(false);
+      return;
+    }
+
+    if (!validateEmail(forgotPasswordData.email)) {
+      setForgotPasswordError("Email không hợp lệ!");
+      setForgotPasswordLoading(false);
+      return;
+    }
+
+    if (forgotPasswordData.newPassword.length < 6) {
+      setForgotPasswordError("Mật khẩu phải có ít nhất 6 ký tự!");
+      setForgotPasswordLoading(false);
+      return;
+    }
+
+    try {
+      const response = await passwordResetService.resetPassword(
+        forgotPasswordData.email, 
+        forgotPasswordData.newPassword
+      );
+
+      console.log("Đặt lại mật khẩu thành công:", response);
+      setForgotPasswordSuccess("Đặt lại mật khẩu thành công! Bạn có thể đăng nhập ngay.");
+      
+      // Đóng modal sau 2 giây
+      setTimeout(() => {
+        closeForgotPasswordModal();
+      }, 2000);
+
+    } catch (err) {
+      console.error("Lỗi đặt lại mật khẩu:", err);
+      
+      if (err.response?.data?.message) {
+        setForgotPasswordError(err.response.data.message);
+      } else if (err.response?.status === 404) {
+        setForgotPasswordError("Email không tồn tại trong hệ thống!");
+      } else if (err.response?.status === 400) {
+        setForgotPasswordError("Thông tin không hợp lệ!");
+      } else {
+        setForgotPasswordError("Có lỗi xảy ra. Vui lòng thử lại!");
+      }
+    } finally {
+      setForgotPasswordLoading(false);
+    }
+  };
+
   // Load remembered email on component mount
   React.useEffect(() => {
     debugLog("🔄 Component mounted, kiểm tra remembered email");
@@ -280,7 +377,7 @@ const Login = () => {
               /> 
               Ghi nhớ tài khoản
             </label>
-            <a href="#" className="forgot">
+            <a href="#" className="forgot" onClick={(e) => { e.preventDefault(); openForgotPasswordModal(); }}>
               Quên mật khẩu?
             </a>
           </div>
@@ -329,6 +426,77 @@ const Login = () => {
           Quay lại trang chủ
         </button>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPasswordModal && (
+        <div className="modal-overlay" onClick={closeForgotPasswordModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Đặt lại mật khẩu</h3>
+              <button className="modal-close" onClick={closeForgotPasswordModal}>
+                <FaTimes />
+              </button>
+            </div>
+            
+            <form className="modal-form" onSubmit={handleForgotPasswordSubmit}>
+              <div className="input-group">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email của bạn"
+                  value={forgotPasswordData.email}
+                  onChange={handleForgotPasswordInputChange}
+                  required
+                  autoComplete="email"
+                  className={forgotPasswordError && !forgotPasswordData.email ? "error" : ""}
+                />
+              </div>
+
+              <div className="input-group">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  name="newPassword"
+                  placeholder="Mật khẩu mới"
+                  value={forgotPasswordData.newPassword}
+                  onChange={handleForgotPasswordInputChange}
+                  required
+                  autoComplete="new-password"
+                  className={forgotPasswordError && !forgotPasswordData.newPassword ? "error" : ""}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+
+              {forgotPasswordError && <p className="error-text">{forgotPasswordError}</p>}
+              {forgotPasswordSuccess && <p className="success-text">{forgotPasswordSuccess}</p>}
+
+              <div className="modal-actions">
+                <button 
+                  type="submit" 
+                  className={`btn-submit ${forgotPasswordLoading ? "loading" : ""}`}
+                  disabled={forgotPasswordLoading}
+                >
+                  {forgotPasswordLoading ? "Đang xử lý..." : "Đặt lại mật khẩu"}
+                </button>
+                
+                <button 
+                  type="button" 
+                  className="btn-cancel"
+                  onClick={closeForgotPasswordModal}
+                  disabled={forgotPasswordLoading}
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

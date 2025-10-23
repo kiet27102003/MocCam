@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
   LOGIN: '/auth/login',
   GOOGLE_LOGIN: '/auth/google-login',
   REGISTER: '/auth/register/customer',
+  RESET_PASSWORD: '/auth/reset-password',
   
   // User endpoints
   USERS: '/users',

@@ -23,6 +23,22 @@ export const subscriptionService = {
       });
 
       if (!response.ok) {
+        // If unauthorized (401), try without token for public access
+        if (response.status === 401) {
+          console.log('Unauthorized, trying public access...');
+          const publicResponse = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (publicResponse.ok) {
+            const data = await publicResponse.json();
+            return data;
+          }
+        }
+        
         const errorText = await response.text();
         throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
       }
