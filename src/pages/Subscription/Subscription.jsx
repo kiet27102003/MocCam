@@ -3,7 +3,6 @@ import "./Subscription.css";
 import { useNavigate } from "react-router-dom";
 import { FaCrown, FaCheck, FaStar, FaGem, FaRocket, FaSpinner } from "react-icons/fa";
 import { message } from 'antd';
-import Footer from "../../components/Footer/Footer";
 import { subscriptionService } from "../../services/subscriptionService";
 
 const Subscription = () => {
@@ -30,15 +29,6 @@ const Subscription = () => {
         setLoading(true);
         setError(null);
         
-        // Check if user is authenticated
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.log('No token found, user not authenticated');
-          setError('Bạn cần đăng nhập để xem danh sách gói đăng ký');
-          setLoading(false);
-          return;
-        }
-        
         const data = await subscriptionService.getAllPlans();
         
         // Transform API data to match our component structure
@@ -60,12 +50,39 @@ const Subscription = () => {
         
         // Handle specific error cases
         if (err.message.includes('401')) {
-          setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-          message.error('Phiên đăng nhập đã hết hạn');
-          // Optionally redirect to login
-          setTimeout(() => {
-            navigate('/login');
-          }, 2000);
+          // If user is not logged in, try to fetch without token
+          console.log('User not authenticated, trying to fetch packages without token');
+          try {
+            const url = '/api/subscription-plans';
+            const response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              const transformedPackages = data.map((plan, index) => ({
+                id: plan.id || plan.plan_id,
+                name: plan.name || plan.plan_name,
+                icon: getIconByIndex(index),
+                price: plan.price || plan.current_price,
+                originalPrice: plan.original_price || plan.price,
+                duration: plan.duration || plan.duration_type || "tháng",
+                features: plan.features || plan.description ? plan.description.split('\n').filter(f => f.trim()) : [],
+                popular: plan.popular || index === 1,
+                color: getColorByIndex(index)
+              }));
+              setPackages(transformedPackages);
+              return;
+            }
+          } catch (fetchErr) {
+            console.log('Failed to fetch packages without token:', fetchErr);
+          }
+          
+          setError('Bạn cần đăng nhập để xem danh sách gói đăng ký.');
+          message.warning('Vui lòng đăng nhập để xem gói đăng ký');
         } else if (err.message.includes('403')) {
           setError('Bạn không có quyền truy cập danh sách gói đăng ký.');
           message.error('Không có quyền truy cập');
@@ -147,8 +164,6 @@ const Subscription = () => {
           </div>
           <p>Đang tải danh sách gói đăng ký...</p>
         </div>
-
-        <Footer />
       </div>
     );
   }
@@ -187,8 +202,6 @@ const Subscription = () => {
             </button>
           </div>
         </div>
-
-        <Footer />
       </div>
     );
   }
@@ -254,11 +267,13 @@ const Subscription = () => {
               </ul>
 
               <button
-                className={`subscribe-button ${pkg.popular ? 'popular' : ''}`}
+                className={`subscribe-button ${pkg.popular ? 'popular' : ''} ${!user ? 'disabled' : ''}`}
                 onClick={() => handleSubscribe(pkg)}
                 style={{ backgroundColor: pkg.color }}
+                disabled={!user}
+                title={!user ? 'Bạn cần đăng nhập để mua gói này' : ''}
               >
-                Chọn gói {pkg.name}
+                {!user ? 'Đăng nhập để mua' : `Chọn gói ${pkg.name}`}
               </button>
             </div>
           ))
@@ -298,8 +313,6 @@ const Subscription = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

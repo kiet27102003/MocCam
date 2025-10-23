@@ -72,11 +72,9 @@ const InstrumentSelect = () => {
       <div className="page-content">
         <div className="page-header">
           <h1 className="page-title">
-            Chọn nhạc cụ để bắt đầu học
+            Chọn nhạc cụ để bắt đầu học<br />
+            <span className="page-subtitle">Khám phá vẻ đẹp của âm nhạc truyền thống Việt Nam</span>
           </h1>
-          <p className="page-subtitle">
-            Khám phá vẻ đẹp của âm nhạc truyền thống Việt Nam
-          </p>
         </div>
 
         <div className="instruments-grid">

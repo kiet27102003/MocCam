@@ -97,8 +97,8 @@ const Footer = () => {
             </p>
             <div className="contact-info">
               <div className="contact-item">
-                <MailOutlined className="contact-icon" />
-                <span>support@moccam.com</span>
+                <MailOutlined className="contact-icon" /  >
+                <span>moccam.business@gmail.com</span>
               </div>
               <div className="contact-item">
                 <PhoneOutlined className="contact-icon" />

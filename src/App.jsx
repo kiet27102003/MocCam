@@ -14,6 +14,8 @@ import BangXepHang from "./pages/DanTranh/Ranking/BangXepHang";
 import HoSo from "./pages/DanTranh/Profile/HoSo";
 import Subscription from "./pages/Subscription/Subscription";
 import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation";
+import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel/PaymentCancel";
 
 import VoucherManagement from "./pages/Admin/VoucherManagement/VoucherManagement";
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
@@ -79,6 +81,8 @@ function App() {
           <Route path="/HoSo" element={<ProtectedRoute><HoSo /></ProtectedRoute>} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Layout><AdminDashboard /></Layout></ProtectedRoute>} />
