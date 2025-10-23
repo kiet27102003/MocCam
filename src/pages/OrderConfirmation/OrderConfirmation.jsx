@@ -163,8 +163,15 @@ const OrderConfirmation = () => {
     console.log("📦 Selected package:", selectedPackage);
     console.log("🎫 Voucher applied:", voucherApplied);
     console.log("🎫 Voucher code:", voucherCode);
-    console.log("🎫 Voucher ID:", voucherId);
+    console.log("🎫 Voucher ID:", voucherId, "Type:", typeof voucherId);
     console.log("💰 Final price:", finalPrice);
+    
+    // Validate voucher data
+    if (voucherApplied && (!voucherId || voucherId === null || voucherId === undefined)) {
+      console.error("❌ Voucher applied but voucherId is missing!");
+      setError("Lỗi: Mã voucher không hợp lệ. Vui lòng thử lại!");
+      return;
+    }
     
     setLoading(true);
     setError("");
@@ -175,13 +182,15 @@ const OrderConfirmation = () => {
       
       // Prepare request body
       const requestBody = {
-        plan_id: selectedPackage.id
+        plan_id: parseInt(selectedPackage.id) // Ensure plan_id is a number
       };
       
       // Add voucher_id if applied
       if (voucherApplied && voucherId) {
-        requestBody.voucher_id = voucherId;
-        console.log("🎫 Adding voucher ID to request:", voucherId);
+        requestBody.voucher_id = parseInt(voucherId); // Ensure it's a number
+        console.log("🎫 Adding voucher ID to request:", voucherId, "as number:", parseInt(voucherId));
+      } else {
+        console.log("🎫 No voucher applied, sending request without voucher_id");
       }
       
       console.log("📤 Payment request body:", requestBody);
@@ -200,7 +209,9 @@ const OrderConfirmation = () => {
 
       console.log("✅ Payment response received:");
       console.log("Status:", response.status);
+      console.log("Headers:", response.headers);
       console.log("Data:", response.data);
+      console.log("Response keys:", Object.keys(response.data || {}));
 
       if (response.data.checkoutUrl) {
         console.log("🔗 Checkout URL:", response.data.checkoutUrl);
@@ -209,6 +220,7 @@ const OrderConfirmation = () => {
         window.location.href = response.data.checkoutUrl;
       } else {
         console.log("❌ No checkout URL in response");
+        console.log("Available fields:", Object.keys(response.data || {}));
         setError("Không thể tạo link thanh toán. Vui lòng thử lại!");
       }
 

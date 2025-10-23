@@ -25,7 +25,6 @@ const SubscriptionManagement = () => {
     plan_name: "",
     description: "",
     price: "",
-    currency: "VND",
     duration_in_days: "",
     is_active: true,
   });
@@ -38,13 +37,20 @@ const SubscriptionManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+      
       const res = await axios.get("/api/subscription-plans", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      
       setSubscriptions(res.data);
     } catch (err) {
-      setError("Không thể tải danh sách gói đăng ký");
-      console.error(err);
+      if (err.response?.status === 401) {
+        setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+      } else if (err.response?.status === 500) {
+        setError("Lỗi máy chủ khi tải danh sách gói đăng ký.");
+      } else {
+        setError("Không thể tải danh sách gói đăng ký");
+      }
     } finally {
       setLoading(false);
     }
@@ -63,7 +69,6 @@ const SubscriptionManagement = () => {
       plan_name: "",
       description: "",
       price: "",
-      currency: "VND",
       duration_in_days: "",
       is_active: true,
     });
@@ -78,7 +83,6 @@ const SubscriptionManagement = () => {
       plan_name: subscription.plan_name,
       description: subscription.description,
       price: subscription.price,
-      currency: subscription.currency,
       duration_in_days: subscription.duration_in_days,
       is_active: subscription.is_active,
     });
@@ -92,9 +96,11 @@ const SubscriptionManagement = () => {
     const token = localStorage.getItem("token");
 
     const payload = {
-      ...formData,
+      plan_name: formData.plan_name,
+      description: formData.description,
       price: parseFloat(formData.price),
       duration_in_days: parseInt(formData.duration_in_days),
+      is_active: formData.is_active,
     };
 
     if (!payload.plan_name || !payload.description || payload.price <= 0 || payload.duration_in_days <= 0) {
@@ -105,16 +111,13 @@ const SubscriptionManagement = () => {
     try {
       setLoading(true);
       if (isEditing) {
-        await axios.put(
-          `/api/subscription-plans/update/${editingSubscription.id}`,
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const subscriptionId = editingSubscription.id || editingSubscription.plan_id;
+        await axios.put(`/api/subscription-plans/${subscriptionId}`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         setSuccess("Cập nhật gói đăng ký thành công!");
       } else {
         await axios.post("/api/subscription-plans/create", payload, {
@@ -128,28 +131,45 @@ const SubscriptionManagement = () => {
       setIsModalOpen(false);
       loadSubscriptions();
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Có lỗi xảy ra khi xử lý yêu cầu."
-      );
+      // Handle specific error cases according to API spec
+      if (err.response?.status === 400) {
+        setError(err.response?.data?.message || "Thiếu hoặc sai dữ liệu.");
+      } else if (err.response?.status === 404) {
+        setError("Không tìm thấy gói đăng ký.");
+      } else if (err.response?.status === 500) {
+        setError("Lỗi máy chủ. Vui lòng thử lại sau.");
+      } else {
+        setError(
+          err.response?.data?.message ||
+            "Có lỗi xảy ra khi xử lý yêu cầu."
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (subscription) => {
     if (!window.confirm("Bạn có chắc muốn xóa gói đăng ký này?")) return;
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      await axios.delete(`/api/subscription-plans/${id}`, {
+      const subscriptionId = subscription.id || subscription.plan_id;
+      
+      await axios.delete(`/api/subscription-plans/${subscriptionId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      
       setSuccess("Xóa gói đăng ký thành công!");
       loadSubscriptions();
     } catch (err) {
-      setError("Không thể xóa gói đăng ký.");
-      console.error(err);
+      if (err.response?.status === 404) {
+        setError("Không tìm thấy gói đăng ký để xóa.");
+      } else if (err.response?.status === 500) {
+        setError("Lỗi máy chủ khi xóa gói đăng ký.");
+      } else {
+        setError("Không thể xóa gói đăng ký.");
+      }
     } finally {
       setLoading(false);
     }
@@ -243,7 +263,7 @@ const SubscriptionManagement = () => {
                       </button>
                       <button
                         className="action-btn delete-btn"
-                        onClick={() => handleDelete(subscription.id)}
+                        onClick={() => handleDelete(subscription)}
                         title="Xóa"
                       >
                         <DeleteOutlined />

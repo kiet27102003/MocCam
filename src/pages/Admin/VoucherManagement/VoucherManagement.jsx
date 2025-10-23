@@ -238,9 +238,7 @@ const VoucherManagement = () => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: '2-digit'
     });
   };
 
@@ -351,11 +349,15 @@ const VoucherManagement = () => {
               {/* Create Voucher Modal */}
               {isCreateModalOpen && (
                 <div className="modal-overlay">
-                  <div className="modal-content">
+                  <div className="modal-content create-voucher-modal">
                     <div className="modal-header">
-                      <h2>Tạo voucher mới</h2>
+                      <h2>
+                        <PlusOutlined />
+                        Tạo voucher mới
+                      </h2>
                       <button className="close-btn" onClick={() => setIsCreateModalOpen(false)}>×</button>
                     </div>
+                    
                     <form onSubmit={handleCreateVoucher} className="voucher-form">
                       <div className="form-group">
                         <label htmlFor="description">Mô tả voucher *</label>
@@ -369,7 +371,7 @@ const VoucherManagement = () => {
                           rows={3}
                         />
                       </div>
-        
+
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="discount_value">Giá trị giảm (VNĐ) *</label>
@@ -384,7 +386,7 @@ const VoucherManagement = () => {
                             required
                           />
                         </div>
-        
+
                         <div className="form-group">
                           <label htmlFor="max_usage">Số lần sử dụng tối đa *</label>
                           <input
@@ -399,7 +401,7 @@ const VoucherManagement = () => {
                           />
                         </div>
                       </div>
-        
+
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="start_date">Ngày bắt đầu *</label>
@@ -412,7 +414,7 @@ const VoucherManagement = () => {
                             required
                           />
                         </div>
-        
+
                         <div className="form-group">
                           <label htmlFor="end_date">Ngày kết thúc *</label>
                           <input
@@ -425,12 +427,21 @@ const VoucherManagement = () => {
                           />
                         </div>
                       </div>
-        
-                      <div className="form-actions">
-                        <button type="button" className="cancel-btn" onClick={() => setIsCreateModalOpen(false)}>
+
+                      <div className="modal-actions">
+                        <button 
+                          type="button" 
+                          className="cancel-btn" 
+                          onClick={() => setIsCreateModalOpen(false)}
+                        >
                           Hủy
                         </button>
-                        <button type="submit" className="submit-btn" disabled={loading}>
+                        <button 
+                          type="submit" 
+                          className="submit-btn" 
+                          disabled={loading}
+                        >
+                          <PlusOutlined />
                           {loading ? 'Đang tạo...' : 'Tạo voucher'}
                         </button>
                       </div>
@@ -442,11 +453,15 @@ const VoucherManagement = () => {
               {/* Edit Voucher Modal */}
               {isEditModalOpen && (
                 <div className="modal-overlay">
-                  <div className="modal-content">
+                  <div className="modal-content edit-voucher-modal">
                     <div className="modal-header">
-                      <h2>Chỉnh sửa voucher</h2>
+                      <h2>
+                        <EditOutlined />
+                        Chỉnh sửa voucher
+                      </h2>
                       <button className="close-btn" onClick={() => setIsEditModalOpen(false)}>×</button>
                     </div>
+                    
                     <form onSubmit={handleUpdateVoucher} className="voucher-form">
                       <div className="form-group">
                         <label htmlFor="edit_description">Mô tả voucher *</label>
@@ -460,7 +475,7 @@ const VoucherManagement = () => {
                           rows={3}
                         />
                       </div>
-        
+
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="edit_discount_value">Giá trị giảm (VNĐ) *</label>
@@ -475,7 +490,7 @@ const VoucherManagement = () => {
                             required
                           />
                         </div>
-        
+
                         <div className="form-group">
                           <label htmlFor="edit_max_usage">Số lần sử dụng tối đa *</label>
                           <input
@@ -490,7 +505,7 @@ const VoucherManagement = () => {
                           />
                         </div>
                       </div>
-        
+
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="edit_start_date">Ngày bắt đầu *</label>
@@ -503,7 +518,7 @@ const VoucherManagement = () => {
                             required
                           />
                         </div>
-        
+
                         <div className="form-group">
                           <label htmlFor="edit_end_date">Ngày kết thúc *</label>
                           <input
@@ -516,12 +531,21 @@ const VoucherManagement = () => {
                           />
                         </div>
                       </div>
-        
-                      <div className="form-actions">
-                        <button type="button" className="cancel-btn" onClick={() => setIsEditModalOpen(false)}>
+
+                      <div className="modal-actions">
+                        <button 
+                          type="button" 
+                          className="cancel-btn" 
+                          onClick={() => setIsEditModalOpen(false)}
+                        >
                           Hủy
                         </button>
-                        <button type="submit" className="submit-btn" disabled={loading}>
+                        <button 
+                          type="submit" 
+                          className="submit-btn" 
+                          disabled={loading}
+                        >
+                          <EditOutlined />
                           {loading ? 'Đang cập nhật...' : 'Cập nhật voucher'}
                         </button>
                       </div>

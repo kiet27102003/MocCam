@@ -84,11 +84,11 @@ const Footer = () => {
         <div className="footer-main">
           {/* Brand Section */}
           <div className="footer-brand">
-            <div className="brand-logo">
+            <div className="brand-logo" onClick={() => navigate("/home")}>
               <img src={mainLogo} alt="Mộc Cầm Logo" />
               <div className="brand-text">
-                <h3>Mộc Cầm</h3>
-                <p>Âm nhạc truyền thống</p>
+                <span className="brand-name">Mộc Cầm</span>
+                <span className="brand-tagline">Âm nhạc truyền thống</span>
               </div>
             </div>
             <p className="brand-description">

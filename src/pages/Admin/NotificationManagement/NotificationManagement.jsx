@@ -125,20 +125,42 @@ const NotificationManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('🚀 Form submitted with data:', formData);
+    
+    // Ensure we're sending the correct user_id
+    const submitData = { ...formData };
+    console.log('🔄 Form data user_id:', formData.user_id);
+    console.log('🔄 Form data type:', typeof formData.user_id);
+    
+    if (formData.user_id && formData.user_id !== '') {
+      console.log('✅ Sending notification to specific user_id:', formData.user_id);
+    } else {
+      console.log('✅ Sending notification to all users (user_id is empty)');
+    }
+    
+    console.log('📤 Final data to be sent:', submitData);
+    
     try {
       setLoading(true);
-      await notificationService.createNotification(formData);
+      console.log('🟡 Creating notification...');
+      const result = await notificationService.createNotification(submitData);
+      console.log('✅ Notification created successfully:', result);
+      
       setShowCreateForm(false);
-      setFormData({
+      const resetFormData = {
         user_id: '',
         title: '',
         message: '',
         type: 'system'
-      });
+      };
+      console.log('🔄 Resetting form data:', resetFormData);
+      setFormData(resetFormData);
+      
+      console.log('🔄 Reloading notifications...');
       loadNotifications();
       alert('Tạo thông báo thành công!');
     } catch (err) {
-      console.error('Error creating notification:', err);
+      console.error('❌ Error creating notification:', err);
       alert(err.message || 'Có lỗi xảy ra khi tạo thông báo');
     } finally {
       setLoading(false);
@@ -216,7 +238,10 @@ const NotificationManagement = () => {
           </button>
           <button 
             className="create-btn"
-            onClick={() => setShowCreateForm(true)}
+            onClick={() => {
+              console.log('➕ Create notification button clicked');
+              setShowCreateForm(true);
+            }}
           >
             <PlusOutlined />
             Tạo thông báo
@@ -424,11 +449,14 @@ const NotificationManagement = () => {
                   onChange={handleInputChange}
                 >
                   <option value="">Tất cả người dùng</option>
-                  {users.map(user => (
-                    <option key={user.id} value={user.id}>
-                      {user.name || user.username || user.email}
-                    </option>
-                  ))}
+                  {users.map(user => {
+                    console.log('👤 User data:', user);
+                    return (
+                      <option key={user.id || user.user_id} value={user.id || user.user_id}>
+                        {user.name || user.username || user.email} (ID: {user.id || user.user_id})
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 

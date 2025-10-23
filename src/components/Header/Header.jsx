@@ -34,7 +34,6 @@ const Header = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
   const [notificationError, setNotificationError] = useState(null);
   const userMenuRef = useRef(null);
@@ -48,7 +47,6 @@ const Header = () => {
     } else {
       setUser(null);
       setNotifications([]);
-      setUnreadCount(0);
     }
   }, [location]);
 
@@ -63,15 +61,10 @@ const Header = () => {
           // Assuming the API returns notifications in response.data or response.notifications
           const notificationData = response.data || response.notifications || response;
           setNotifications(notificationData);
-          
-          // Count unread notifications
-          const unread = notificationData.filter(notification => !notification.isRead).length;
-          setUnreadCount(unread);
         } catch (error) {
           console.error('Error fetching notifications:', error);
           setNotificationError('Không thể tải thông báo');
           setNotifications([]);
-          setUnreadCount(0);
         } finally {
           setIsLoadingNotifications(false);
         }
@@ -102,43 +95,6 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
-  // Mark notification as read
-  const markNotificationAsRead = async (notificationId) => {
-    try {
-      await notificationService.updateNotification(notificationId, { isRead: true });
-      // Update local state
-      setNotifications(prev => 
-        prev.map(notification => 
-          notification.id === notificationId 
-            ? { ...notification, isRead: true }
-            : notification
-        )
-      );
-      // Update unread count
-      setUnreadCount(prev => Math.max(0, prev - 1));
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  };
-
-  // Mark all notifications as read
-  const markAllAsRead = async () => {
-    try {
-      const unreadNotifications = notifications.filter(notification => !notification.isRead);
-      await Promise.all(
-        unreadNotifications.map(notification => 
-          notificationService.updateNotification(notification.id, { isRead: true })
-        )
-      );
-      // Update local state
-      setNotifications(prev => 
-        prev.map(notification => ({ ...notification, isRead: true }))
-      );
-      setUnreadCount(0);
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-    }
-  };
 
   // Format time ago
   const formatTimeAgo = (dateString) => {
@@ -221,7 +177,7 @@ const Header = () => {
     <header className={`header ${userRole === 'customer' ? 'customer-header' : ''}`}>
       <div className="header-container">
         {/* Logo */}
-        <div className="logo" onClick={() => navigate("/")}>
+        <div className="logo" onClick={() => navigate("/home")}>
           <img src={mainLogo} alt="Logo" />
           <div className="logo-text">
             <span className="brand-name">Mộc Cầm</span>
@@ -257,8 +213,8 @@ const Header = () => {
                 onClick={() => setIsNotificationOpen(prev => !prev)}
               >
                 <BellOutlined />
-                {unreadCount > 0 && (
-                  <span className="notification-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                {notifications.length > 0 && (
+                  <span className="notification-badge">{notifications.length > 99 ? '99+' : notifications.length}</span>
                 )}
               </button>
               
@@ -266,11 +222,6 @@ const Header = () => {
                 <div className="notification-dropdown">
                   <div className="notification-header">
                     <h4>Thông báo</h4>
-                    {unreadCount > 0 && (
-                      <button className="mark-all-read" onClick={markAllAsRead}>
-                        Đánh dấu tất cả đã đọc
-                      </button>
-                    )}
                   </div>
                   <div className="notification-list">
                     {isLoadingNotifications ? (
@@ -290,8 +241,7 @@ const Header = () => {
                       notifications.slice(0, 5).map((notification) => (
                         <div 
                           key={notification.id}
-                          className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
-                          onClick={() => !notification.isRead && markNotificationAsRead(notification.id)}
+                          className="notification-item"
                         >
                           <div className="notification-content">
                             <div className="notification-title">{notification.title}</div>

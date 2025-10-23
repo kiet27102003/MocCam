@@ -14,6 +14,7 @@ const getApiBaseUrl = () => {
 };
 
 export const API_BASE_URL = getApiBaseUrl();
+console.log('🌐 API_BASE_URL configured as:', API_BASE_URL);
 
 // Helper function to create full API URLs
 export const createApiUrl = (endpoint) => {

@@ -76,7 +76,7 @@ function App() {
           <Route path="/song-list" element={<SongList />} />
           <Route path="/bangxephang" element={<BangXepHang />} />
           <Route path="/HoSo" element={<ProtectedRoute><HoSo /></ProtectedRoute>} />
-          <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
+          <Route path="/subscription" element={<Subscription />} />
           <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
           
           {/* Admin Routes */}

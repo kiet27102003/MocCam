@@ -4,30 +4,43 @@ export const notificationService = {
   // Tạo thông báo mới
   createNotification: async (notificationData) => {
     try {
+      console.log('🔵 notificationService.createNotification called with:', notificationData);
       const token = localStorage.getItem('token');
+      console.log('🔑 Token available:', !!token);
       
       if (!token) {
         throw new Error('Vui lòng đăng nhập để thực hiện thao tác này');
       }
 
-      const response = await fetch(`${API_BASE_URL}/notifications/create`, {
+      const url = `${API_BASE_URL}/notifications/create`;
+      console.log('🌐 API URL:', url);
+      
+      const requestBody = JSON.stringify(notificationData);
+      console.log('📤 Request body (stringified):', requestBody);
+      console.log('📤 Request body (object):', notificationData);
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(notificationData)
+        body: requestBody
       });
+
+      console.log('📥 Response status:', response.status, response.statusText);
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('❌ API Error response:', errorText);
         throw new Error(`Không thể tạo thông báo: ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('✅ API Response data:', data);
       return data;
     } catch (error) {
-      console.error('Error creating notification:', error);
+      console.error('❌ Error creating notification:', error);
       throw error;
     }
   },
@@ -35,7 +48,9 @@ export const notificationService = {
   // Lấy danh sách thông báo
   getNotifications: async (params = {}) => {
     try {
+      console.log('🔵 notificationService.getNotifications called with params:', params);
       const token = localStorage.getItem('token');
+      console.log('🔑 Token available:', !!token);
       
       if (!token) {
         throw new Error('Vui lòng đăng nhập để thực hiện thao tác này');
@@ -43,6 +58,7 @@ export const notificationService = {
 
       const queryParams = new URLSearchParams(params);
       const url = `${API_BASE_URL}/notifications${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      console.log('🌐 API URL:', url);
 
       const response = await fetch(url, {
         headers: {
@@ -51,15 +67,19 @@ export const notificationService = {
         }
       });
 
+      console.log('📥 Response status:', response.status, response.statusText);
+
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('❌ API Error response:', errorText);
         throw new Error(`Không thể lấy danh sách thông báo: ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('✅ API Response data:', data);
       return data;
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('❌ Error fetching notifications:', error);
       throw error;
     }
   },
@@ -127,28 +147,76 @@ export const notificationService = {
   // Lấy danh sách người dùng để gửi thông báo
   getUsers: async () => {
     try {
+      console.log('🔵 notificationService.getUsers called');
       const token = localStorage.getItem('token');
+      console.log('🔑 Token available:', !!token);
       
       if (!token) {
         throw new Error('Vui lòng đăng nhập để thực hiện thao tác này');
       }
 
-      const response = await fetch(`${API_BASE_URL}/users`, {
+      const url = `${API_BASE_URL}/users`;
+      console.log('🌐 API URL:', url);
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
 
+      console.log('📥 Response status:', response.status, response.statusText);
+
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('❌ API Error response:', errorText);
         throw new Error(`Không thể lấy danh sách người dùng: ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('✅ API Response data:', data);
       return data;
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('❌ Error fetching users:', error);
+      throw error;
+    }
+  },
+
+  // Đánh dấu tất cả thông báo đã đọc
+  markAllAsRead: async () => {
+    try {
+      console.log('🔵 notificationService.markAllAsRead called');
+      const token = localStorage.getItem('token');
+      console.log('🔑 Token available:', !!token);
+      
+      if (!token) {
+        throw new Error('Vui lòng đăng nhập để thực hiện thao tác này');
+      }
+
+      const url = `${API_BASE_URL}/notifications/mark-all-read`;
+      console.log('🌐 API URL:', url);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('📥 Response status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ API Error response:', errorText);
+        throw new Error(`Không thể đánh dấu tất cả đã đọc: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ API Response data:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Error marking all notifications as read:', error);
       throw error;
     }
   }
