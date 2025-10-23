@@ -17,14 +17,14 @@ const VirtualDanTranh = () => {
 
   const [showDanTranh, setShowDanTranh] = useState(true);
   const [showHands, setShowHands] = useState(true);
-  const [frameCount, setFrameCount] = useState(0);
+  const [, setFrameCount] = useState(0);
   const [lastTime, setLastTime] = useState(Date.now());
   const [currentFps, setCurrentFps] = useState(0);
   const [currentStream, setCurrentStream] = useState(null);
   const [currentCamera, setCurrentCamera] = useState(null);
   const [hands, setHands] = useState(null);
   const [cameraInstance, setCameraInstance] = useState(null);
-  const [availableCameras, setAvailableCameras] = useState([]);
+  const [, setAvailableCameras] = useState([]);
   const [isSwitching, setIsSwitching] = useState(false);
 
   // Canvas đệm
@@ -39,7 +39,6 @@ const VirtualDanTranh = () => {
   const [stringStates, setStringStates] = useState(new Array(17).fill(0));
   const FINGER_TIP_LANDMARKS = [4, 8, 12];
   
-  let previousTouching = new Array(17).fill(false);
   let previousHandLandmarks = [];
 
   const DAN_TRANH_CONFIG = {
@@ -169,7 +168,7 @@ const VirtualDanTranh = () => {
   };
 
   // Hàm vẽ rhythm elements
-  const drawRhythmElements = (ctx, width, height) => {
+  const drawRhythmElements = (ctx, width) => {
     if (danTranhStrings.length === 0) return;
 
     const config = DAN_TRANH_CONFIG.rhythmGame;
@@ -367,7 +366,6 @@ const VirtualDanTranh = () => {
       return newCount;
     });
 
-    previousTouching = [...currentlyTouching];
     previousHandLandmarks = results.multiHandLandmarks ? JSON.parse(JSON.stringify(results.multiHandLandmarks)) : [];
   };
 
@@ -431,7 +429,7 @@ const VirtualDanTranh = () => {
         
         if (cameras.length === 0) {
           cameraSelectRef.current.innerHTML = '<option value="">Không tìm thấy camera</option>';
-          return;
+          return [];
         }
 
         cameras.forEach((camera, index) => {
@@ -445,12 +443,15 @@ const VirtualDanTranh = () => {
           switchCameraBtnRef.current.disabled = false;
         }
       }
+      
+      return cameras; // Trả về danh sách camera
     } catch (err) {
       console.error('Error getting camera list:', err);
       if (cameraSelectRef.current) {
         cameraSelectRef.current.innerHTML = '<option value="">Lỗi khi tải camera</option>';
       }
       showError('Không thể lấy danh sách camera. Vui lòng cấp quyền truy cập camera và tải lại trang.');
+      return []; // Trả về mảng rỗng nếu có lỗi
     }
   };
 
@@ -629,15 +630,17 @@ const VirtualDanTranh = () => {
       setHands(handsInstance);
 
       await loadAudioFiles();
-      await getCameraList();
+      const cameras = await getCameraList();
       
-      const defaultCamera = availableCameras.length > 0 ? availableCameras[0].deviceId : null;
-      if (defaultCamera) {
-        if (cameraSelectRef.current) {
-          cameraSelectRef.current.value = defaultCamera;
+      if (cameras && cameras.length > 0) {
+        const defaultCamera = cameras[0].deviceId;
+        if (defaultCamera) {
+          if (cameraSelectRef.current) {
+            cameraSelectRef.current.value = defaultCamera;
+          }
+          await startCamera(defaultCamera);
         }
-        await startCamera(defaultCamera);
-      } else if (availableCameras.length === 0 && errorOverlayRef.current && !errorOverlayRef.current.classList.contains('show')) {
+      } else {
         showError('Không tìm thấy camera nào trên thiết bị');
       }
 
@@ -771,6 +774,26 @@ const VirtualDanTranh = () => {
           <div ref={errorOverlayRef} className="error-overlay">
             <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>Lỗi:</p>
             <p ref={errorMessageRef}></p>
+            <button 
+              onClick={() => {
+                if (errorOverlayRef.current) {
+                  errorOverlayRef.current.classList.remove('show');
+                }
+                initializeApp();
+              }}
+              style={{
+                marginTop: '15px',
+                padding: '10px 20px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              🔄 Thử lại
+            </button>
           </div>
         </div>
 
