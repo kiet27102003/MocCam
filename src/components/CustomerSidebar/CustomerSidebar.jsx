@@ -12,14 +12,26 @@ import {
   MenuOutlined,
   CloseOutlined,
   PlayCircleOutlined,
-  HeartOutlined
+  HeartOutlined,
+  EditOutlined
 } from '@ant-design/icons';
+import ProfileModal from '../ProfileModal/ProfileModal';
 import './CustomerSidebar.css';
 
 const CustomerSidebar = ({ collapsed, onToggle, isMobile }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [userData, setUserData] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Load user data from localStorage
+  React.useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setUserData(JSON.parse(user));
+    }
+  }, []);
 
   const menuItems = [
     {
@@ -101,6 +113,14 @@ const CustomerSidebar = ({ collapsed, onToggle, isMobile }) => {
     navigate('/');
   };
 
+  const handleProfileClick = () => {
+    setProfileModalVisible(true);
+  };
+
+  const handleProfileUpdated = (updatedUser) => {
+    setUserData(updatedUser);
+  };
+
   return (
     <>
       {/* Mobile overlay */}
@@ -148,15 +168,22 @@ const CustomerSidebar = ({ collapsed, onToggle, isMobile }) => {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="user-info">
+          <div className="user-info" onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
             <div className="user-avatar">
-              <UserOutlined />
+              {userData?.picture ? (
+                <img src={userData.picture} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              ) : (
+                <UserOutlined />
+              )}
             </div>
             {!collapsed && (
               <div className="user-details">
-                <div className="user-name">Customer User</div>
-                <div className="user-role">CUSTOMER</div>
+                <div className="user-name">{userData?.full_name || 'Customer User'}</div>
+                <div className="user-role">{userData?.role?.toUpperCase() || 'CUSTOMER'}</div>
               </div>
+            )}
+            {!collapsed && (
+              <EditOutlined className="edit-profile-icon" />
             )}
           </div>
           <button 
@@ -169,6 +196,14 @@ const CustomerSidebar = ({ collapsed, onToggle, isMobile }) => {
           </button>
         </div>
       </div>
+
+      {/* Profile Modal */}
+      <ProfileModal
+        visible={profileModalVisible}
+        onClose={() => setProfileModalVisible(false)}
+        userData={userData}
+        onProfileUpdated={handleProfileUpdated}
+      />
     </>
   );
 };

@@ -17,11 +17,13 @@ import {
   SafetyOutlined,
   GiftOutlined,
   BellOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useRole } from '../../hooks/useRole';
 import { notificationService } from '../../services/notificationService';
+import ProfileModal from '../ProfileModal/ProfileModal';
 import '../../components/HomeHeader/HomeHeader.css';
 import mainLogo from '/mainLogo.png';
 
@@ -32,6 +34,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
@@ -95,6 +98,17 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handleProfileClick = () => {
+    setProfileModalVisible(true);
+    setIsUserMenuOpen(false);
+  };
+
+  const handleProfileUpdated = (updatedUser) => {
+    setUser(updatedUser);
+    // Update localStorage
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   // Format time ago
   const formatTimeAgo = (dateString) => {
     const now = new Date();
@@ -141,7 +155,7 @@ const Header = () => {
   // Get user menu items based on role
   const getUserMenuItems = () => {
     const baseItems = [
-      { label: 'Hồ sơ cá nhân', path: '/HoSo', icon: <SettingOutlined /> },
+      { label: 'Hồ sơ cá nhân', action: 'profile', icon: <EditOutlined /> },
       { label: 'Gói đăng ký', path: '/subscription', icon: <CrownOutlined /> },
       { label: 'Bảng xếp hạng', path: '/bangxephang', icon: <TrophyOutlined /> },
     ];
@@ -277,19 +291,19 @@ const Header = () => {
             <div className="home-user-menu-container" ref={userMenuRef} onClick={() => setIsUserMenuOpen(prev => !prev)}>
               <div className="home-user-button">
                 <div className="home-user-avatar">
-                  {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <UserOutlined />}
+                  {user.picture ? <img src={user.picture} alt="Avatar" /> : <UserOutlined />}
                 </div>
-                <span className="home-user-name">{user.name || user.email}</span>
+                <span className="home-user-name">{user.full_name || user.name || user.email}</span>
               </div>
 
               {isUserMenuOpen && (
                 <div className="home-user-dropdown">
                   <div className="home-user-info">
                     <div className="home-user-avatar-large">
-                      {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <UserOutlined />}
+                      {user.picture ? <img src={user.picture} alt="Avatar" /> : <UserOutlined />}
                     </div>
                     <div>
-                      <div className="home-user-name-large">{user.name || 'Người dùng'}</div>
+                      <div className="home-user-name-large">{user.full_name || user.name || 'Người dùng'}</div>
                       <div className="home-user-email">{user.email}</div>
                       <div className="home-user-role">{userRole?.toUpperCase()}</div>
                     </div>
@@ -299,7 +313,11 @@ const Header = () => {
                     <button 
                       key={index}
                       onClick={() => { 
-                        navigate(item.path); 
+                        if (item.action === 'profile') {
+                          handleProfileClick();
+                        } else {
+                          navigate(item.path); 
+                        }
                         setIsUserMenuOpen(false); 
                       }} 
                       className="home-dropdown-item"
@@ -351,9 +369,9 @@ const Header = () => {
           <div className="home-dropdown-divider" />
           {user ? (
             <>
-              <button className="home-mobile-link" onClick={() => { navigate('/HoSo'); setIsMenuOpen(false); }}>
-                <SettingOutlined />
-                <span>Hồ sơ</span>
+              <button className="home-mobile-link" onClick={() => { handleProfileClick(); setIsMenuOpen(false); }}>
+                <EditOutlined />
+                <span>Hồ sơ cá nhân</span>
               </button>
               <button className="home-mobile-link logout" onClick={handleLogout}>
                 <LogoutOutlined />
@@ -368,6 +386,14 @@ const Header = () => {
           )}
         </div>
       )}
+
+      {/* Profile Modal */}
+      <ProfileModal
+        visible={profileModalVisible}
+        onClose={() => setProfileModalVisible(false)}
+        userData={user}
+        onProfileUpdated={handleProfileUpdated}
+      />
     </header>
   );
 };

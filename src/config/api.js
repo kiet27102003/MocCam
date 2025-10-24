@@ -34,6 +34,9 @@ export const API_ENDPOINTS = {
   // User endpoints
   USERS: '/users',
   USER_CREATE: '/users/create',
+  USER_UPDATE: '/users/:id',
+  USER_PICTURE: '/users/:id/picture',
+  USER_PASSWORD: '/users/:id/password',
   
   // Voucher endpoints
   VOUCHERS: '/vouchers',
