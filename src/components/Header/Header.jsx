@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { message } from 'antd';
 import {
   CrownOutlined,
   MenuOutlined,
@@ -31,6 +32,9 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { userRole, clearUserRole } = useRole();
+
+  // Configure message
+  const [messageApi, contextHolder] = message.useMessage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -106,6 +110,16 @@ const Header = () => {
     });
     setProfileModalVisible(true);
     setIsUserMenuOpen(false);
+  };
+
+  // Handle navigation click with special case for "Bảng xếp hạng"
+  const handleNavigationClick = (item, e) => {
+    e.preventDefault();
+    if (item.label === 'Bảng xếp hạng') {
+      messageApi.info('Chức năng Bảng xếp hạng đang được phát triển');
+      return;
+    }
+    navigate(item.path);
   };
 
   const handleProfileUpdated = (updatedUser) => {
@@ -198,6 +212,7 @@ const Header = () => {
 
   return (
     <>
+    {contextHolder}
     <header className="home-header">
       <div className="home-header-container">
         {/* Logo */}
@@ -216,10 +231,7 @@ const Header = () => {
               key={item.path}
               href={item.path}
               className={`home-nav-link ${location.pathname === item.path ? 'active' : ''}`}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate(item.path);
-              }}
+              onClick={(e) => handleNavigationClick(item, e)}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -326,6 +338,11 @@ const Header = () => {
                       onClick={() => { 
                         if (item.action === 'profile') {
                           handleProfileClick();
+                        } else if (item.label === 'Bảng xếp hạng') {
+                          message.info({
+                            content: 'Chức năng Bảng xếp hạng đang được phát triển',
+                            duration: 3,
+                          });
                         } else {
                           navigate(item.path); 
                         }
@@ -369,7 +386,14 @@ const Header = () => {
               className={`home-mobile-link ${location.pathname === item.path ? 'active' : ''}`}
               onClick={(e) => {
                 e.preventDefault();
-                navigate(item.path);
+                if (item.label === 'Bảng xếp hạng') {
+                  message.info({
+                    content: 'Chức năng Bảng xếp hạng đang được phát triển',
+                    duration: 3,
+                  });
+                } else {
+                  navigate(item.path);
+                }
                 setIsMenuOpen(false);
               }}
             >
