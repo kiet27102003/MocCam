@@ -116,15 +116,20 @@ export const notificationService = {
   },
 
   // Xóa thông báo
-  deleteNotification: async (notificationId) => {
+  deleteNotification: async (notification_id) => {
     try {
+      console.log('🔵 notificationService.deleteNotification called with:', notification_id);
       const token = localStorage.getItem('token');
+      console.log('🔑 Token available:', !!token);
       
       if (!token) {
         throw new Error('Vui lòng đăng nhập để thực hiện thao tác này');
       }
 
-      const response = await fetch(`${API_BASE_URL}/notifications/${notificationId}`, {
+      const url = `${API_BASE_URL}/notifications/${notification_id}`;
+      console.log('🌐 API URL:', url);
+
+      const response = await fetch(url, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -132,14 +137,18 @@ export const notificationService = {
         }
       });
 
+      console.log('📥 Response status:', response.status, response.statusText);
+
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('❌ API Error response:', errorText);
         throw new Error(`Không thể xóa thông báo: ${errorText}`);
       }
 
+      console.log('✅ API Response: Xóa thông báo thành công');
       return true;
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      console.error('❌ Error deleting notification:', error);
       throw error;
     }
   },

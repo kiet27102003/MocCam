@@ -216,7 +216,7 @@ const AdminDashboard = () => {
       title: 'Tổng người dùng',
       value: stats.totalUsers,
       icon: <UserOutlined />,
-      change: '+12%',
+      // change: '+12%',
       trend: 'up',
       key: 'users'
     },
@@ -224,7 +224,7 @@ const AdminDashboard = () => {
       title: 'Khóa học',
       value: stats.totalCourses,
       icon: <BookOutlined />,
-      change: '+5%',
+      // change: '+5%',
       trend: 'up',
       key: 'courses'
     },
@@ -232,7 +232,7 @@ const AdminDashboard = () => {
       title: 'Doanh thu',
       value: formatCurrency(stats.totalRevenue),
       icon: <DollarOutlined />,
-      change: '+18%',
+      // change: '+18%',
       trend: 'up',
       key: 'totalRevenue'
     },
@@ -240,7 +240,7 @@ const AdminDashboard = () => {
       title: 'Voucher',
       value: stats.totalVouchers,
       icon: <GiftOutlined />,
-      change: '+3%',
+      // change: '+3%',
       trend: 'up',
       key: 'vouchers'
     }

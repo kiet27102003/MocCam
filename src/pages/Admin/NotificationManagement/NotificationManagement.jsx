@@ -43,13 +43,21 @@ const NotificationManagement = () => {
   }, []);
 
   const loadNotifications = async () => {
+    console.log('📥 [LOAD] Bắt đầu tải danh sách thông báo...');
     try {
       setLoading(true);
       setError('');
+      console.log('📤 [LOAD] Gọi API getNotifications...');
       const data = await notificationService.getNotifications();
-      setNotifications(Array.isArray(data) ? data : []);
+      console.log('📥 [LOAD] API response:', data);
+      
+      const notificationsArray = Array.isArray(data) ? data : [];
+      console.log('📊 [LOAD] Số lượng thông báo:', notificationsArray.length);
+      setNotifications(notificationsArray);
+      
+      console.log('✅ [LOAD] Tải danh sách thông báo thành công');
     } catch (err) {
-      console.error('Error loading notifications:', err);
+      console.error('❌ [LOAD] Lỗi khi tải danh sách thông báo:', err);
       setError(err.message || 'Có lỗi xảy ra khi tải danh sách thông báo');
     } finally {
       setLoading(false);
@@ -172,16 +180,35 @@ const NotificationManagement = () => {
     setShowNotificationDetail(true);
   };
 
-  const handleDeleteNotification = async (notificationId) => {
+  const handleDeleteNotification = async (notification_id) => {
+    console.log('🗑️ [DELETE] Bắt đầu xóa thông báo:', {
+      notification_Id: notification_id,
+      timestamp: new Date().toISOString()
+    });
+
     if (window.confirm('Bạn có chắc chắn muốn xóa thông báo này?')) {
+      console.log('✅ [DELETE] User xác nhận xóa thông báo');
+      
       try {
-        await notificationService.deleteNotification(notificationId);
-        loadNotifications();
+        console.log('📤 [DELETE] Gọi API xóa thông báo...');
+        const result = await notificationService.deleteNotification(notification_id);
+        console.log('📥 [DELETE] API response:', result);
+
+        console.log('🔄 [DELETE] Tải lại danh sách thông báo...');
+        await loadNotifications();
+        
+        console.log('✅ [DELETE] Xóa thông báo thành công!');
         alert('Xóa thông báo thành công!');
       } catch (err) {
-        console.error('Error deleting notification:', err);
+        console.error('❌ [DELETE] Lỗi khi xóa thông báo:', {
+          error: err,
+          notificationId: notification_id,
+          timestamp: new Date().toISOString()
+        });
         alert(err.message || 'Có lỗi xảy ra khi xóa thông báo');
       }
+    } else {
+      console.log('❌ [DELETE] User hủy bỏ xóa thông báo');
     }
   };
 
@@ -404,7 +431,7 @@ const NotificationManagement = () => {
                         </button>
                         <button 
                           className="action-btn delete-btn"
-                          onClick={() => handleDeleteNotification(notification.id)}
+                          onClick={() => handleDeleteNotification(notification.notification_id || notification.id)}
                           title="Xóa thông báo"
                         >
                           <DeleteOutlined />
