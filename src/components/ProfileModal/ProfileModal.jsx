@@ -1,369 +1,199 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Modal, 
-  Form, 
-  Input, 
-  Button, 
-  Upload, 
-  DatePicker, 
-  message, 
-  Avatar,
-  Row,
-  Col,
-  Divider,
-  Space
-} from 'antd';
-import { 
-  UserOutlined, 
-  MailOutlined, 
-  PhoneOutlined, 
-  LockOutlined, 
-  CameraOutlined,
-  SaveOutlined,
-  CloseOutlined
-} from '@ant-design/icons';
-import dayjs from 'dayjs';
-import profileService from '../../services/profileService';
+import React, { useState, useEffect } from "react";
+import { DatePicker, message } from "antd";
+import dayjs from "dayjs";
+import axios from "axios";
 import './ProfileModal.css';
 
-const { TextArea } = Input;
-
-const ProfileModal = ({ 
-  visible, 
-  onClose, 
-  userData, 
-  onProfileUpdated 
-}) => {
-  const [form] = Form.useForm();
+const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
+  const [formData, setFormData] = useState({
+    full_name: "",
+    email: "",
+    phone_number: "",
+    date_of_birth: "",
+    picture: "",
+  });
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [previewImage, setPreviewImage] = useState(null);
 
-  // 🔹 Khóa scroll ngoài khi modal mở
+  useEffect(() => {
+    if (userData) {
+      setFormData({
+        full_name: userData.full_name || "",
+        email: userData.email || "",
+        phone_number: userData.phone_number || "",
+        date_of_birth: userData.date_of_birth
+          ? dayjs(userData.date_of_birth)
+          : null,
+        picture: userData.picture || "",
+      });
+    }
+  }, [userData]);
+
+  // Lock body scroll when modal is open
   useEffect(() => {
     if (visible) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.classList.remove('modal-open');
     }
 
+    // Cleanup on unmount
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.classList.remove('modal-open');
     };
   }, [visible]);
 
-  // 🔹 Khởi tạo form với dữ liệu user
-  useEffect(() => {
-    if (visible && userData) {
-      form.setFieldsValue({
-        full_name: userData.full_name || '',
-        email: userData.email || '',
-        phone_number: userData.phone_number || '',
-        date_of_birth: userData.date_of_birth ? dayjs(userData.date_of_birth) : null,
-        bio: userData.bio || ''
-      });
+  const token = localStorage.getItem("token");
 
-      setPreviewImage(userData.picture || null);
-    }
-  }, [visible, userData, form]);
-
-  // 🔹 Submit form
-  const handleSubmit = async (values) => {
-    console.log('🚀 [ProfileModal] Bắt đầu submit form:', {
-      userId: userData?.id,
-      formValues: values,
-      timestamp: new Date().toISOString()
-    });
-
+  // Gửi request cập nhật thông tin user
+  const handleUpdateProfile = async () => {
+    if (!userData?.id) return message.error("Không tìm thấy ID người dùng.");
+    setLoading(true);
     try {
-      setLoading(true);
-      
-      const updateData = {
-        full_name: values.full_name,
-        email: values.email,
-        phone_number: values.phone_number,
-        date_of_birth: values.date_of_birth ? values.date_of_birth.format('YYYY-MM-DD') : null,
-        bio: values.bio
+      const payload = {
+        ...formData,
+        date_of_birth: formData.date_of_birth
+          ? dayjs(formData.date_of_birth).format("YYYY-MM-DD")
+          : null,
       };
-
-      if (values.password && values.password.trim() !== '') {
-        updateData.password = '[HIDDEN]'; // Không log password thực
-        console.log('🔐 [ProfileModal] Có thay đổi mật khẩu');
-      }
-
-      console.log('📤 [ProfileModal] Dữ liệu gửi lên API:', updateData);
-
-      const updatedUser = await profileService.updateProfile(userData.id, updateData);
-      
-      console.log('✅ [ProfileModal] Cập nhật thành công:', {
-        userId: userData.id,
-        updatedFields: Object.keys(updateData),
-        newUserData: updatedUser,
-        timestamp: new Date().toISOString()
+      await axios.put(`/api/users/${userData.id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
-      
-      message.success('Cập nhật hồ sơ thành công!');
-      onProfileUpdated(updatedUser);
+
+      message.success("Cập nhật hồ sơ thành công 🎉");
+      onProfileUpdated({ ...userData, ...payload });
       onClose();
-      
-    } catch (error) {
-      console.error('❌ [ProfileModal] Lỗi khi cập nhật hồ sơ:', {
-        userId: userData?.id,
-        error: error.message,
-        stack: error.stack,
-        timestamp: new Date().toISOString()
-      });
-      message.error(error.message || 'Có lỗi xảy ra khi cập nhật hồ sơ');
+    } catch (err) {
+      console.error("Lỗi cập nhật hồ sơ:", err);
+      message.error(err.response?.data?.message || "Cập nhật thất bại");
     } finally {
       setLoading(false);
-      console.log('🏁 [ProfileModal] Hoàn thành submit form');
     }
   };
 
-  // 🔹 Upload ảnh đại diện
-  const handlePictureUpload = async (file) => {
-    console.log('📸 [ProfileModal] Bắt đầu upload ảnh:', {
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type,
-      userId: userData?.id,
-      timestamp: new Date().toISOString()
-    });
+  const handleChange = (key, value) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
 
-    try {
-      setUploading(true);
-
-      if (!file.type.startsWith('image/')) {
-        console.warn('⚠️ [ProfileModal] File không phải ảnh:', file.type);
-        message.error('Chỉ được tải lên file ảnh!');
-        return false;
-      }
-
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        console.warn('⚠️ [ProfileModal] File quá lớn:', file.size);
-        message.error('Kích thước ảnh không được vượt quá 5MB!');
-        return false;
-      }
-
-      console.log('📤 [ProfileModal] Gửi ảnh lên server...');
-      const result = await profileService.uploadProfilePicture(userData.id, file);
-      
-      console.log('✅ [ProfileModal] Upload ảnh thành công:', {
-        userId: userData.id,
-        newPictureUrl: result.picture,
-        timestamp: new Date().toISOString()
-      });
-
-      setPreviewImage(result.picture);
-      message.success('Cập nhật ảnh đại diện thành công!');
-      
-      return false;
-    } catch (error) {
-      console.error('❌ [ProfileModal] Lỗi khi upload ảnh:', {
-        userId: userData?.id,
-        fileName: file.name,
-        error: error.message,
-        stack: error.stack,
-        timestamp: new Date().toISOString()
-      });
-      message.error(error.message || 'Có lỗi xảy ra khi tải lên ảnh');
-      return false;
-    } finally {
-      setUploading(false);
-      console.log('🏁 [ProfileModal] Hoàn thành upload ảnh');
+  // Handle click outside modal to close
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
     }
   };
 
-  // 🔹 Đóng modal
-  const handleClose = () => {
-    console.log('🚪 [ProfileModal] Đóng modal:', {
-      userId: userData?.id,
-      timestamp: new Date().toISOString()
-    });
-    form.resetFields();
-    setPreviewImage(null);
-    onClose();
-  };
 
   return (
-    <Modal
-      title={(
-        <div className="profile-modal-header">
-          <UserOutlined />
-          <span> Hồ sơ cá nhân</span>
-        </div>
-      )}
-      open={visible}
-      onCancel={handleClose}
-      width={800}
-      className="profile-modal"
-      footer={null}
-      destroyOnClose
-      centered={false}   // ❗ Không căn giữa
-      maskClosable={false}
-      keyboard={false}
-      style={{ top: 30 }} // ❗ Modal nằm lên cao hơn
+    <div 
+      className="modal-overlay" 
+      style={{ display: visible ? 'flex' : 'none' }}
+      onClick={handleOverlayClick}
     >
-      <div className="profile-modal-content">
-        {/* 🔹 Ảnh đại diện */}
-        <div className="profile-picture-section">
-          <div className="avatar-container">
-            <Avatar
-              size={120}
-              src={previewImage}
-              icon={<UserOutlined />}
-              className="profile-avatar"
-            />
-            <Upload
-              showUploadList={false}
-              beforeUpload={handlePictureUpload}
-              accept="image/*"
-              className="avatar-upload"
-            >
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<CameraOutlined />}
-                className="upload-button"
-                loading={uploading}
-              />
-            </Upload>
-          </div>
-          <p className="upload-hint">Nhấn để thay đổi ảnh đại diện</p>
-        </div>
-
-        <Divider />
-
-        {/* 🔹 Form hồ sơ */}
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          className="profile-form"
-        >
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Họ và tên"
-                name="full_name"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập họ và tên!' },
-                  { min: 2, message: 'Họ và tên phải có ít nhất 2 ký tự!' }
-                ]}
-              >
-                <Input
-                  prefix={<UserOutlined />}
-                  placeholder="Nhập họ và tên"
-                />
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập email!' },
-                  { type: 'email', message: 'Email không hợp lệ!' }
-                ]}
-              >
-                <Input
-                  prefix={<MailOutlined />}
-                  placeholder="Nhập email"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Số điện thoại"
-                name="phone_number"
-                rules={[
-                  { required: true, message: 'Vui lòng nhập số điện thoại!' },
-                  { pattern: /^[0-9+\-\s()]+$/, message: 'Số điện thoại không hợp lệ!' }
-                ]}
-              >
-                <Input
-                  prefix={<PhoneOutlined />}
-                  placeholder="Nhập số điện thoại"
-                />
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item
-                label="Ngày sinh"
-                name="date_of_birth"
-              >
-                <DatePicker
-                  placeholder="Chọn ngày sinh"
-                  style={{ width: '100%' }}
-                  format="DD/MM/YYYY"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Mật khẩu mới"
-                name="password"
-                rules={[
-                  { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' }
-                ]}
-              >
-                <Input.Password
-                  prefix={<LockOutlined />}
-                  placeholder="Nhập mật khẩu mới (để trống nếu không đổi)"
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              {/* ❌ Bỏ trường role — người dùng không tự thay đổi được */}
-            </Col>
-          </Row>
-
-          <Form.Item
-            label="Giới thiệu bản thân"
-            name="bio"
+      <div className="modal-content create-user-modal">
+        <div className="modal-header">
+          <h2>
+            👤 Cập nhật hồ sơ cá nhân
+          </h2>
+          <button 
+            className="close-btn"
+            onClick={onClose}
           >
-            <TextArea
-              rows={4}
-              placeholder="Viết vài dòng giới thiệu về bản thân..."
-              maxLength={500}
-              showCount
+            ×
+          </button>
+        </div>
+        
+        <form className="user-form">
+          <div className="form-group">
+            <label htmlFor="full_name">Họ và tên</label>
+            <input
+              type="text"
+              id="full_name"
+              value={formData.full_name}
+              onChange={(e) => handleChange("full_name", e.target.value)}
+              placeholder="Nhập họ và tên"
             />
-          </Form.Item>
-
-          <Divider />
-
-          {/* 🔹 Nút hành động */}
-          <div className="profile-form-actions">
-            <Space>
-              <Button
-                type="default"
-                icon={<CloseOutlined />}
-                onClick={handleClose}
-              >
-                Hủy
-              </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SaveOutlined />}
-                loading={loading}
-              >
-                Lưu thay đổi
-              </Button>
-            </Space>
           </div>
-        </Form>
+
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={formData.email}
+              disabled
+              style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phone_number">Số điện thoại</label>
+            <input
+              type="tel"
+              id="phone_number"
+              value={formData.phone_number}
+              onChange={(e) => handleChange("phone_number", e.target.value)}
+              placeholder="Nhập số điện thoại"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="date_of_birth">Ngày sinh</label>
+            <DatePicker
+              id="date_of_birth"
+              className="w-full"
+              value={formData.date_of_birth}
+              onChange={(date) => handleChange("date_of_birth", date)}
+              format="DD/MM/YYYY"
+              style={{ width: '100%', height: '40px' }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="picture">Ảnh đại diện (URL)</label>
+            <input
+              type="url"
+              id="picture"
+              value={formData.picture}
+              onChange={(e) => handleChange("picture", e.target.value)}
+              placeholder="Nhập URL ảnh đại diện"
+            />
+            {formData.picture && (
+              <img
+                src={formData.picture}
+                alt="Avatar preview"
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  marginTop: '12px',
+                  borderRadius: '50%',
+                  objectFit: 'cover'
+                }}
+              />
+            )}
+          </div>
+          
+          <div className="modal-actions">
+            <button 
+              type="button" 
+              className="cancel-btn"
+              onClick={onClose}
+            >
+              Hủy
+            </button>
+            <button 
+              type="button" 
+              className="submit-btn"
+              onClick={handleUpdateProfile}
+              disabled={loading}
+            >
+              {loading ? 'Đang cập nhật...' : 'Lưu thay đổi'}
+            </button>
+          </div>
+        </form>
       </div>
-    </Modal>
+    </div>
   );
 };
 

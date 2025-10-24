@@ -115,9 +115,9 @@ const Header = () => {
       timestamp: new Date().toISOString()
     });
     setUser(updatedUser);
-    // Update localStorage
     localStorage.setItem('user', JSON.stringify(updatedUser));
   };
+  
 
   // Format time ago
   const formatTimeAgo = (dateString) => {
@@ -197,6 +197,7 @@ const Header = () => {
   const userMenuItems = getUserMenuItems();
 
   return (
+    <>
     <header className="home-header">
       <div className="home-header-container">
         {/* Logo */}
@@ -397,14 +398,16 @@ const Header = () => {
         </div>
       )}
 
-      {/* Profile Modal */}
-      <ProfileModal
-        visible={profileModalVisible}
-        onClose={() => setProfileModalVisible(false)}
-        userData={user}
-        onProfileUpdated={handleProfileUpdated}
-      />
     </header>
+
+    {/* Profile Modal - Outside header to avoid positioning issues */}
+    <ProfileModal
+      visible={profileModalVisible}
+      onClose={() => setProfileModalVisible(false)}
+      userData={user}
+      onProfileUpdated={handleProfileUpdated}
+    />
+    </>
   );
 };
 
