@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   UserOutlined, 
   BookOutlined, 
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
   const [chartData, setChartData] = useState({
     users: Array(12).fill(0),
     courses: Array(12).fill(0),
-    revenue: Array(12).fill(0),
+    totalRevenue: Array(12).fill(0),
     vouchers: Array(12).fill(0)
   });
   const [chartLoading, setChartLoading] = useState(false);
@@ -39,41 +39,92 @@ const AdminDashboard = () => {
     }).format(amount);
   };
 
-  // Generate mock monthly data (replace with real API calls)
-  const generateMonthlyData = (type, year) => {
-    // This is mock data - replace with real API calls to get monthly statistics
-    const baseValues = {
-      users: [15, 23, 18, 31, 25, 28, 35, 42, 38, 45, 52, 48],
-      courses: [3, 5, 2, 7, 4, 6, 8, 9, 7, 11, 13, 10],
-      revenue: [2500000, 3800000, 2200000, 4500000, 3200000, 4100000, 5200000, 6800000, 5900000, 7200000, 8500000, 7800000],
-      vouchers: [2, 4, 1, 6, 3, 5, 7, 8, 6, 9, 12, 10]
-    };
-    
-    // Add some variation based on year (older years have less data)
-    const yearMultiplier = Math.max(0.5, 1 - (new Date().getFullYear() - year) * 0.1);
-    
-    return baseValues[type].map(value => Math.round(value * yearMultiplier));
-  };
 
-  // Fetch chart data for selected type and year
-  const fetchChartData = async (type, year) => {
+  // Fetch chart data for selected type
+  const fetchChartData = useCallback(async (type) => {
     setChartLoading(true);
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const monthlyData = generateMonthlyData(type, year);
-      
-      setChartData(prev => ({
-        ...prev,
-        [type]: monthlyData
-      }));
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+
+      let endpointKey;
+      switch (type) {
+        case 'users':
+          endpointKey = 'DASHBOARD_USER_STATS_BY_MONTH';
+          break;
+        case 'vouchers':
+          endpointKey = 'DASHBOARD_VOUCHER_STATS_BY_MONTH';
+          break;
+        case 'totalRevenue':
+          endpointKey = 'DASHBOARD_REVENUE_STATS_BY_MONTH';
+          break;
+        case 'courses':
+          endpointKey = 'DASHBOARD_LESSON_STATS_BY_MONTH'; // Using lesson stats for courses
+          break;
+        default:
+          endpointKey = null;
+      }
+
+      if (endpointKey) {
+        const response = await fetch(getEndpointUrl(endpointKey), { headers });
+        
+        if (response.ok) {
+          const statsData = await response.json();
+          
+          // Log the API response for debugging
+          console.log(`📊 ${type.toUpperCase()} Stats API Response:`, statsData);
+          
+          // Process the API response to get monthly data
+          const monthlyData = Array(12).fill(0);
+          
+          // If the API returns data in a specific format, process it accordingly
+          if (Array.isArray(statsData)) {
+            statsData.forEach(item => {
+              // Handle different data structures
+              if (item.month >= 1 && item.month <= 12) {
+                // API returns month as 1-12, but array index is 0-11
+                const arrayIndex = item.month - 1;
+                monthlyData[arrayIndex] = item.totalRevenue || item.count || item.amount || 0;
+              } else if (item.month >= 0 && item.month < 12) {
+                // Handle 0-based month indexing
+                monthlyData[item.month] = item.totalRevenue || item.count || item.amount || 0;
+              }
+            });
+          } else if (statsData.monthlyData && Array.isArray(statsData.monthlyData)) {
+            statsData.monthlyData.forEach(item => {
+              if (item.month >= 1 && item.month <= 12) {
+                const arrayIndex = item.month - 1;
+                monthlyData[arrayIndex] = item.totalRevenue || item.count || item.amount || 0;
+              } else if (item.month >= 0 && item.month < 12) {
+                monthlyData[item.month] = item.totalRevenue || item.count || item.amount || 0;
+              }
+            });
+          }
+          
+          setChartData(prev => ({
+            ...prev,
+            [type]: monthlyData
+          }));
+          
+          // Log processed monthly data
+          console.log(`📈 ${type.toUpperCase()} Processed Monthly Data:`, monthlyData);
+        } else {
+          console.error(`Failed to fetch ${type} stats:`, response.statusText);
+          // Keep existing data if API fails
+        }
+      } else {
+        console.warn(`Unknown chart type: ${type}`);
+      }
     } catch (err) {
       console.error('Error fetching chart data:', err);
+      // Keep existing data on error
     } finally {
       setChartLoading(false);
     }
-  };
+  }, []);
 
   // Fetch dashboard statistics
   const fetchDashboardStats = async () => {
@@ -86,32 +137,63 @@ const AdminDashboard = () => {
         'Content-Type': 'application/json'
       };
 
+      // Log API endpoints being called
+      console.log('🚀 FETCHING DASHBOARD DATA FROM:');
+      console.log('User Stats Endpoint:', getEndpointUrl('DASHBOARD_USER_STATS_BY_MONTH'));
+      console.log('Voucher Stats Endpoint:', getEndpointUrl('DASHBOARD_VOUCHER_STATS_BY_MONTH'));
+      console.log('Revenue Stats Endpoint:', getEndpointUrl('DASHBOARD_REVENUE_STATS_BY_MONTH'));
+      console.log('Lesson Stats Endpoint:', getEndpointUrl('DASHBOARD_LESSON_STATS_BY_MONTH'));
+
       // Fetch data from multiple endpoints in parallel
-      const [usersResponse, coursesResponse, vouchersResponse, paymentsResponse] = await Promise.all([
-        fetch(getEndpointUrl('USERS'), { headers }),
-        fetch(getEndpointUrl('COURSES'), { headers }),
-        fetch(getEndpointUrl('VOUCHERS'), { headers }),
-        fetch(getEndpointUrl('PAYMENTS'), { headers })
+      const [userStatsResponse, voucherStatsResponse, revenueStatsResponse, lessonStatsResponse] = await Promise.all([
+        fetch(getEndpointUrl('DASHBOARD_USER_STATS_BY_MONTH'), { headers }),
+        fetch(getEndpointUrl('DASHBOARD_VOUCHER_STATS_BY_MONTH'), { headers }),
+        fetch(getEndpointUrl('DASHBOARD_REVENUE_STATS_BY_MONTH'), { headers }),
+        fetch(getEndpointUrl('DASHBOARD_LESSON_STATS_BY_MONTH'), { headers })
       ]);
 
-      const [users, courses, vouchers, payments] = await Promise.all([
-        usersResponse.ok ? usersResponse.json() : [],
-        coursesResponse.ok ? coursesResponse.json() : [],
-        vouchersResponse.ok ? vouchersResponse.json() : [],
-        paymentsResponse.ok ? paymentsResponse.json() : []
+      const [userStatsData, voucherStatsData, revenueStatsData, lessonStatsData] = await Promise.all([
+        userStatsResponse.ok ? userStatsResponse.json() : null,
+        voucherStatsResponse.ok ? voucherStatsResponse.json() : null,
+        revenueStatsResponse.ok ? revenueStatsResponse.json() : null,
+        lessonStatsResponse.ok ? lessonStatsResponse.json() : null
       ]);
 
-      // Calculate total revenue from payments
-      const totalRevenue = payments.reduce((sum, payment) => {
-        return sum + (payment.amount || 0);
-      }, 0);
+      // Log all dashboard API responses
+      console.log('🔍 DASHBOARD API RESPONSES:');
+      console.log('👥 User Stats:', userStatsData);
+      console.log('🎫 Voucher Stats:', voucherStatsData);
+      console.log('💰 Revenue Stats:', revenueStatsData);
+      console.log('📚 Lesson Stats:', lessonStatsData);
 
-      setStats({
-        totalUsers: Array.isArray(users) ? users.length : 0,
-        totalCourses: Array.isArray(courses) ? courses.length : 0,
-        totalRevenue: totalRevenue,
-        totalVouchers: Array.isArray(vouchers) ? vouchers.length : 0
-      });
+      // Helper function to calculate totals from API data
+      const calculateTotal = (data) => {
+        if (!data) return 0;
+        if (Array.isArray(data)) {
+          return data.reduce((sum, item) => sum + (item.totalRevenue || item.count || item.amount || 0), 0);
+        } else if (data.totalUsers || data.totalVouchers || data.totalRevenue || data.totalLessons) {
+          return data.totalUsers || data.totalVouchers || data.totalRevenue || data.totalLessons || 0;
+        } else if (data.monthlyData && Array.isArray(data.monthlyData)) {
+          return data.monthlyData.reduce((sum, item) => sum + (item.totalRevenue || item.count || item.amount || 0), 0);
+        }
+        return 0;
+      };
+
+      const calculatedStats = {
+        totalUsers: calculateTotal(userStatsData),
+        totalCourses: calculateTotal(lessonStatsData), // Using lesson stats for courses
+        totalRevenue: calculateTotal(revenueStatsData),
+        totalVouchers: calculateTotal(voucherStatsData)
+      };
+
+      // Log calculated stats
+      console.log('📊 CALCULATED DASHBOARD STATS:');
+      console.log('Total Users:', calculatedStats.totalUsers);
+      console.log('Total Courses:', calculatedStats.totalCourses);
+      console.log('Total Revenue:', calculatedStats.totalRevenue);
+      console.log('Total Vouchers:', calculatedStats.totalVouchers);
+
+      setStats(calculatedStats);
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
       setError('Không thể tải dữ liệu dashboard');
@@ -125,8 +207,8 @@ const AdminDashboard = () => {
   }, []);
 
   useEffect(() => {
-    fetchChartData(selectedChart, chartYear);
-  }, [selectedChart, chartYear]);
+    fetchChartData(selectedChart);
+  }, [selectedChart, fetchChartData]);
 
 
   const statCards = [
@@ -152,7 +234,7 @@ const AdminDashboard = () => {
       icon: <DollarOutlined />,
       change: '+18%',
       trend: 'up',
-      key: 'revenue'
+      key: 'totalRevenue'
     },
     {
       title: 'Voucher',
@@ -170,13 +252,16 @@ const AdminDashboard = () => {
 
   const handleYearChange = (year) => {
     setChartYear(year);
+    // Note: API should return data for the requested year
+    // For now, we'll fetch data for the current selected chart
+    fetchChartData(selectedChart);
   };
 
   const getChartTitle = () => {
     const titles = {
       users: 'Thống kê người dùng theo tháng',
       courses: 'Thống kê khóa học theo tháng',
-      revenue: 'Thống kê doanh thu theo tháng',
+      totalRevenue: 'Thống kê doanh thu theo tháng',
       vouchers: 'Thống kê voucher theo tháng'
     };
     return titles[selectedChart] || 'Thống kê theo tháng';

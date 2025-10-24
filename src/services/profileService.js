@@ -17,6 +17,13 @@ class ProfileService {
 
   // Update user profile
   async updateProfile(userId, profileData) {
+    console.log('🌐 [ProfileService] Bắt đầu cập nhật profile:', {
+      userId,
+      updateData: profileData,
+      endpoint: `${this.baseUrl}/${userId}`,
+      timestamp: new Date().toISOString()
+    });
+
     try {
       const response = await fetch(`${this.baseUrl}/${userId}`, {
         method: 'PUT',
@@ -24,19 +31,39 @@ class ProfileService {
         body: JSON.stringify(profileData)
       });
 
+      console.log('📡 [ProfileService] Response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ [ProfileService] API Error:', {
+          status: response.status,
+          error: errorData,
+          timestamp: new Date().toISOString()
+        });
         throw new Error(errorData.message || 'Cập nhật hồ sơ thất bại');
       }
 
       const updatedUser = await response.json();
       
+      console.log('✅ [ProfileService] Cập nhật profile thành công:', {
+        userId,
+        updatedFields: Object.keys(profileData),
+        newUserData: updatedUser,
+        timestamp: new Date().toISOString()
+      });
+      
       // Update localStorage with new user data
       localStorage.setItem('user', JSON.stringify(updatedUser));
+      console.log('💾 [ProfileService] Đã cập nhật localStorage');
       
       return updatedUser;
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('❌ [ProfileService] Lỗi khi cập nhật profile:', {
+        userId,
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
       throw error;
     }
   }
@@ -63,6 +90,15 @@ class ProfileService {
 
   // Upload profile picture
   async uploadProfilePicture(userId, file) {
+    console.log('📸 [ProfileService] Bắt đầu upload ảnh:', {
+      userId,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      endpoint: `${this.baseUrl}/${userId}/picture`,
+      timestamp: new Date().toISOString()
+    });
+
     try {
       const formData = new FormData();
       formData.append('picture', file);
@@ -76,21 +112,41 @@ class ProfileService {
         body: formData
       });
 
+      console.log('📡 [ProfileService] Upload response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ [ProfileService] Upload API Error:', {
+          status: response.status,
+          error: errorData,
+          timestamp: new Date().toISOString()
+        });
         throw new Error(errorData.message || 'Tải lên ảnh đại diện thất bại');
       }
 
       const result = await response.json();
       
+      console.log('✅ [ProfileService] Upload ảnh thành công:', {
+        userId,
+        newPictureUrl: result.picture,
+        timestamp: new Date().toISOString()
+      });
+      
       // Update localStorage with new picture URL
       const userData = JSON.parse(localStorage.getItem('user'));
       userData.picture = result.picture;
       localStorage.setItem('user', JSON.stringify(userData));
+      console.log('💾 [ProfileService] Đã cập nhật localStorage với ảnh mới');
       
       return result;
     } catch (error) {
-      console.error('Error uploading profile picture:', error);
+      console.error('❌ [ProfileService] Lỗi khi upload ảnh:', {
+        userId,
+        fileName: file.name,
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
       throw error;
     }
   }

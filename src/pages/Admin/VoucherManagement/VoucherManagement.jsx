@@ -34,6 +34,7 @@ const VoucherManagement = () => {
         }
       });
       setVouchers(response.data);
+      console.log('Loaded vouchers:', response.data.map(v => ({ voucher_id: v.voucher_id, code: v.code })));
     } catch (err) {
       console.error('Error loading vouchers:', err);
       setError('Không thể tải danh sách voucher');
@@ -88,7 +89,7 @@ const VoucherManagement = () => {
         return;
       }
 
-      await axios.post('/api/vouchers/create', {
+      const response = await axios.post('/api/vouchers/create', {
         description: formData.description,
         discount_value: discountValue,
         max_usage: maxUsage,
@@ -101,6 +102,7 @@ const VoucherManagement = () => {
         }
       });
 
+      console.log('Created voucher with ID:', response.data.voucher_id);
       setSuccess('Tạo voucher thành công!');
       setFormData({
         description: '',
@@ -120,6 +122,7 @@ const VoucherManagement = () => {
   };
 
   const handleEditVoucher = (voucher) => {
+    console.log('Editing voucher with ID:', voucher.voucher_id, 'Code:', voucher.code);
     setEditingVoucher(voucher);
     setFormData({
       description: voucher.description,
@@ -168,7 +171,7 @@ const VoucherManagement = () => {
         return;
       }
 
-      await axios.put(`/api/vouchers/${editingVoucher.id}`, {
+      await axios.put(`/api/vouchers/${editingVoucher.voucher_id}`, {
         description: formData.description,
         discount_value: discountValue,
         max_usage: maxUsage,
@@ -181,6 +184,7 @@ const VoucherManagement = () => {
         }
       });
 
+      console.log('Updated voucher with ID:', editingVoucher.voucher_id);
       setSuccess('Cập nhật voucher thành công!');
       setFormData({
         description: '',
@@ -200,19 +204,21 @@ const VoucherManagement = () => {
     }
   };
 
-  const handleDeleteVoucher = async (voucherId) => {
+  const handleDeleteVoucher = async (voucher_id) => {
+    console.log('Deleting voucher with ID:', voucher_id);
     if (!window.confirm('Bạn có chắc chắn muốn xóa voucher này?')) return;
 
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
 
-      await axios.delete(`/api/vouchers/${voucherId}`, {
+      await axios.delete(`/api/vouchers/${voucher_id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
+      console.log('Successfully deleted voucher with ID:', voucher_id);
       setSuccess('Xóa voucher thành công!');
       loadVouchers();
     } catch (err) {
@@ -299,8 +305,9 @@ const VoucherManagement = () => {
             ) : (
               vouchers.map(voucher => {
                         const status = getVoucherStatus(voucher);
+                        console.log('Rendering voucher:', { voucher_id: voucher.voucher_id, code: voucher.code, description: voucher.description });
                         return (
-                          <tr key={voucher.id}>
+                          <tr key={voucher.voucher_id}>
                             <td>{voucher.description}</td>
                             <td className="code-cell">
                               <span>{voucher.code}</span>
@@ -333,7 +340,7 @@ const VoucherManagement = () => {
                                 </button>
                                 <button
                                   className="action-btn delete-btn"
-                                  onClick={() => handleDeleteVoucher(voucher.id)}
+                                  onClick={() => handleDeleteVoucher(voucher.voucher_id)}
                                   title="Xóa"
                                 >
                                   <DeleteOutlined />

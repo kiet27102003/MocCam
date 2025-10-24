@@ -69,6 +69,12 @@ const ProfileModal = ({
 
   // 🔹 Submit form
   const handleSubmit = async (values) => {
+    console.log('🚀 [ProfileModal] Bắt đầu submit form:', {
+      userId: userData?.id,
+      formValues: values,
+      timestamp: new Date().toISOString()
+    });
+
     try {
       setLoading(true);
       
@@ -81,54 +87,100 @@ const ProfileModal = ({
       };
 
       if (values.password && values.password.trim() !== '') {
-        updateData.password = values.password;
+        updateData.password = '[HIDDEN]'; // Không log password thực
+        console.log('🔐 [ProfileModal] Có thay đổi mật khẩu');
       }
 
+      console.log('📤 [ProfileModal] Dữ liệu gửi lên API:', updateData);
+
       const updatedUser = await profileService.updateProfile(userData.id, updateData);
+      
+      console.log('✅ [ProfileModal] Cập nhật thành công:', {
+        userId: userData.id,
+        updatedFields: Object.keys(updateData),
+        newUserData: updatedUser,
+        timestamp: new Date().toISOString()
+      });
       
       message.success('Cập nhật hồ sơ thành công!');
       onProfileUpdated(updatedUser);
       onClose();
       
     } catch (error) {
+      console.error('❌ [ProfileModal] Lỗi khi cập nhật hồ sơ:', {
+        userId: userData?.id,
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
       message.error(error.message || 'Có lỗi xảy ra khi cập nhật hồ sơ');
     } finally {
       setLoading(false);
+      console.log('🏁 [ProfileModal] Hoàn thành submit form');
     }
   };
 
   // 🔹 Upload ảnh đại diện
   const handlePictureUpload = async (file) => {
+    console.log('📸 [ProfileModal] Bắt đầu upload ảnh:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      userId: userData?.id,
+      timestamp: new Date().toISOString()
+    });
+
     try {
       setUploading(true);
 
       if (!file.type.startsWith('image/')) {
+        console.warn('⚠️ [ProfileModal] File không phải ảnh:', file.type);
         message.error('Chỉ được tải lên file ảnh!');
         return false;
       }
 
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
+        console.warn('⚠️ [ProfileModal] File quá lớn:', file.size);
         message.error('Kích thước ảnh không được vượt quá 5MB!');
         return false;
       }
 
+      console.log('📤 [ProfileModal] Gửi ảnh lên server...');
       const result = await profileService.uploadProfilePicture(userData.id, file);
       
+      console.log('✅ [ProfileModal] Upload ảnh thành công:', {
+        userId: userData.id,
+        newPictureUrl: result.picture,
+        timestamp: new Date().toISOString()
+      });
+
       setPreviewImage(result.picture);
       message.success('Cập nhật ảnh đại diện thành công!');
       
       return false;
     } catch (error) {
+      console.error('❌ [ProfileModal] Lỗi khi upload ảnh:', {
+        userId: userData?.id,
+        fileName: file.name,
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
       message.error(error.message || 'Có lỗi xảy ra khi tải lên ảnh');
       return false;
     } finally {
       setUploading(false);
+      console.log('🏁 [ProfileModal] Hoàn thành upload ảnh');
     }
   };
 
   // 🔹 Đóng modal
   const handleClose = () => {
+    console.log('🚪 [ProfileModal] Đóng modal:', {
+      userId: userData?.id,
+      timestamp: new Date().toISOString()
+    });
     form.resetFields();
     setPreviewImage(null);
     onClose();
@@ -203,7 +255,6 @@ const ProfileModal = ({
                 <Input
                   prefix={<UserOutlined />}
                   placeholder="Nhập họ và tên"
-                  size="large"
                 />
               </Form.Item>
             </Col>
@@ -220,7 +271,6 @@ const ProfileModal = ({
                 <Input
                   prefix={<MailOutlined />}
                   placeholder="Nhập email"
-                  size="large"
                 />
               </Form.Item>
             </Col>
@@ -239,7 +289,6 @@ const ProfileModal = ({
                 <Input
                   prefix={<PhoneOutlined />}
                   placeholder="Nhập số điện thoại"
-                  size="large"
                 />
               </Form.Item>
             </Col>
@@ -251,7 +300,6 @@ const ProfileModal = ({
               >
                 <DatePicker
                   placeholder="Chọn ngày sinh"
-                  size="large"
                   style={{ width: '100%' }}
                   format="DD/MM/YYYY"
                 />
@@ -271,7 +319,6 @@ const ProfileModal = ({
                 <Input.Password
                   prefix={<LockOutlined />}
                   placeholder="Nhập mật khẩu mới (để trống nếu không đổi)"
-                  size="large"
                 />
               </Form.Item>
             </Col>
@@ -301,7 +348,6 @@ const ProfileModal = ({
                 type="default"
                 icon={<CloseOutlined />}
                 onClick={handleClose}
-                size="large"
               >
                 Hủy
               </Button>
@@ -310,7 +356,6 @@ const ProfileModal = ({
                 htmlType="submit"
                 icon={<SaveOutlined />}
                 loading={loading}
-                size="large"
               >
                 Lưu thay đổi
               </Button>

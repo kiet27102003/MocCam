@@ -99,11 +99,21 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
+    console.log('👤 [Header] Mở ProfileModal:', {
+      userId: user?.id,
+      userName: user?.full_name || user?.name,
+      timestamp: new Date().toISOString()
+    });
     setProfileModalVisible(true);
     setIsUserMenuOpen(false);
   };
 
   const handleProfileUpdated = (updatedUser) => {
+    console.log('🔄 [Header] Profile đã được cập nhật:', {
+      userId: updatedUser?.id,
+      updatedFields: Object.keys(updatedUser),
+      timestamp: new Date().toISOString()
+    });
     setUser(updatedUser);
     // Update localStorage
     localStorage.setItem('user', JSON.stringify(updatedUser));

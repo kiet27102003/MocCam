@@ -66,6 +66,13 @@ export const API_ENDPOINTS = {
   // Notification endpoints
   NOTIFICATIONS: '/notifications',
   NOTIFICATION_CREATE: '/notifications/create',
+
+  // Dashboard endpoints
+  DASHBOARD_USER_STATS_BY_MONTH: '/dashboard/user-stats-by-month',
+  DASHBOARD_VOUCHER_STATS_BY_MONTH: '/dashboard/voucher-stats-by-month',
+  DASHBOARD_REVENUE_STATS_BY_MONTH: '/dashboard/revenue-stats-by-month',
+  DASHBOARD_LESSON_STATS_BY_MONTH: '/dashboard/lesson-stats-by-month',
+  
 };
 
 // Helper to get full endpoint URL
