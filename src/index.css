@@ -17,6 +17,16 @@ body {
   background-color: #f9f7f4;
 }
 
+/* VirtualDanTranh specific styles */
+.virtual-dan-tranh-container {
+  background: linear-gradient(135deg, #1e293b 0%, #7e22ce 50%, #1e293b 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
 #root {
   height: 100%;
 }

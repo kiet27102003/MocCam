@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { message } from 'antd';
 import {
   CrownOutlined,
   MenuOutlined,
@@ -33,8 +32,6 @@ const Header = () => {
   const location = useLocation();
   const { userRole, clearUserRole } = useRole();
 
-  // Configure message
-  const [messageApi, contextHolder] = message.useMessage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -112,13 +109,9 @@ const Header = () => {
     setIsUserMenuOpen(false);
   };
 
-  // Handle navigation click with special case for "Bảng xếp hạng"
+  // Handle navigation click
   const handleNavigationClick = (item, e) => {
     e.preventDefault();
-    if (item.label === 'Bảng xếp hạng') {
-      messageApi.info('Chức năng Bảng xếp hạng đang được phát triển');
-      return;
-    }
     navigate(item.path);
   };
 
@@ -151,7 +144,7 @@ const Header = () => {
     const baseItems = [
       { label: 'Trang chủ', path: '/', icon: <HomeOutlined /> },
       { label: 'Chọn nhạc cụ', path: '/home', icon: <SoundOutlined /> },
-      { label: 'Bảng xếp hạng', path: '/bangxephang', icon: <TrophyOutlined /> },
+      { label: 'Gói nâng cấp', path: '/subscription', icon: <CrownOutlined /> },
     ];
 
     // Add role-specific items
@@ -180,8 +173,7 @@ const Header = () => {
   const getUserMenuItems = () => {
     const baseItems = [
       { label: 'Hồ sơ cá nhân', action: 'profile', icon: <EditOutlined /> },
-      { label: 'Gói đăng ký', path: '/subscription', icon: <CrownOutlined /> },
-      { label: 'Bảng xếp hạng', path: '/bangxephang', icon: <TrophyOutlined /> },
+      { label: 'Gói nâng cấp', path: '/subscription', icon: <CrownOutlined /> },
     ];
 
     // Add role-specific menu items
@@ -212,7 +204,6 @@ const Header = () => {
 
   return (
     <>
-    {contextHolder}
     <header className="home-header">
       <div className="home-header-container">
         {/* Logo */}
@@ -338,11 +329,6 @@ const Header = () => {
                       onClick={() => { 
                         if (item.action === 'profile') {
                           handleProfileClick();
-                        } else if (item.label === 'Bảng xếp hạng') {
-                          message.info({
-                            content: 'Chức năng Bảng xếp hạng đang được phát triển',
-                            duration: 3,
-                          });
                         } else {
                           navigate(item.path); 
                         }
@@ -386,14 +372,7 @@ const Header = () => {
               className={`home-mobile-link ${location.pathname === item.path ? 'active' : ''}`}
               onClick={(e) => {
                 e.preventDefault();
-                if (item.label === 'Bảng xếp hạng') {
-                  message.info({
-                    content: 'Chức năng Bảng xếp hạng đang được phát triển',
-                    duration: 3,
-                  });
-                } else {
-                  navigate(item.path);
-                }
+                navigate(item.path);
                 setIsMenuOpen(false);
               }}
             >
