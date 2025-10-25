@@ -1,0 +1,106 @@
+.songlist-page {
+    position: relative;
+    background-color: #faf7f2;
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+  
+  /* Sidebar cố định */
+  .songlist-content {
+    flex: 1;
+    padding: 40px 60px;
+    margin-left: 200px; /* Tùy theo chiều rộng sidebar */
+  }
+  
+  /* Ô tìm kiếm */
+  .song-search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .song-search-bar input {
+    width: 500px;
+    height: 38px;
+    border: 1.5px solid #ccc;
+    border-radius: 20px;
+    padding: 0 16px;
+    font-size: 15px;
+    outline: none;
+  }
+  
+  .song-search-bar input:focus {
+    border-color: #a00000;
+  }
+  
+  .search-btn {
+    background: none;
+    border: none;
+    margin-left: -40px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  /* Lưới bài hát */
+  .song-grid {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  
+  /* Card bài hát */
+  .song-card {
+    width: 200px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: left;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  
+  .song-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .song-image {
+    width: 100%;
+    height: 180px;
+    border-radius: 10px 10px 0 0;
+    background-color: #d9d9d9;
+  }
+  
+  .song-info {
+    padding: 10px 14px 14px;
+  }
+  
+  .song-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  
+  .song-info p {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  /* Đánh giá sao */
+  .rating {
+    display: flex;
+    gap: 2px;
+  }
+  
+  .star {
+    color: #bbb;
+    font-size: 14px;
+  }
+  
+  .star.filled {
+    color: #d98c00;
+  }
+  

@@ -1,0 +1,400 @@
+/* Footer Styles */
+.footer {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  color: #f9fafb;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Main Footer Content */
+.footer-main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  padding: 60px 0 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Brand Section */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.brand-logo:hover {
+  transform: scale(1.05);
+}
+
+.brand-logo img {
+  height: 48px;
+  width: auto;
+  /* Remove filter to show original logo colors */
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f9fafb;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.brand-tagline {
+  font-size: 14px;
+  color: #d1d5db;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+}
+
+.brand-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #d1d5db;
+  margin: 0;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+.contact-icon {
+  color: #a61c1c;
+  font-size: 16px;
+  width: 16px;
+  text-align: center;
+}
+
+/* Links Sections */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.link-section h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 0 0 20px 0;
+  position: relative;
+}
+
+.link-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: #a61c1c;
+  border-radius: 1px;
+}
+
+.link-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-link {
+  background: none;
+  border: none;
+  color: #d1d5db;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 0;
+  position: relative;
+}
+
+.footer-link:hover {
+  color: #a61c1c;
+  transform: translateX(4px);
+}
+
+.footer-link::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: transparent;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.footer-link:hover::before {
+  background-color: #a61c1c;
+}
+
+/* Social Media Section */
+.footer-social {
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(166, 28, 28, 0.05);
+}
+
+.social-content {
+  text-align: center;
+}
+
+.social-content h4 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 0 0 8px 0;
+}
+
+.social-content p {
+  font-size: 16px;
+  color: #d1d5db;
+  margin: 0 0 32px 0;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
+  border-radius: 12px;
+  font-size: 20px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-link:hover {
+  background: var(--social-color);
+  color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: var(--social-color);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  padding: 24px 0;
+}
+
+.footer-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.copyright {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.made-with-love {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.heart-icon {
+  color: #ef4444;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.1);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .footer-links {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 0 16px;
+  }
+  
+  .footer-main {
+    padding: 40px 0 30px;
+    gap: 30px;
+  }
+  
+  .footer-links {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .social-links {
+    gap: 12px;
+  }
+  
+  .social-link {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+  
+  .footer-bottom-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-logo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .brand-logo img {
+    height: 40px;
+  }
+  
+  .brand-name {
+    font-size: 20px;
+  }
+  
+  .social-content h4 {
+    font-size: 20px;
+  }
+  
+  .social-content p {
+    font-size: 14px;
+  }
+  
+  .social-links {
+    gap: 10px;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .footer-social {
+    padding: 30px 0;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .footer {
+    background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .footer-link,
+  .social-link {
+    transition: none;
+  }
+  
+  .heart-icon {
+    animation: none;
+  }
+}
+
+/* Focus states for accessibility */
+.footer-link:focus,
+.social-link:focus {
+  outline: 2px solid #a61c1c;
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .footer {
+    background: #000000;
+    border-top: 2px solid #ffffff;
+  }
+  
+  .footer-link:hover,
+  .social-link:hover {
+    background: #ffffff;
+    color: #000000;
+  }
+}
+
+/* Print styles */
+@media print {
+  .footer {
+    display: none;
+  }
+}

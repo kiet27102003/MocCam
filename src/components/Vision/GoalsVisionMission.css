@@ -1,0 +1,190 @@
+.gvm-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(206, 28, 28, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(206, 28, 28, 0.05) 0%, transparent 50%);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.gvm-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(206, 28, 28, 0.02) 2px,
+      rgba(206, 28, 28, 0.02) 4px
+    );
+  pointer-events: none;
+}
+
+.gvm-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.gvm-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gvm-image {
+  margin-bottom: 30px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Instrument Images */
+.instrument-image {
+  width: 100%;
+  height: 100%;
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s ease;
+}
+
+.instrument-image:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+.gvm-banner {
+  background-color: #ce1c1c;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(206, 28, 28, 0.3);
+  transition: all 0.3s ease;
+}
+
+.gvm-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(206, 28, 28, 0.4);
+}
+
+.gvm-banner span {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.gvm-description {
+  max-width: 300px;
+}
+
+.gvm-description p {
+  font-size: 15px;
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .gvm-container {
+    gap: 40px;
+  }
+  
+  .gvm-image {
+    height: 180px;
+  }
+  
+  .instrument-image {
+    max-width: 180px;
+    max-height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gvm-section {
+    padding: 80px 0;
+  }
+  
+  .gvm-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+  .gvm-image {
+    height: 160px;
+  }
+  
+  .gvm-description {
+    max-width: 500px;
+  }
+  
+  .gvm-description p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gvm-section {
+    padding: 60px 0;
+  }
+  
+  .gvm-container {
+    padding: 0 15px;
+    gap: 40px;
+  }
+  
+  .gvm-image {
+    height: 140px;
+  }
+  
+  .instrument-image {
+    max-width: 140px;
+    max-height: 140px;
+  }
+  
+  .gvm-banner {
+    padding: 10px 20px;
+  }
+  
+  .gvm-banner span {
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gvm-column:nth-child(1) {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.gvm-column:nth-child(2) {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.gvm-column:nth-child(3) {
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}

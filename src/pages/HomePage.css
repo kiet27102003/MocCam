@@ -1,0 +1,34 @@
+.homepage-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f9f7f4;
+}
+
+.homepage-main {
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  padding-top: 70px; /* Account for fixed header */
+}
+
+/* Ensure header displays properly */
+.homepage-layout .home-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .homepage-layout {
+    min-height: 100vh;
+  }
+  
+  .homepage-main {
+    padding-top: 60px; /* Smaller header on mobile */
+  }
+}

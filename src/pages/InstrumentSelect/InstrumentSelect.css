@@ -1,0 +1,464 @@
+/* Instrument Select Page Styles */
+.instrument-select-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f9f7f4 0%, #f3f4f6 100%);
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  flex: 1;
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+  width: 100%;
+}
+
+.page-title .page-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.6;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Instruments Grid */
+.instruments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 80px;
+  margin-bottom: 80px;
+  justify-items: center;
+  padding: 0 60px;
+}
+
+/* Instrument Card */
+.instrument-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  border: 2px solid transparent;
+  overflow: hidden;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.instrument-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.instrument-card.available {
+  border-color: #10b981;
+}
+
+.instrument-card.coming_soon {
+  border-color: #f59e0b;
+  opacity: 0.9;
+}
+
+.instrument-card.coming_soon:hover {
+  opacity: 1;
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+
+.status-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instrument-card.available .status-text {
+  color: #10b981;
+  background-color: #d1fae5;
+}
+
+.instrument-card.coming_soon .status-text {
+  color: #f59e0b;
+  background-color: #fef3c7;
+}
+
+/* Instrument Image Container */
+.instrument-image-container {
+  position: relative;
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.instrument-img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
+.instrument-card:hover .instrument-img {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: rgba(166, 28, 28, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.instrument-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-icon {
+  color: #a61c1c;
+  font-size: 14px;
+}
+
+/* Card Content */
+.card-content {
+  margin-bottom: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.instrument-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.instrument-description {
+  font-size: 1rem;
+  color: #6b7280;
+  text-align: center;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+/* Features List */
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.feature-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #a61c1c;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Card Footer */
+.card-footer {
+  text-align: center;
+}
+
+.select-button {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instrument-card.available .select-button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.instrument-card.available .select-button:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.instrument-card.coming_soon .select-button {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.instrument-card.coming_soon .select-button:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Page Footer */
+.page-footer {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.info-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  border: 2px solid rgba(166, 28, 28, 0.1);
+}
+
+.info-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.info-card p {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .instruments-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    padding: 0 40px;
+  }
+  
+  .instrument-card {
+    padding: 20px;
+  }
+  
+  .instrument-img {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding: 20px 16px;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1.125rem;
+  }
+  
+  .instruments-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 60px;
+    padding: 0 30px;
+  }
+  
+  .instrument-card {
+    padding: 16px;
+  }
+  
+  .instrument-img {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .instrument-name {
+    font-size: 1.125rem;
+  }
+  
+  .instrument-description {
+    font-size: 0.9rem;
+  }
+  
+  .page-footer {
+    margin-top: 40px;
+  }
+  
+  .info-card {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.75rem;
+  }
+  
+  .instruments-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 0 20px;
+  }
+  
+  .instrument-card {
+    padding: 12px;
+  }
+  
+  .instrument-img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .instrument-name {
+    font-size: 1rem;
+  }
+  
+  .instrument-description {
+    font-size: 0.8rem;
+  }
+  
+  .select-button {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .card-header {
+    margin-bottom: 12px;
+  }
+  
+  .instrument-image-container {
+    margin-bottom: 16px;
+    padding: 12px;
+  }
+  
+  .card-content {
+    margin-bottom: 16px;
+  }
+}
+
+/* Animation for card entrance */
+.instrument-card {
+  animation: cardSlideUp 0.6s ease-out;
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for cards */
+.instrument-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.instrument-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.instrument-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .instrument-card,
+  .instrument-img,
+  .select-button {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Focus states for accessibility */
+.instrument-card:focus,
+.select-button:focus {
+  outline: 2px solid #a61c1c;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.instrument-card.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.instrument-card.loading .select-button {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Toast customization */
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: white !important;
+}
+
+.Toastify__toast--info .Toastify__toast-body {
+  color: white !important;
+  font-weight: 600;
+}
