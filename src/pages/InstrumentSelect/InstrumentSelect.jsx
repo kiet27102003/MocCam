@@ -19,7 +19,7 @@ const instruments = [
   { 
     name: "Đàn Tranh", 
     image: "/tranh.png", 
-    route: "/virtual-dantranh",
+    route: "/demo5.html",
     description: "Đàn tranh 16 dây cổ điển",
     status: "available",
     features: ["16 dây chuẩn", "Bài học chi tiết", "Thực hành ngay"]
@@ -48,7 +48,7 @@ const InstrumentSelect = () => {
           color: "white"
         }
       });
-    } else if (instrument.route === "/virtual-dantranh") {
+    } else if (instrument.route === "/demo5.html") {
       // Mở tab mới cho đàn tranh ảo
       window.open(instrument.route, '_blank');
     } else {
