@@ -8,7 +8,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 export default function DanTranh() {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-
+//ttesst
   // Tự bật modal khi trang load
   useEffect(() => {
     setShowModal(true);
