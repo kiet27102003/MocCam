@@ -977,7 +977,7 @@ const VirtualDanTranh = () => {
         <ul>
           <li>• Chọn camera từ dropdown phía trên</li>
           <li>• Đưa bàn tay vào trước camera, đặt tay phía trên các dây đàn</li>
-          <li>• Đàn tranh có 16 dây được hiển thị trên màn hình</li>
+          <li>• Đàn tranh có 17 dây được hiển thị trên màn hình</li>
           <li>• Sử dụng 3 ngón: **Cái, Trỏ, Giữa** để gảy</li>
           <li>• Dây đàn sẽ sáng lên khi bạn gảy trúng</li>
         </ul>
@@ -989,7 +989,7 @@ const VirtualDanTranh = () => {
       </div>
 
       <div className="footer">
-        <p>Công nghệ: MediaPipe Hands | Đàn Tranh 16 dây | Real-time Hand Tracking</p>
+        <p>Công nghệ: MediaPipe Hands | Đàn Tranh 17 dây | Real-time Hand Tracking</p>
       </div>
     </div>
   );
