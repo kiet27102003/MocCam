@@ -13,7 +13,8 @@ import {
   TeamOutlined,
   IdcardOutlined,
   ClockCircleOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  CalendarOutlined
 } from '@ant-design/icons';
 import './UserManagement.css';
 import RoleContext from '../../../contexts/RoleContext';
@@ -39,6 +40,7 @@ const UserManagement = () => {
     password: '',
     full_name: '',
     phone_number: '',
+    date_of_birth: '',
     role: 'customer'
   });
 
@@ -48,6 +50,7 @@ const UserManagement = () => {
     password: '',
     full_name: '',
     phone_number: '',
+    date_of_birth: '',
     role: 'customer'
   });
 
@@ -117,6 +120,7 @@ const UserManagement = () => {
           password: '',
           full_name: '',
           phone_number: '',
+          date_of_birth: '',
           role: 'customer'
         });
         setFormErrors({});
@@ -186,6 +190,15 @@ const UserManagement = () => {
     });
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Chưa cập nhật';
+    return new Date(dateString).toLocaleDateString('vi-VN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
   const handleViewUser = (user) => {
     setSelectedUser(user);
     setShowUserDetail(true);
@@ -198,6 +211,7 @@ const UserManagement = () => {
       password: '', // Don't pre-fill password for security
       full_name: user.full_name || '',
       phone_number: user.phone_number || '',
+      date_of_birth: user.date_of_birth || '',
       role: user.role || 'customer'
     });
     setEditFormErrors({});
@@ -228,6 +242,7 @@ const UserManagement = () => {
         email: editUser.email,
         full_name: editUser.full_name,
         phone_number: editUser.phone_number,
+        date_of_birth: editUser.date_of_birth,
         role: editUser.role
       };
       
@@ -257,6 +272,7 @@ const UserManagement = () => {
           password: '',
           full_name: '',
           phone_number: '',
+          date_of_birth: '',
           role: 'customer'
         });
         setEditFormErrors({});
@@ -556,6 +572,19 @@ const UserManagement = () => {
                   {formErrors.phone_number && <span className="error-text">{formErrors.phone_number}</span>}
                 </div>
               </div>
+
+              <div className="form-group">
+                <label htmlFor="date_of_birth">Ngày sinh</label>
+                <input
+                  type="date"
+                  id="date_of_birth"
+                  name="date_of_birth"
+                  value={newUser.date_of_birth}
+                  onChange={handleInputChange}
+                  className={formErrors.date_of_birth ? 'error' : ''}
+                />
+                {formErrors.date_of_birth && <span className="error-text">{formErrors.date_of_birth}</span>}
+              </div>
               
               <div className="form-group">
                 <label htmlFor="role">Vai trò</label>
@@ -641,6 +670,14 @@ const UserManagement = () => {
                     <div>
                       <label>Số điện thoại</label>
                       <span>{selectedUser.phone_number || 'Chưa cập nhật'}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="detail-item">
+                    <CalendarOutlined />
+                    <div>
+                      <label>Ngày sinh</label>
+                      <span>{formatDate(selectedUser.date_of_birth)}</span>
                     </div>
                   </div>
                   
@@ -758,6 +795,19 @@ const UserManagement = () => {
                   />
                   {editFormErrors.phone_number && <span className="error-text">{editFormErrors.phone_number}</span>}
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="edit_date_of_birth">Ngày sinh</label>
+                <input
+                  type="date"
+                  id="edit_date_of_birth"
+                  name="date_of_birth"
+                  value={editUser.date_of_birth}
+                  onChange={handleEditInputChange}
+                  className={editFormErrors.date_of_birth ? 'error' : ''}
+                />
+                {editFormErrors.date_of_birth && <span className="error-text">{editFormErrors.date_of_birth}</span>}
               </div>
               
               <div className="form-group">

@@ -33,10 +33,43 @@ const VoucherManagement = () => {
           Authorization: `Bearer ${token}`
         }
       });
+      
+      // Log chi tiết API response
+      console.log('=== VOUCHER API RESPONSE ===');
+      console.log('Full response:', response);
+      console.log('Response data:', response.data);
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      // Log từng voucher để xem structure
+      if (response.data && Array.isArray(response.data)) {
+        console.log('Number of vouchers:', response.data.length);
+        response.data.forEach((voucher, index) => {
+          console.log(`Voucher ${index + 1}:`, {
+            voucher_id: voucher.voucher_id,
+            code: voucher.code,
+            description: voucher.description,
+            discount_value: voucher.discount_value,
+            max_usage: voucher.max_usage,
+            used_count: voucher.used_count,
+            start_date: voucher.start_date,
+            end_date: voucher.end_date,
+            created_at: voucher.created_at,
+            updated_at: voucher.updated_at,
+            // Log tất cả keys để xem có field nào khác không
+            all_keys: Object.keys(voucher)
+          });
+        });
+      } else {
+        console.log('Response data is not an array:', typeof response.data);
+      }
+      console.log('=== END VOUCHER API RESPONSE ===');
+      
       setVouchers(response.data);
-      console.log('Loaded vouchers:', response.data.map(v => ({ voucher_id: v.voucher_id, code: v.code })));
     } catch (err) {
       console.error('Error loading vouchers:', err);
+      console.error('Error response:', err.response);
+      console.error('Error message:', err.message);
       setError('Không thể tải danh sách voucher');
     } finally {
       setLoading(false);
@@ -102,7 +135,12 @@ const VoucherManagement = () => {
         }
       });
 
+      // Log chi tiết response khi tạo voucher
+      console.log('=== CREATE VOUCHER API RESPONSE ===');
+      console.log('Full response:', response);
+      console.log('Response data:', response.data);
       console.log('Created voucher with ID:', response.data.voucher_id);
+      console.log('=== END CREATE VOUCHER API RESPONSE ===');
       setSuccess('Tạo voucher thành công!');
       setFormData({
         description: '',
@@ -122,7 +160,15 @@ const VoucherManagement = () => {
   };
 
   const handleEditVoucher = (voucher) => {
-    console.log('Editing voucher with ID:', voucher.voucher_id, 'Code:', voucher.code);
+    console.log('=== EDITING VOUCHER ===');
+    console.log('Full voucher object:', voucher);
+    console.log('Voucher ID:', voucher.voucher_id);
+    console.log('Voucher code:', voucher.code);
+    console.log('Voucher max_usage:', voucher.max_usage);
+    console.log('Voucher used_count:', voucher.used_count);
+    console.log('All voucher keys:', Object.keys(voucher));
+    console.log('=== END EDITING VOUCHER ===');
+    
     setEditingVoucher(voucher);
     setFormData({
       description: voucher.description,
@@ -171,7 +217,7 @@ const VoucherManagement = () => {
         return;
       }
 
-      await axios.put(`/api/vouchers/${editingVoucher.voucher_id}`, {
+      const response = await axios.put(`/api/vouchers/${editingVoucher.voucher_id}`, {
         description: formData.description,
         discount_value: discountValue,
         max_usage: maxUsage,
@@ -184,7 +230,12 @@ const VoucherManagement = () => {
         }
       });
 
+      // Log chi tiết response khi cập nhật voucher
+      console.log('=== UPDATE VOUCHER API RESPONSE ===');
+      console.log('Full response:', response);
+      console.log('Response data:', response.data);
       console.log('Updated voucher with ID:', editingVoucher.voucher_id);
+      console.log('=== END UPDATE VOUCHER API RESPONSE ===');
       setSuccess('Cập nhật voucher thành công!');
       setFormData({
         description: '',
@@ -236,7 +287,7 @@ const VoucherManagement = () => {
 
     if (now < startDate) return { status: 'upcoming', text: 'Sắp diễn ra', color: '#1890ff' };
     if (now > endDate) return { status: 'expired', text: 'Đã hết hạn', color: '#ff4d4f' };
-    if (voucher.usage_count >= voucher.max_usage) return { status: 'exhausted', text: 'Đã hết lượt', color: '#faad14' };
+    if (voucher.used_count >= voucher.max_usage) return { status: 'exhausted', text: 'Đã hết lượt', color: '#faad14' };
     return { status: 'active', text: 'Đang hoạt động', color: '#52c41a' };
   };
 
@@ -305,7 +356,14 @@ const VoucherManagement = () => {
             ) : (
               vouchers.map(voucher => {
                         const status = getVoucherStatus(voucher);
-                        console.log('Rendering voucher:', { voucher_id: voucher.voucher_id, code: voucher.code, description: voucher.description });
+                        console.log('=== RENDERING VOUCHER ===');
+                        console.log('Voucher ID:', voucher.voucher_id);
+                        console.log('Voucher code:', voucher.code);
+                        console.log('Voucher description:', voucher.description);
+                        console.log('Voucher max_usage:', voucher.max_usage);
+                        console.log('Voucher used_count:', voucher.used_count);
+                        console.log('Voucher status:', status);
+                        console.log('=== END RENDERING VOUCHER ===');
                         return (
                           <tr key={voucher.voucher_id}>
                             <td>{voucher.description}</td>
@@ -321,7 +379,7 @@ const VoucherManagement = () => {
                               </button>
                             </td>
                             <td>{voucher.discount_value.toLocaleString('vi-VN')}₫</td>
-                            <td>{voucher.usage_count || 0}/{voucher.max_usage}</td>
+                            <td>{voucher.used_count || 0}/{voucher.max_usage}</td>
                             <td>{formatDate(voucher.start_date)}</td>
                             <td>{formatDate(voucher.end_date)}</td>
                             <td>
