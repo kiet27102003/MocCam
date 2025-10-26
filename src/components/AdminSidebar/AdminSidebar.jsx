@@ -72,10 +72,10 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
       path: '/admin/courses'
     },
     {
-      key: '/admin/notifications',
+      key: '/admin/ai-models',
       icon: <BellOutlined />,
-      label: 'Quản lý thông báo',
-      path: '/admin/notifications'
+      label: 'Quản lý AI Models',
+      path: '/admin/ai-models'
     },
     // {
     //   key: '/admin/reports',

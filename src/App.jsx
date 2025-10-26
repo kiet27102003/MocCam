@@ -27,6 +27,7 @@ import SubscriptionManagement from "./pages/Admin/SubscriptionManagement/Subscri
 import UserSubscriptionManagement from "./pages/Admin/UserSubscriptionManagement/UserSubscriptionManagement";
 import LessonManagement from "./pages/Admin/LessonManagement/LessonManagement";
 import CourseManagement from "./pages/Admin/CourseManagement/CourseManagement";
+import AIModelManagement from "./pages/Admin/AIModelManagement/AIModelManagement";
 import "./pages/Admin/AdminPlaceholder/AdminPlaceholder.css";
 
 // Employee components
@@ -98,6 +99,7 @@ function App() {
           <Route path="/admin/user-subscriptions" element={<ProtectedRoute requiredRole="admin"><Layout><UserSubscriptionManagement /></Layout></ProtectedRoute>} />
         <Route path="/admin/lessons" element={<ProtectedRoute requiredRole="admin"><Layout><LessonManagement /></Layout></ProtectedRoute>} />
           <Route path="/admin/courses" element={<ProtectedRoute requiredRole="admin"><Layout><CourseManagement /></Layout></ProtectedRoute>} />
+          <Route path="/admin/ai-models" element={<ProtectedRoute requiredRole="admin"><Layout><AIModelManagement /></Layout></ProtectedRoute>} />
           <Route path="/admin/notifications" element={<ProtectedRoute requiredRole="admin"><Layout><NotificationManagement /></Layout></ProtectedRoute>} />
           
           {/* Employee Routes */}

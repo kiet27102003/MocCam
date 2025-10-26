@@ -62,6 +62,9 @@ export const API_ENDPOINTS = {
   // Course endpoints
   COURSES: '/courses',
   
+  // AI Model endpoints
+  AI_MODELS: '/ai-models',
+  
   // Payment endpoints
   PAYMENTS: '/payments',
   PAYMENT_CREATE: '/payments/payos/create',
@@ -207,5 +210,33 @@ export const courseApi = {
 
   deleteCourse(id) {
     return axiosClient.delete(`/courses/${id}`);
+  }
+};
+
+// AI Model API functions
+export const aiModelApi = {
+  // Lấy danh sách
+  getAIModels() {
+    return axiosClient.get("/ai-models");
+  },
+
+  // Lấy chi tiết
+  getAIModelById(id) {
+    return axiosClient.get(`/ai-models/${id}`);
+  },
+
+  // Thêm mới (admin/employee)
+  createAIModel(data) {
+    return axiosClient.post("/ai-models/create", data);
+  },
+
+  // Cập nhật
+  updateAIModel(id, data) {
+    return axiosClient.put(`/ai-models/${id}`, data);
+  },
+
+  // Xóa
+  deleteAIModel(id) {
+    return axiosClient.delete(`/ai-models/${id}`);
   }
 };
