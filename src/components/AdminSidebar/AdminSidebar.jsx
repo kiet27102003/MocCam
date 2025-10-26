@@ -62,8 +62,14 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
     {
       key: '/admin/lessons',
       icon: <BookOutlined />,
-      label: 'Quản lý khóa học',
+      label: 'Quản lý bài học',
       path: '/admin/lessons'
+    },
+    {
+      key: '/admin/courses',
+      icon: <BookOutlined />,
+      label: 'Quản lý khóa học',
+      path: '/admin/courses'
     },
     {
       key: '/admin/notifications',
@@ -71,18 +77,18 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
       label: 'Quản lý thông báo',
       path: '/admin/notifications'
     },
-    {
-      key: '/admin/reports',
-      icon: <BarChartOutlined />,
-      label: 'Báo cáo',
-      path: '/admin/reports'
-    },
-    {
-      key: '/admin/settings',
-      icon: <SettingOutlined />,
-      label: 'Cài đặt',
-      path: '/admin/settings'
-    }
+    // {
+    //   key: '/admin/reports',
+    //   icon: <BarChartOutlined />,
+    //   label: 'Báo cáo',
+    //   path: '/admin/reports'
+    // },
+    // {
+    //   key: '/admin/settings',
+    //   icon: <SettingOutlined />,
+    //   label: 'Cài đặt',
+    //   path: '/admin/settings'
+    // }
   ];
 
   const handleMenuClick = (path) => {

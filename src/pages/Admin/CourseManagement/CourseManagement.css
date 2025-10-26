@@ -1,12 +1,12 @@
-/* Lesson Management Styles - Dashboard Style */
-.lesson-management {
+/* Course Management Styles - Dashboard Style */
+.course-management {
   padding: 2rem;
   min-height: 100vh;
   width: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-.lesson-header {
+.course-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,7 +19,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.lesson-header h1 {
+.course-header h1 {
   color: #1a1a1a;
   font-size: 2.5rem;
   font-weight: 700;
@@ -75,7 +75,7 @@
   transform: rotate(90deg);
 }
 
-/* Search and Filter Section */
+/* Search Section */
 .search-filter-section {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -89,7 +89,6 @@
 .search-bar {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 .search-bar input {
@@ -128,50 +127,6 @@
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.filter-controls {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.filter-controls select {
-  flex: 1;
-  min-width: 150px;
-  padding: 10px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-controls select:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.clear-filters-btn {
-  background: #f0f0f0;
-  border: 1px solid #d9d9d9;
-  color: #666;
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.clear-filters-btn:hover {
-  background: #e0e0e0;
-  border-color: #999;
-}
-
 .error-message {
   background-color: #fef2f2;
   color: #dc2626;
@@ -190,7 +145,7 @@
   margin-bottom: 1rem;
 }
 
-.lesson-stats {
+.course-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
@@ -222,19 +177,19 @@
   font-weight: 700;
 }
 
-.lesson-table-container {
+.course-table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
-.lesson-table {
+.course-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.lesson-table th {
+.course-table th {
   background: #fafafa;
   padding: 16px;
   text-align: left;
@@ -243,23 +198,23 @@
   border-bottom: 1px solid #e8e8e8;
 }
 
-.lesson-table td {
+.course-table td {
   padding: 16px;
   border-bottom: 1px solid #f0f0f0;
   vertical-align: middle;
 }
 
-.lesson-table tr:hover {
+.course-table tr:hover {
   background: #fafafa;
 }
 
-.lesson-name {
+.course-name {
   font-weight: 600;
   color: #1a1a1a;
   font-size: 1rem;
 }
 
-.course-name {
+.instructor {
   color: #4f46e5;
   font-weight: 500;
   font-size: 0.9rem;
@@ -274,12 +229,25 @@
   font-size: 0.9rem;
 }
 
+.price {
+  color: #f5222d;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.duration {
+  color: #666;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
 .created-date {
   color: #666;
   font-weight: 500;
   font-size: 0.9rem;
 }
 
+.level-badge,
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -337,7 +305,7 @@
   padding: 40px 16px;
 }
 
-/* Modal Styles - Notification Style */
+/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -361,8 +329,8 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-.create-lesson-modal {
-  max-width: 500px;
+.create-course-modal {
+  max-width: 600px;
 }
 
 .modal-header {
@@ -404,7 +372,7 @@
   color: #666;
 }
 
-.lesson-form {
+.course-form {
   padding: 24px;
 }
 
@@ -516,17 +484,17 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .lesson-management {
+  .course-management {
     padding: 1rem;
   }
   
-  .lesson-header {
+  .course-header {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
   }
   
-  .lesson-header h1 {
+  .course-header h1 {
     font-size: 1.5rem;
     text-align: center;
   }
@@ -542,27 +510,18 @@
   .search-filter-section {
     padding: 1rem;
   }
-
-  .filter-controls {
-    flex-direction: column;
-  }
-
-  .filter-controls select,
-  .clear-filters-btn {
-    width: 100%;
-  }
   
-  .lesson-stats {
+  .course-stats {
     grid-template-columns: 1fr;
   }
   
-  .lesson-table-container {
+  .course-table-container {
     overflow-x: auto;
     padding: 1rem;
   }
   
-  .lesson-table {
-    min-width: 800px;
+  .course-table {
+    min-width: 1000px;
   }
   
   .form-row {
@@ -580,13 +539,13 @@
 }
 
 @media (max-width: 480px) {
-  .lesson-table th,
-  .lesson-table td {
+  .course-table th,
+  .course-table td {
     padding: 0.5rem;
   }
   
-  .lesson-name,
-  .course-name {
+  .course-name,
+  .instructor {
     font-size: 0.9rem;
   }
   
@@ -594,7 +553,7 @@
     max-width: 150px;
   }
   
-  .status-badge {
+  .level-badge {
     font-size: 0.7rem;
   }
 }

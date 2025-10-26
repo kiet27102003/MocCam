@@ -9,13 +9,17 @@ import {
   DollarOutlined,
   CalendarOutlined,
   VideoCameraOutlined,
-  FileImageOutlined
+  FileImageOutlined,
+  SearchOutlined,
+  FilterOutlined,
+  ReloadOutlined
 } from "@ant-design/icons";
-import axios from "axios";
+import { lessonApi } from "../../../config/api";
 import "./LessonManagement.css";
 
 const LessonManagement = () => {
   const [lessons, setLessons] = useState([]);
+  const [filteredLessons, setFilteredLessons] = useState([]);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -24,6 +28,12 @@ const LessonManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingLesson, setEditingLesson] = useState(null);
+
+  // Search and filter states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterInstrument, setFilterInstrument] = useState("");
+  const [filterDifficulty, setFilterDifficulty] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   const [formData, setFormData] = useState({
     course_id: "",
@@ -42,13 +52,11 @@ const LessonManagement = () => {
   const loadLessons = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const res = await axios.get("/api/lessons", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLessons(res.data);
+      const response = await lessonApi.getAllLessons();
+      setLessons(response.data);
+      setFilteredLessons(response.data);
     } catch (err) {
-      setError("Không thể tải danh sách khóa học");
+      setError("Không thể tải danh sách bài học");
       console.error(err);
     } finally {
       setLoading(false);
@@ -57,11 +65,14 @@ const LessonManagement = () => {
 
   const loadCourses = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("/api/courses", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCourses(res.data);
+      // Giả sử có API courses, nếu không có thì có thể hardcode
+      const mockCourses = [
+        { course_id: 1, course_name: "Đàn Tranh Cơ Bản" },
+        { course_id: 2, course_name: "Đàn Tranh Nâng Cao" },
+        { course_id: 3, course_name: "Đàn Nguyệt" },
+        { course_id: 4, course_name: "Đàn Tỳ Bà" }
+      ];
+      setCourses(mockCourses);
     } catch (err) {
       console.error("Error loading courses:", err);
     }
@@ -106,7 +117,6 @@ const LessonManagement = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    const token = localStorage.getItem("token");
 
     const payload = {
       ...formData,
@@ -121,25 +131,11 @@ const LessonManagement = () => {
     try {
       setLoading(true);
       if (isEditing) {
-        await axios.put(
-          `/api/lessons/${editingLesson.lesson_id}`,
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setSuccess("Cập nhật khóa học thành công!");
+        await lessonApi.updateLesson(editingLesson.lesson_id, payload);
+        setSuccess("Cập nhật bài học thành công!");
       } else {
-        await axios.post("/api/lessons/create", payload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        setSuccess("Tạo khóa học thành công!");
+        await lessonApi.createLesson(payload);
+        setSuccess("Tạo bài học thành công!");
       }
       setIsModalOpen(false);
       loadLessons();
@@ -154,17 +150,14 @@ const LessonManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Bạn có chắc muốn xóa khóa học này?")) return;
+    if (!window.confirm("Bạn có chắc muốn xóa bài học này?")) return;
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      await axios.delete(`/api/lessons/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSuccess("Xóa khóa học thành công!");
+      await lessonApi.deleteLesson(id);
+      setSuccess("Xóa bài học thành công!");
       loadLessons();
     } catch (err) {
-      setError("Không thể xóa khóa học.");
+      setError("Không thể xóa bài học.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -187,13 +180,130 @@ const LessonManagement = () => {
     });
   };
 
+  // Search and filter functions
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setFilteredLessons(lessons);
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const response = await lessonApi.searchLessons(searchQuery);
+      setFilteredLessons(response.data);
+    } catch (err) {
+      console.error("Search error:", err);
+      // Fallback to client-side search
+      const filtered = lessons.filter(lesson =>
+        lesson.lesson_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lesson.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredLessons(filtered);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilter = () => {
+    let filtered = [...lessons];
+
+    if (filterInstrument) {
+      filtered = filtered.filter(lesson => 
+        lesson.instrument === filterInstrument
+      );
+    }
+
+    if (filterDifficulty) {
+      filtered = filtered.filter(lesson => 
+        lesson.difficulty === filterDifficulty
+      );
+    }
+
+    if (filterType) {
+      filtered = filtered.filter(lesson => 
+        filterType === 'free' ? lesson.is_free : !lesson.is_free
+      );
+    }
+
+    setFilteredLessons(filtered);
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setFilterInstrument("");
+    setFilterDifficulty("");
+    setFilterType("");
+    setFilteredLessons(lessons);
+  };
+
+  // Effect to apply filters when they change
+  useEffect(() => {
+    handleFilter();
+  }, [filterInstrument, filterDifficulty, filterType, lessons]);
+
   return (
     <div className="lesson-management">
       <div className="lesson-header">
-        <h1>Quản lý Khóa Học</h1>
-        <button className="create-btn" onClick={handleOpenCreate}>
-          <PlusOutlined /> Tạo khóa học mới
-        </button>
+        <h1>Quản lý Bài Học</h1>
+        <div className="header-actions">
+          <button className="reload-btn" onClick={loadLessons} title="Làm mới">
+            <ReloadOutlined />
+          </button>
+          <button className="create-btn" onClick={handleOpenCreate}>
+            <PlusOutlined /> Tạo bài học mới
+          </button>
+        </div>
+      </div>
+
+      {/* Search and Filter Section */}
+      <div className="search-filter-section">
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Tìm kiếm bài học..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          <button className="search-btn" onClick={handleSearch}>
+            <SearchOutlined />
+          </button>
+        </div>
+
+        <div className="filter-controls">
+          <select
+            value={filterInstrument}
+            onChange={(e) => setFilterInstrument(e.target.value)}
+          >
+            <option value="">Tất cả nhạc cụ</option>
+            <option value="dantranh">Đàn Tranh</option>
+            <option value="dannguyet">Đàn Nguyệt</option>
+            <option value="tyba">Đàn Tỳ Bà</option>
+          </select>
+
+          <select
+            value={filterDifficulty}
+            onChange={(e) => setFilterDifficulty(e.target.value)}
+          >
+            <option value="">Tất cả độ khó</option>
+            <option value="beginner">Cơ bản</option>
+            <option value="intermediate">Trung bình</option>
+            <option value="advanced">Nâng cao</option>
+          </select>
+
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="">Tất cả loại</option>
+            <option value="free">Miễn phí</option>
+            <option value="paid">Trả phí</option>
+          </select>
+
+          <button className="clear-filters-btn" onClick={clearFilters}>
+            <FilterOutlined /> Xóa bộ lọc
+          </button>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -201,20 +311,24 @@ const LessonManagement = () => {
 
       <div className="lesson-stats">
         <div className="stat-card">
-          <h3>Tổng khóa học</h3>
+          <h3>Tổng bài học</h3>
           <span className="stat-number">{lessons.length}</span>
         </div>
         <div className="stat-card">
-          <h3>Khóa học miễn phí</h3>
+          <h3>Bài học miễn phí</h3>
           <span className="stat-number">
             {lessons.filter(l => l.is_free).length}
           </span>
         </div>
         <div className="stat-card">
-          <h3>Khóa học trả phí</h3>
+          <h3>Bài học trả phí</h3>
           <span className="stat-number">
             {lessons.filter(l => !l.is_free).length}
           </span>
+        </div>
+        <div className="stat-card">
+          <h3>Kết quả tìm kiếm</h3>
+          <span className="stat-number">{filteredLessons.length}</span>
         </div>
       </div>
 
@@ -235,12 +349,12 @@ const LessonManagement = () => {
               <tr>
                 <td colSpan="6" className="loading-cell">Đang tải...</td>
               </tr>
-            ) : lessons.length === 0 ? (
+            ) : filteredLessons.length === 0 ? (
               <tr>
-                <td colSpan="6" className="empty-cell">Chưa có khóa học nào</td>
+                <td colSpan="6" className="empty-cell">Không tìm thấy bài học nào</td>
               </tr>
             ) : (
-              lessons.map(lesson => {
+              filteredLessons.map(lesson => {
                 const isFree = lesson.is_free;
                 const status = isFree ? 
                   { status: 'free', text: 'Miễn phí', color: '#52c41a' } : 
@@ -258,20 +372,22 @@ const LessonManagement = () => {
                     </td>
                     <td className="created-date">{formatDate(lesson.created_at)}</td>
                     <td>
-                      <button
-                        className="action-btn edit-btn"
-                        onClick={() => handleOpenEdit(lesson)}
-                        title="Chỉnh sửa"
-                      >
-                        <EditOutlined />
-                      </button>
-                      <button
-                        className="action-btn delete-btn"
-                        onClick={() => handleDelete(lesson.lesson_id)}
-                        title="Xóa"
-                      >
-                        <DeleteOutlined />
-                      </button>
+                      <div className="action-buttons-wrapper">
+                        <button
+                          className="action-btn edit-btn"
+                          onClick={() => handleOpenEdit(lesson)}
+                          title="Chỉnh sửa"
+                        >
+                          <EditOutlined />
+                        </button>
+                        <button
+                          className="action-btn delete-btn"
+                          onClick={() => handleDelete(lesson.lesson_id)}
+                          title="Xóa"
+                        >
+                          <DeleteOutlined />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -287,7 +403,7 @@ const LessonManagement = () => {
             <div className="modal-header">
               <h2>
                 <PlusOutlined />
-                {isEditing ? "Chỉnh sửa khóa học" : "Tạo khóa học mới"}
+                {isEditing ? "Chỉnh sửa bài học" : "Tạo bài học mới"}
               </h2>
               <button
                 className="close-btn"
@@ -317,14 +433,14 @@ const LessonManagement = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="lesson_name">Tên khóa học *</label>
+                <label htmlFor="lesson_name">Tên bài học *</label>
                 <input
                   type="text"
                   id="lesson_name"
                   name="lesson_name"
                   value={formData.lesson_name}
                   onChange={handleInputChange}
-                  placeholder="Nhập tên khóa học"
+                  placeholder="Nhập tên bài học"
                   required
                 />
               </div>
@@ -336,7 +452,7 @@ const LessonManagement = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  placeholder="Nhập mô tả khóa học"
+                  placeholder="Nhập mô tả bài học"
                   rows="3"
                 />
               </div>

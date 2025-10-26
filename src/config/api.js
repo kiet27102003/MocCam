@@ -1,3 +1,6 @@
+// Import axios client for API calls
+import axios from 'axios';
+
 // API configuration for different environments
 const getApiBaseUrl = () => {
   // In production (Vercel), use relative URLs that go through the Vite proxy
@@ -85,4 +88,124 @@ export const getEndpointUrl = (endpoint, params = {}) => {
   });
   
   return url;
+};
+
+// Create axios instance with base configuration
+const axiosClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor to add auth token
+axiosClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor for error handling
+axiosClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Lesson API functions
+export const lessonApi = {
+  ping() {
+    return axiosClient.get("/lessons/ping");
+  },
+
+  getAllLessons() {
+    return axiosClient.get("/lessons");
+  },
+
+  getLessonById(id) {
+    return axiosClient.get(`/lessons/${id}`);
+  },
+
+  createLesson(data) {
+    return axiosClient.post("/lessons/create", data);
+  },
+
+  updateLesson(id, data) {
+    return axiosClient.put(`/lessons/${id}`, data);
+  },
+
+  deleteLesson(id) {
+    return axiosClient.delete(`/lessons/${id}`);
+  },
+
+  // Additional lesson APIs
+  getLessonsByCourse(courseId) {
+    return axiosClient.get(`/lessons/course/${courseId}`);
+  },
+
+  getLessonsByInstrument(instrument) {
+    return axiosClient.get(`/lessons/instrument/${instrument}`);
+  },
+
+  getLessonsByDifficulty(difficulty) {
+    return axiosClient.get(`/lessons/difficulty/${difficulty}`);
+  },
+
+  searchLessons(query) {
+    return axiosClient.get(`/lessons/search?q=${encodeURIComponent(query)}`);
+  },
+
+  getLessonProgress(userId, lessonId) {
+    return axiosClient.get(`/lessons/${lessonId}/progress/${userId}`);
+  },
+
+  updateLessonProgress(userId, lessonId, progress) {
+    return axiosClient.post(`/lessons/${lessonId}/progress/${userId}`, progress);
+  },
+
+  getPopularLessons(limit = 10) {
+    return axiosClient.get(`/lessons/popular?limit=${limit}`);
+  },
+
+  getRecentLessons(limit = 10) {
+    return axiosClient.get(`/lessons/recent?limit=${limit}`);
+  }
+};
+
+// Course API functions
+export const courseApi = {
+  getAllCourses() {
+    return axiosClient.get("/courses");
+  },
+
+  getCourseById(id) {
+    return axiosClient.get(`/courses/${id}`);
+  },
+
+  createCourse(data) {
+    return axiosClient.post("/courses/create", data);
+  },
+
+  updateCourse(id, data) {
+    return axiosClient.put(`/courses/${id}`, data);
+  },
+
+  deleteCourse(id) {
+    return axiosClient.delete(`/courses/${id}`);
+  }
 };
