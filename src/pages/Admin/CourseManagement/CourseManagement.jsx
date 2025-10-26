@@ -30,7 +30,7 @@ const CourseManagement = () => {
   const [formData, setFormData] = useState({
     course_name: "",
     description: "",
-    level: "beginner",
+    level: "Beginner",
     is_free: true,
   });
 
@@ -42,11 +42,17 @@ const CourseManagement = () => {
     try {
       setLoading(true);
       const response = await courseApi.getAllCourses();
+      console.log("📦 Course API Response:", response);
+      console.log("📦 Course Data:", response.data);
+      console.log("📦 Number of courses:", response.data?.length);
+      if (response.data && response.data.length > 0) {
+        console.log("📦 First course example:", response.data[0]);
+      }
       setCourses(response.data);
       setFilteredCourses(response.data);
     } catch (err) {
       setError("Không thể tải danh sách khóa học");
-      console.error(err);
+      console.error("❌ Error loading courses:", err);
     } finally {
       setLoading(false);
     }
@@ -64,7 +70,7 @@ const CourseManagement = () => {
     setFormData({
       course_name: "",
       description: "",
-      level: "beginner",
+      level: "Beginner",
       is_free: true,
     });
     setIsEditing(false);
@@ -77,7 +83,7 @@ const CourseManagement = () => {
     setFormData({
       course_name: course.course_name || "",
       description: course.description || "",
-      level: course.level || "beginner",
+      level: course.level || "Beginner",
       is_free: course.is_free !== undefined ? course.is_free : true,
     });
     setIsModalOpen(true);
@@ -100,15 +106,23 @@ const CourseManagement = () => {
     try {
       setLoading(true);
       if (isEditing) {
-        await courseApi.updateCourse(editingCourse.course_id, payload);
+        console.log("📝 Updating course with ID:", editingCourse.course_id);
+        console.log("📝 Update payload:", payload);
+        const response = await courseApi.updateCourse(editingCourse.course_id, payload);
+        console.log("✅ Update response:", response);
         setSuccess("Cập nhật khóa học thành công!");
       } else {
-        await courseApi.createCourse(payload);
+        console.log("➕ Creating new course");
+        console.log("➕ Create payload:", payload);
+        const response = await courseApi.createCourse(payload);
+        console.log("✅ Create response:", response);
         setSuccess("Tạo khóa học thành công!");
       }
       setIsModalOpen(false);
       loadCourses();
     } catch (err) {
+      console.error("❌ Error in submit:", err);
+      console.error("❌ Error response:", err.response);
       setError(
         err.response?.data?.message ||
           "Có lỗi xảy ra khi xử lý yêu cầu."
@@ -147,12 +161,18 @@ const CourseManagement = () => {
 
 
   const getLevelLabel = (level) => {
+    const normalizedLevel = level?.toLowerCase();
+    console.log("🔍 Level received:", level, "→ Normalized:", normalizedLevel);
+    
     const levels = {
-      beginner: { text: 'Cơ bản', color: '#52c41a' },
-      intermediate: { text: 'Trung bình', color: '#1890ff' },
-      advanced: { text: 'Nâng cao', color: '#f5222d' }
+      beginner: { text: 'Beginner', color: '#52c41a' },
+      advanced: { text: 'Advanced', color: '#f5222d' }
     };
-    return levels[level] || { text: 'N/A', color: '#666' };
+    
+    const result = levels[normalizedLevel] || { text: 'N/A', color: '#666' };
+    console.log("🎯 Level result:", result);
+    
+    return result;
   };
 
   // Search function
@@ -164,8 +184,7 @@ const CourseManagement = () => {
     
     const filtered = courses.filter(course =>
       course.course_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.instructor?.toLowerCase().includes(searchQuery.toLowerCase())
+      course.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredCourses(filtered);
   };
@@ -224,10 +243,6 @@ const CourseManagement = () => {
           <span className="stat-number">
             {courses.filter(c => !c.is_free).length}
           </span>
-        </div>
-        <div className="stat-card">
-          <h3>Kết quả tìm kiếm</h3>
-          <span className="stat-number">{filteredCourses.length}</span>
         </div>
       </div>
 
@@ -351,9 +366,8 @@ const CourseManagement = () => {
                   value={formData.level}
                   onChange={handleInputChange}
                 >
-                  <option value="beginner">Cơ bản</option>
-                  <option value="intermediate">Trung bình</option>
-                  <option value="advanced">Nâng cao</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="advanced">Advanced</option>
                 </select>
               </div>
 
