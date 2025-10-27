@@ -13,7 +13,8 @@ import {
   MenuOutlined,
   CloseOutlined,
   CreditCardOutlined,
-  TeamOutlined
+  TeamOutlined,
+  NotificationOutlined
 } from '@ant-design/icons';
 import './AdminSidebar.css';
 
@@ -76,6 +77,12 @@ const AdminSidebar = ({ collapsed, onToggle, isMobile }) => {
       icon: <BellOutlined />,
       label: 'Quản lý AI Models',
       path: '/admin/ai-models'
+    },
+    {
+      key: '/admin/notifications',
+      icon: <NotificationOutlined />,
+      label: 'Quản lý thông báo',
+      path: '/admin/notifications'
     },
     // {
     //   key: '/admin/reports',
