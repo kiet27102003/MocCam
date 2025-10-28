@@ -175,8 +175,8 @@ const LessonManagement = () => {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+      // hour: '2-digit',
+      // minute: '2-digit'
     });
   };
 
@@ -336,7 +336,7 @@ const LessonManagement = () => {
         <table className="lesson-table">
           <thead>
             <tr>
-              <th>Tên khóa học</th>
+              <th>Tên bài học</th>
               <th>Danh mục</th>
               <th>Mô tả</th>
               <th>Loại</th>
@@ -415,7 +415,7 @@ const LessonManagement = () => {
             
             <form onSubmit={handleSubmit} className="lesson-form">
               <div className="form-group">
-                <label htmlFor="course_id">Khóa học *</label>
+                <label htmlFor="course_id">Bài học *</label>
                 <select
                   id="course_id"
                   name="course_id"
@@ -423,7 +423,7 @@ const LessonManagement = () => {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">Chọn khóa học</option>
+                  <option value="">Chọn bài học</option>
                   {courses.map(course => (
                     <option key={course.course_id} value={course.course_id}>
                       {course.course_name}
@@ -490,7 +490,7 @@ const LessonManagement = () => {
                     checked={formData.is_free}
                     onChange={handleInputChange}
                   />
-                  Khóa học miễn phí
+                  Bài học miễn phí
                 </label>
               </div>
 

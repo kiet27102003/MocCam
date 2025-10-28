@@ -294,12 +294,12 @@ const Header = () => {
           )}
 
           {/* Only show upgrade button for customers */}
-          {userRole === 'customer' && (
+          {/* {userRole === 'customer' && (
             <button className="upgrade-button" onClick={() => navigate('/subscription')}>
               <CrownOutlined />
               <span>Nâng cấp</span>
             </button>
-          )}
+          )} */}
 
           {user ? (
             <div className="home-user-menu-container" ref={userMenuRef} onClick={() => setIsUserMenuOpen(prev => !prev)}>
