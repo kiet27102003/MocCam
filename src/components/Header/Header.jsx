@@ -144,7 +144,7 @@ const Header = () => {
     const baseItems = [
       { label: 'Trang chủ', path: '/', icon: <HomeOutlined /> },
       { label: 'Chọn nhạc cụ', path: '/home', icon: <SoundOutlined /> },
-      { label: 'Gói nâng cấp', path: '/subscription', icon: <CrownOutlined /> },
+      { label: 'Nâng cấp', path: '/subscription', icon: <CrownOutlined /> },
     ];
 
     // Add role-specific items
@@ -173,7 +173,7 @@ const Header = () => {
   const getUserMenuItems = () => {
     const baseItems = [
       { label: 'Hồ sơ cá nhân', action: 'profile', icon: <EditOutlined /> },
-      { label: 'Gói nâng cấp', path: '/subscription', icon: <CrownOutlined /> },
+      { label: 'Quản lý gói', path: '/my-subscriptions', icon: <CrownOutlined /> },
     ];
 
     // Add role-specific menu items

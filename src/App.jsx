@@ -14,6 +14,7 @@ import BangXepHang from "./pages/DanTranh/Ranking/BangXepHang";
 import HoSo from "./pages/DanTranh/Profile/HoSo";
 import VirtualDanTranh from "./pages/DanTranh/VirtualDanTranh/VirtualDanTranh";
 import Subscription from "./pages/Subscription/Subscription";
+import MySubscriptions from "./pages/MySubscriptions/MySubscriptions";
 import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel/PaymentCancel";
@@ -84,6 +85,7 @@ function App() {
           <Route path="/bangxephang" element={<BangXepHang />} />
           <Route path="/HoSo" element={<ProtectedRoute><HoSo /></ProtectedRoute>} />
           <Route path="/subscription" element={<Subscription />} />
+          <Route path="/my-subscriptions" element={<ProtectedRoute><MySubscriptions /></ProtectedRoute>} />
           <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancel" element={<PaymentCancel />} />

@@ -35,6 +35,40 @@ export const userSubscriptionService = {
     }
   },
 
+  // Get current user's subscriptions
+  async getMySubscriptions() {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const url = createApiUrl('/user-subscriptions');
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('Request URL:', url);
+      console.log('Response:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching my subscriptions:', error);
+      throw error;
+    }
+  },
+
   // Get a specific user subscription by ID
   async getUserSubscriptionById(id) {
     try {
