@@ -48,10 +48,10 @@ const InstrumentSelect = () => {
           color: "white"
         }
       });
-    } else if (instrument.route === "/demo5.html") {
-      // Mở tab mới cho đàn tranh ảo
+    } else if (instrument.route.includes("demo5.html")) {
       window.open(instrument.route, '_blank');
-    } else {
+    }
+     else {
       navigate(instrument.route);
     }
   };
