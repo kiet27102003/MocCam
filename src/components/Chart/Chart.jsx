@@ -70,7 +70,7 @@ const Chart = ({ data, title, year, onYearChange }) => {
               data: data,
               label: title,
               color: '#667eea',
-              curve: 'natural',
+              curve: 'linear',
               area: true,
             },
           ]}

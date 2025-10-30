@@ -169,15 +169,28 @@ const AdminDashboard = () => {
       // Helper function to calculate totals from API data
       const calculateTotal = (data) => {
         if (!data) return 0;
+      
         if (Array.isArray(data)) {
-          return data.reduce((sum, item) => sum + (item.totalRevenue || item.count || item.amount || 0), 0);
-        } else if (data.totalUsers || data.totalVouchers || data.totalRevenue || data.totalLessons) {
-          return data.totalUsers || data.totalVouchers || data.totalRevenue || data.totalLessons || 0;
-        } else if (data.monthlyData && Array.isArray(data.monthlyData)) {
-          return data.monthlyData.reduce((sum, item) => sum + (item.totalRevenue || item.count || item.amount || 0), 0);
+          return data.reduce((sum, item) => {
+            const value = Number(item.totalRevenue || item.count || item.amount || 0);
+            return sum + (isNaN(value) ? 0 : value);
+          }, 0);
         }
+      
+        if (data.monthlyData && Array.isArray(data.monthlyData)) {
+          return data.monthlyData.reduce((sum, item) => {
+            const value = Number(item.totalRevenue || item.count || item.amount || 0);
+            return sum + (isNaN(value) ? 0 : value);
+          }, 0);
+        }
+      
+        if (typeof data.totalRevenue === 'string' || typeof data.totalRevenue === 'number') {
+          return Number(data.totalRevenue);
+        }
+      
         return 0;
       };
+      
 
       const calculatedStats = {
         totalUsers: calculateTotal(userStatsData),
