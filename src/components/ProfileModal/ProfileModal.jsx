@@ -15,7 +15,8 @@ const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (userData) {
+    if (userData && visible) {
+      console.log("🔄 Load lại thông tin hồ sơ vào form:", userData);
       setFormData({
         full_name: userData.full_name || "",
         email: userData.email || "",
@@ -26,7 +27,18 @@ const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
         picture: userData.picture || "",
       });
     }
-  }, [userData]);
+  }, [userData, visible]);
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return "Chưa có thông tin";
+    try {
+      return dayjs(dateString).format("DD/MM/YYYY");
+    } catch {
+      return dateString;
+    }
+  };
+  
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -46,7 +58,8 @@ const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
 
   // Gửi request cập nhật thông tin user
   const handleUpdateProfile = async () => {
-    if (!userData?.id) return message.error("Không tìm thấy ID người dùng.");
+    const userId = userData?.user_id || userData?.id;
+    if (!userId) return message.error("Không tìm thấy ID người dùng.");
     setLoading(true);
     try {
       const payload = {
@@ -55,11 +68,19 @@ const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
           ? dayjs(formData.date_of_birth).format("YYYY-MM-DD")
           : null,
       };
-      await axios.put(`/api/users/${userData.id}`, payload, {
+      const response = await axios.put(`/api/users/${userId}`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+      });
+
+      console.log('📡 [ProfileModal] Response từ API PUT /api/users/' + userId + ':', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+        data: response.data,
+        timestamp: new Date().toISOString()
       });
 
       message.success("Cập nhật hồ sơ thành công 🎉");
@@ -128,6 +149,28 @@ const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
           </div>
 
           <div className="form-group">
+            <label htmlFor="user_id">ID người dùng</label>
+            <input
+              type="text"
+              id="user_id"
+              value={userData?.user_id || userData?.id || "Chưa có thông tin"}
+              disabled
+              style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="role">Vai trò</label>
+            <input
+              type="text"
+              id="role"
+              value={userData?.role ? userData.role.toUpperCase() : "Chưa có thông tin"}
+              disabled
+              style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="phone_number">Số điện thoại</label>
             <input
               type="tel"
@@ -172,6 +215,17 @@ const ProfileModal = ({ visible, onClose, userData, onProfileUpdated }) => {
                 }}
               />
             )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="created_at">Ngày tạo tài khoản</label>
+            <input
+              type="text"
+              id="created_at"
+              value={formatDate(userData?.created_at)}
+              disabled
+              style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+            />
           </div>
           
           <div className="modal-actions">

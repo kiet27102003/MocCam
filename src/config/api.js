@@ -37,9 +37,8 @@ export const API_ENDPOINTS = {
   // User endpoints
   USERS: '/users',
   USER_CREATE: '/users/create',
+  USER_GET: '/users/:id',
   USER_UPDATE: '/users/:id',
-  USER_PICTURE: '/users/:id/picture',
-  USER_PASSWORD: '/users/:id/password',
   
   // Voucher endpoints
   VOUCHERS: '/vouchers',
@@ -238,5 +237,23 @@ export const aiModelApi = {
   // Xóa
   deleteAIModel(id) {
     return axiosClient.delete(`/ai-models/${id}`);
+  }
+};
+
+// User API functions
+export const userApi = {
+  // Lấy thông tin user theo ID
+  getUserById(id) {
+    return axiosClient.get(`/users/${id}`);
+  },
+
+  // Cập nhật thông tin user
+  updateUser(id, data) {
+    return axiosClient.put(`/users/${id}`, data);
+  },
+
+  // Tạo user mới
+  createUser(data) {
+    return axiosClient.post("/users/create", data);
   }
 };

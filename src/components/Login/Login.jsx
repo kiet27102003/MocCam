@@ -7,6 +7,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useRole } from "../../hooks/useRole";
 import passwordResetService from "../../services/passwordResetService";
+import { userApi } from "../../config/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -89,13 +90,38 @@ const Login = () => {
       debugLog("✅ Đăng nhập thành công", response.data);
 
       if (response.data.token) {
-        debugLog("💾 Lưu token và user data vào localStorage");
+        debugLog("💾 Lưu token vào localStorage");
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
         
-        // Update role context
-        debugLog("🔄 Cập nhật role context", response.data.user.role);
-        updateUserRole(response.data.user.role || 'customer', response.data.user);
+        // Lấy user_id từ response (có thể là id hoặc user_id)
+        const userId = response.data.user?.user_id || response.data.user?.id;
+        
+        if (userId) {
+          debugLog("🔍 Lấy thông tin user đầy đủ từ API", { userId });
+          try {
+            // Gọi API để lấy thông tin user đầy đủ
+            const userResponse = await userApi.getUserById(userId);
+            const fullUserData = userResponse.data;
+            
+            debugLog("✅ Đã lấy thông tin user đầy đủ", fullUserData);
+            
+            // Lưu thông tin user đầy đủ vào localStorage
+            localStorage.setItem("user", JSON.stringify(fullUserData));
+            
+            // Update role context
+            debugLog("🔄 Cập nhật role context", fullUserData.role);
+            updateUserRole(fullUserData.role || 'customer', fullUserData);
+          } catch (userErr) {
+            debugLog("⚠️ Không thể lấy thông tin user đầy đủ, sử dụng data từ login response", userErr);
+            // Fallback: sử dụng data từ login response nếu không lấy được từ API
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            updateUserRole(response.data.user.role || 'customer', response.data.user);
+          }
+        } else {
+          debugLog("⚠️ Không tìm thấy user_id, sử dụng data từ login response");
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          updateUserRole(response.data.user.role || 'customer', response.data.user);
+        }
         
         // Remember me functionality
         if (rememberMe) {
@@ -159,13 +185,38 @@ const Login = () => {
       debugLog("✅ Đăng nhập Google thành công", response.data);
 
       if (response.data.token) {
-        debugLog("💾 Lưu token và user data vào localStorage");
+        debugLog("💾 Lưu token vào localStorage");
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
         
-        // Update role context
-        debugLog("🔄 Cập nhật role context", response.data.user.role);
-        updateUserRole(response.data.user.role || 'customer', response.data.user);
+        // Lấy user_id từ response (có thể là id hoặc user_id)
+        const userId = response.data.user?.user_id || response.data.user?.id;
+        
+        if (userId) {
+          debugLog("🔍 Lấy thông tin user đầy đủ từ API", { userId });
+          try {
+            // Gọi API để lấy thông tin user đầy đủ
+            const userResponse = await userApi.getUserById(userId);
+            const fullUserData = userResponse.data;
+            
+            debugLog("✅ Đã lấy thông tin user đầy đủ", fullUserData);
+            
+            // Lưu thông tin user đầy đủ vào localStorage
+            localStorage.setItem("user", JSON.stringify(fullUserData));
+            
+            // Update role context
+            debugLog("🔄 Cập nhật role context", fullUserData.role);
+            updateUserRole(fullUserData.role || 'customer', fullUserData);
+          } catch (userErr) {
+            debugLog("⚠️ Không thể lấy thông tin user đầy đủ, sử dụng data từ login response", userErr);
+            // Fallback: sử dụng data từ login response nếu không lấy được từ API
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            updateUserRole(response.data.user.role || 'customer', response.data.user);
+          }
+        } else {
+          debugLog("⚠️ Không tìm thấy user_id, sử dụng data từ login response");
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          updateUserRole(response.data.user.role || 'customer', response.data.user);
+        }
         
         // Show success message for new users
         if (response.data.isNewUser) {

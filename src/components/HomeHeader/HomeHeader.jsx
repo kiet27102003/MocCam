@@ -17,6 +17,7 @@ import {
 import './HomeHeader.css';
 import mainLogo from '/mainLogo.png';
 import ProfileModal from '../ProfileModal/ProfileModal';
+import { userApi } from '../../config/api';
 
 const HomeHeader = () => {
   const navigate = useNavigate();
@@ -27,15 +28,66 @@ const HomeHeader = () => {
   const [user, setUser] = useState(null);
   const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
 
+  // Normalize user data để đảm bảo có đầy đủ các field (avatar từ picture, name từ full_name)
+  const normalizeUser = (userData) => {
+    if (!userData) return null;
+    
+    return {
+      ...userData,
+      // Map picture sang avatar nếu chưa có avatar
+      avatar: userData.avatar || userData.picture || '',
+      // Map full_name sang name nếu chưa có name
+      name: userData.name || userData.full_name || userData.email || '',
+      // Giữ lại picture để tương thích ngược
+      picture: userData.picture || userData.avatar || '',
+      // Giữ lại full_name để tương thích ngược
+      full_name: userData.full_name || userData.name || '',
+    };
+  };
+  
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-    if (token && userData) {
-      setUser(JSON.parse(userData));
-    } else {
-      setUser(null);
-    }
+    const loadUserData = async () => {
+      const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("user");
+      
+      if (token && userData) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          const userId = parsedUser?.user_id || parsedUser?.id;
+          
+          // Nếu có user_id, gọi API để lấy thông tin user đầy đủ
+          if (userId) {
+            try {
+              const userResponse = await userApi.getUserById(userId);
+              const fullUserData = userResponse.data;
+              const normalizedUser = normalizeUser(fullUserData);
+              setUser(normalizedUser);
+              localStorage.setItem("user", JSON.stringify(normalizedUser));
+            } catch (apiErr) {
+              // Nếu API fail, sử dụng data từ localStorage
+              console.warn("⚠️ Không thể lấy thông tin user từ API, sử dụng data từ localStorage", apiErr);
+              const normalizedUser = normalizeUser(parsedUser);
+              setUser(normalizedUser);
+            }
+          } else {
+            // Nếu không có user_id, chỉ normalize data từ localStorage
+            const normalizedUser = normalizeUser(parsedUser);
+            setUser(normalizedUser);
+            localStorage.setItem("user", JSON.stringify(normalizedUser));
+          }
+        } catch (parseErr) {
+          console.error("❌ Lỗi parse user data từ localStorage", parseErr);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    loadUserData();
   }, [location]);
+  
 
   const handleLogout = () => {
     clearUserRole();
@@ -61,8 +113,10 @@ const HomeHeader = () => {
   };
 
   const handleProfileUpdated = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    // Normalize user data trước khi lưu
+    const normalizedUser = normalizeUser(updatedUser);
+    setUser(normalizedUser);
+    localStorage.setItem("user", JSON.stringify(normalizedUser));
   };
 
   const navItems = getNavigationItems();
@@ -105,19 +159,19 @@ const HomeHeader = () => {
               <div className="home-user-menu-container" onClick={() => setIsUserMenuOpen(prev => !prev)}>
                 <div className="home-user-button">
                   <div className="home-user-avatar">
-                    {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <UserOutlined />}
+                    {(user.avatar || user.picture) ? <img src={user.avatar || user.picture} alt="Avatar" /> : <UserOutlined />}
                   </div>
-                  <span className="home-user-name">{user.name || user.email}</span>
+                  <span className="home-user-name">{user.name || user.full_name || user.email}</span>
                 </div>
 
                 {isUserMenuOpen && (
                   <div className="home-user-dropdown">
                     <div className="home-user-info">
                       <div className="home-user-avatar-large">
-                        {user.avatar ? <img src={user.avatar} alt="Avatar" /> : <UserOutlined />}
+                        {(user.avatar || user.picture) ? <img src={user.avatar || user.picture} alt="Avatar" /> : <UserOutlined />}
                       </div>
                       <div>
-                        <div className="home-user-name-large">{user.name || 'Người dùng'}</div>
+                        <div className="home-user-name-large">{user.name || user.full_name || 'Người dùng'}</div>
                         <div className="home-user-email">{user.email}</div>
                         <div className="home-user-role">{userRole?.toUpperCase()}</div>
                       </div>

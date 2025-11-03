@@ -41,6 +41,7 @@ const UserManagement = () => {
     full_name: '',
     phone_number: '',
     date_of_birth: '',
+    picture: '',
     role: 'customer'
   });
 
@@ -51,6 +52,7 @@ const UserManagement = () => {
     full_name: '',
     phone_number: '',
     date_of_birth: '',
+    picture: '',
     role: 'customer'
   });
 
@@ -121,6 +123,7 @@ const UserManagement = () => {
           full_name: '',
           phone_number: '',
           date_of_birth: '',
+          picture: '',
           role: 'customer'
         });
         setFormErrors({});
@@ -212,6 +215,7 @@ const UserManagement = () => {
       full_name: user.full_name || '',
       phone_number: user.phone_number || '',
       date_of_birth: user.date_of_birth || '',
+      picture: user.picture || '',
       role: user.role || 'customer'
     });
     setEditFormErrors({});
@@ -273,6 +277,7 @@ const UserManagement = () => {
           full_name: '',
           phone_number: '',
           date_of_birth: '',
+          picture: '',
           role: 'customer'
         });
         setEditFormErrors({});
@@ -445,7 +450,21 @@ const UserManagement = () => {
                       <td className="user-name">
                         <div className="name-cell">
                           <div className="user-avatar">
-                            <UserOutlined />
+                            {(user.picture || user.avatar) ? (
+                              <img 
+                                src={user.picture || user.avatar} 
+                                alt={user.full_name || 'Avatar'}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  const icon = e.target.parentElement.querySelector('.table-avatar-icon');
+                                  if (icon) icon.style.display = 'block';
+                                }}
+                              />
+                            ) : null}
+                            <UserOutlined 
+                              className="table-avatar-icon"
+                              style={{ display: (user.picture || user.avatar) ? 'none' : 'block' }}
+                            />
                           </div>
                           <div className="name-info">
                             <span className="name">{user.full_name || 'Chưa cập nhật'}</span>
@@ -641,7 +660,22 @@ const UserManagement = () => {
             
             <div className="user-detail-content">
               <div className="user-detail-avatar">
-                <UserOutlined />
+                {(selectedUser.picture || selectedUser.avatar) ? (
+                  <img 
+                    src={selectedUser.picture || selectedUser.avatar} 
+                    alt={selectedUser.full_name || 'Avatar'}
+                    onError={(e) => {
+                      // Fallback to icon if image fails to load
+                      e.target.style.display = 'none';
+                      const icon = e.target.parentElement.querySelector('.avatar-icon');
+                      if (icon) icon.style.display = 'block';
+                    }}
+                  />
+                ) : null}
+                <UserOutlined 
+                  className="avatar-icon"
+                  style={{ display: (selectedUser.picture || selectedUser.avatar) ? 'none' : 'block' }} 
+                />
               </div>
               
               <div className="user-detail-info">
@@ -688,6 +722,23 @@ const UserManagement = () => {
                       <span>{selectedUser.role}</span>
                     </div>
                   </div>
+                  
+                  {(selectedUser.picture || selectedUser.avatar) && (
+                    <div className="detail-item">
+                      <UserOutlined />
+                      <div>
+                        <label>Ảnh đại diện</label>
+                        <span style={{ 
+                          wordBreak: 'break-all', 
+                          fontSize: '0.9em',
+                          color: '#1890ff',
+                          fontFamily: 'monospace'
+                        }}>
+                          {selectedUser.picture || selectedUser.avatar}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                   
                   <div className="detail-item">
                     <ClockCircleOutlined />
