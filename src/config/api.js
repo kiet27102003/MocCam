@@ -46,10 +46,13 @@ export const API_ENDPOINTS = {
   VOUCHER_CREATE: '/vouchers/create',
 
   // Subcription endpoints
+
   SUBSCRIPTIONS: '/subscription-plans',
-  SUBSCRIPTION_CREATE: '/subscription-plans/create',
+  SUBSCRIPTIONS_ACTIVE: '/subscription-plans/active',
   SUBSCRIPTION_DETAIL: '/subscription-plans/{id}',
+  SUBSCRIPTION_CREATE: '/subscription-plans/create',
   SUBSCRIPTION_UPDATE: '/subscription-plans/update/{id}',
+  SUBSCRIPTION_DELETE: '/subscription-plans/{id}',
 
   // Lesson endpoints
   LESSONS: '/lessons',
@@ -255,5 +258,38 @@ export const userApi = {
   // Tạo user mới
   createUser(data) {
     return axiosClient.post("/users/create", data);
+  }
+};
+
+// Subscription API functions
+export const subscriptionApi = {
+  // Lấy tất cả gói đăng ký
+  getAllSubscriptions() {
+    return axiosClient.get("/subscription-plans");
+  },
+
+  // Lấy các gói đang hoạt động (dùng cho mọi người xem)
+  getActiveSubscriptions() {
+    return axiosClient.get("/subscription-plans/active");
+  },
+
+  // Lấy chi tiết gói đăng ký theo ID
+  getSubscriptionById(id) {
+    return axiosClient.get(`/subscription-plans/${id}`);
+  },
+
+  // Tạo gói đăng ký mới
+  createSubscription(data) {
+    return axiosClient.post("/subscription-plans/create", data);
+  },
+
+  // Cập nhật gói đăng ký
+  updateSubscription(id, data) {
+    return axiosClient.put(`/subscription-plans/update/${id}`, data);
+  },
+
+  // Xóa gói đăng ký
+  deleteSubscription(id) {
+    return axiosClient.delete(`/subscription-plans/${id}`);
   }
 };

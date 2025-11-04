@@ -13,7 +13,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'https://moccam-backend.onrender.com', 
+        target: 'https://moccam-backend.vercel.app', 
         changeOrigin: true,               
         secure: false,                   
       },

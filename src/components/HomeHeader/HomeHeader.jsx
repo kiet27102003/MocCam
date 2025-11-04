@@ -34,13 +34,9 @@ const HomeHeader = () => {
     
     return {
       ...userData,
-      // Map picture sang avatar nếu chưa có avatar
       avatar: userData.avatar || userData.picture || '',
-      // Map full_name sang name nếu chưa có name
       name: userData.name || userData.full_name || userData.email || '',
-      // Giữ lại picture để tương thích ngược
       picture: userData.picture || userData.avatar || '',
-      // Giữ lại full_name để tương thích ngược
       full_name: userData.full_name || userData.name || '',
     };
   };

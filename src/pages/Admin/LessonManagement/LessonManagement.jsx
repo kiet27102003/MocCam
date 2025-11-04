@@ -14,7 +14,7 @@ import {
   FilterOutlined,
   ReloadOutlined
 } from "@ant-design/icons";
-import { lessonApi } from "../../../config/api";
+import { lessonApi, courseApi } from "../../../config/api";
 import "./LessonManagement.css";
 
 const LessonManagement = () => {
@@ -65,16 +65,11 @@ const LessonManagement = () => {
 
   const loadCourses = async () => {
     try {
-      // Giả sử có API courses, nếu không có thì có thể hardcode
-      const mockCourses = [
-        { course_id: 1, course_name: "Đàn Tranh Cơ Bản" },
-        { course_id: 2, course_name: "Đàn Tranh Nâng Cao" },
-        { course_id: 3, course_name: "Đàn Nguyệt" },
-        { course_id: 4, course_name: "Đàn Tỳ Bà" }
-      ];
-      setCourses(mockCourses);
+      const response = await courseApi.getAllCourses();
+      setCourses(response.data || []);
     } catch (err) {
       console.error("Error loading courses:", err);
+      setError("Không thể tải danh sách khóa học");
     }
   };
 
@@ -415,7 +410,7 @@ const LessonManagement = () => {
             
             <form onSubmit={handleSubmit} className="lesson-form">
               <div className="form-group">
-                <label htmlFor="course_id">Bài học *</label>
+                <label htmlFor="course_id">Khóa học *</label>
                 <select
                   id="course_id"
                   name="course_id"
@@ -423,7 +418,7 @@ const LessonManagement = () => {
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">Chọn bài học</option>
+                  <option value="">Chọn khóa học</option>
                   {courses.map(course => (
                     <option key={course.course_id} value={course.course_id}>
                       {course.course_name}
