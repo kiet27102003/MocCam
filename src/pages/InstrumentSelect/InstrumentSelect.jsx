@@ -48,10 +48,10 @@ const InstrumentSelect = () => {
           color: "white"
         }
       });
-    } else if (instrument.route.includes("demo5.html")) {
-      window.open(instrument.route, '_blank');
-    }
-     else {
+    } else if (instrument.status === "available") {
+      // Navigate to course selection page
+      navigate("/courses");
+    } else {
       navigate(instrument.route);
     }
   };

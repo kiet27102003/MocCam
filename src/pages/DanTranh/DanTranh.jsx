@@ -15,7 +15,7 @@ export default function DanTranh() {
   }, []);
 
   const handleStartLearning = () => {
-    window.open('/virtual-dantranh', '_blank');
+    navigate('/courses');
   };
 
   return (

@@ -18,6 +18,8 @@ import MySubscriptions from "./pages/MySubscriptions/MySubscriptions";
 import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel/PaymentCancel";
+import CourseSelect from "./pages/CourseSelect/CourseSelect";
+import LessonList from "./pages/LessonList/LessonList";
 
 import VoucherManagement from "./pages/Admin/VoucherManagement/VoucherManagement";
 import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
@@ -89,6 +91,8 @@ function App() {
           <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancel" element={<PaymentCancel />} />
+          <Route path="/courses" element={<CourseSelect />} />
+          <Route path="/courses/:courseId/lessons" element={<LessonList />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Layout><AdminDashboard /></Layout></ProtectedRoute>} />

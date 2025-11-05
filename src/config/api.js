@@ -134,8 +134,8 @@ axiosClient.interceptors.response.use(
 
 // Lesson API functions
 export const lessonApi = {
-  ping() {
-    return axiosClient.get("/lessons/ping");
+  getLessonsByCourse(courseId) {
+    return axiosClient.get(`/lessons/course/${courseId}`);
   },
 
   getAllLessons() {
@@ -157,39 +157,6 @@ export const lessonApi = {
   deleteLesson(id) {
     return axiosClient.delete(`/lessons/${id}`);
   },
-
-  // Additional lesson APIs
-  getLessonsByCourse(courseId) {
-    return axiosClient.get(`/lessons/course/${courseId}`);
-  },
-
-  getLessonsByInstrument(instrument) {
-    return axiosClient.get(`/lessons/instrument/${instrument}`);
-  },
-
-  getLessonsByDifficulty(difficulty) {
-    return axiosClient.get(`/lessons/difficulty/${difficulty}`);
-  },
-
-  searchLessons(query) {
-    return axiosClient.get(`/lessons/search?q=${encodeURIComponent(query)}`);
-  },
-
-  getLessonProgress(userId, lessonId) {
-    return axiosClient.get(`/lessons/${lessonId}/progress/${userId}`);
-  },
-
-  updateLessonProgress(userId, lessonId, progress) {
-    return axiosClient.post(`/lessons/${lessonId}/progress/${userId}`, progress);
-  },
-
-  getPopularLessons(limit = 10) {
-    return axiosClient.get(`/lessons/popular?limit=${limit}`);
-  },
-
-  getRecentLessons(limit = 10) {
-    return axiosClient.get(`/lessons/recent?limit=${limit}`);
-  }
 };
 
 // Course API functions
