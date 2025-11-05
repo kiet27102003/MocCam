@@ -46,9 +46,37 @@ const LessonList = () => {
     loadCourseAndLessons();
   }, [loadCourseAndLessons]);
 
-  const handleSelectLesson = (lessonId) => {
-    // Navigate to demo5.html with lesson ID
-    window.open(`/demo5.html?lesson=${lessonId}`, "_blank");
+  // Map lesson name to HTML file
+  const getLessonHtmlFile = (lessonName) => {
+    if (!lessonName) return 'demo5.html';
+    
+    const name = lessonName.toLowerCase().trim();
+    
+    // Mapping lesson names to HTML files
+    const lessonMap = {
+      'trống cơm': 'trongcom.html',
+      'bắc kim thang': 'backimthang.html',
+      'lý cây bông': 'lycaybong.html',
+      'con chim vành khuyên': 'conchimvanhkhuyen.html',
+      'thằng cuội': 'thangcuoi.html',
+      'giấc mơ trưa': 'giacmotrua.html',
+      'tay trái chỉ trăng': 'taytraichitrang.html',
+    };
+    
+    // Check if lesson name matches any key
+    for (const [key, file] of Object.entries(lessonMap)) {
+      if (name.includes(key) || key.includes(name)) {
+        return file;
+      }
+    }
+    
+    // Default to demo5.html if no match
+    return 'demo5.html';
+  };
+
+  const handleSelectLesson = (lesson) => {
+    const htmlFile = getLessonHtmlFile(lesson.lesson_name);
+    window.open(`/${htmlFile}?lesson=${lesson.lesson_id}`, "_blank");
   };
 
   const handleBack = () => {
@@ -121,7 +149,7 @@ const LessonList = () => {
                     <div
                       key={lesson.lesson_id}
                       className="lesson-card"
-                      onClick={() => handleSelectLesson(lesson.lesson_id)}
+                      onClick={() => handleSelectLesson(lesson)}
                     >
                       <div className="lesson-number">{index + 1}</div>
                       
