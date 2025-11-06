@@ -132,7 +132,7 @@ const PaymentManagement = () => {
       const cancelled = payments.filter(p => p?.status === 'cancelled').length;
       const totalAmount = payments
         .filter(p => p?.status === 'success')
-        .reduce((sum, p) => sum + (p?.final_amount || 0), 0);
+        .reduce((sum, p) => sum + parseFloat(p?.final_amount ?? 0), 0);
 
       return { total, success, pending, cancelled, totalAmount };
     } catch (err) {
