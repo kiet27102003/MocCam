@@ -71,17 +71,11 @@ const CourseSelect = () => {
                 onClick={() => handleSelectCourse(course.course_id)}
               >
                 <div className="course-image-container">
-                  {course.picture_url ? (
-                    <img
-                      src={course.picture_url}
-                      alt={course.course_name}
-                      className="course-image"
-                    />
-                  ) : (
-                    <div className="course-image-placeholder">
-                      <BookOutlined style={{ fontSize: 48, color: "#ccc" }} />
-                    </div>
-                  )}
+                  <img
+                    src="/course.jpg"
+                    alt={course.course_name}
+                    className="course-image"
+                  />
                 </div>
                 
                 <div className="course-content">

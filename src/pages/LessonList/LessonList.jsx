@@ -9,6 +9,7 @@ import {
   ArrowLeftOutlined,
   LoadingOutlined,
   VideoCameraOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import "./LessonList.css";
 
@@ -19,6 +20,8 @@ const LessonList = () => {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [selectedPdfUrl, setSelectedPdfUrl] = useState("");
 
   const loadCourseAndLessons = useCallback(async () => {
     try {
@@ -36,7 +39,7 @@ const LessonList = () => {
       }
     } catch (err) {
       console.error("Error loading course and lessons:", err);
-      setError("Không thể tải thông tin khóa học và bài học");
+      setError("Bạn chưa đăng kí gói, vui lòng đăng kí để trải nghiệm tốt hơn nhé");
     } finally {
       setLoading(false);
     }
@@ -45,6 +48,32 @@ const LessonList = () => {
   useEffect(() => {
     loadCourseAndLessons();
   }, [loadCourseAndLessons]);
+
+  // Check if lesson should show PDF modal
+  const isPdfLesson = (lessonName) => {
+    if (!lessonName) return false;
+    const name = lessonName.toLowerCase().trim();
+    // Match lesson about hand position
+    return name.includes('giới thiệu') && 
+           (name.includes('tư thế') || name.includes('đặt tay')) &&
+           name.includes('đàn tranh');
+  };
+
+  // Map lesson name to PDF file
+  const getLessonPdfFile = (lessonName) => {
+    if (!lessonName) return null;
+    const name = lessonName.toLowerCase().trim();
+    
+    // Mapping lesson names to PDF files
+    // Match lesson about hand position on đàn tranh
+    if (name.includes('giới thiệu') && 
+        (name.includes('tư thế') || name.includes('đặt tay')) &&
+        name.includes('đàn tranh')) {
+      return '/baihoc/Bài 1.pdf';
+    }
+    
+    return null;
+  };
 
   // Map lesson name to HTML file
   const getLessonHtmlFile = (lessonName) => {
@@ -75,8 +104,24 @@ const LessonList = () => {
   };
 
   const handleSelectLesson = (lesson) => {
+    // Check if this is a PDF lesson
+    if (isPdfLesson(lesson.lesson_name)) {
+      const pdfFile = getLessonPdfFile(lesson.lesson_name);
+      if (pdfFile) {
+        setSelectedPdfUrl(pdfFile);
+        setIsPdfModalOpen(true);
+        return;
+      }
+    }
+    
+    // Otherwise, open HTML file
     const htmlFile = getLessonHtmlFile(lesson.lesson_name);
     window.open(`/${htmlFile}?lesson=${lesson.lesson_id}`, "_blank");
+  };
+
+  const handleClosePdfModal = () => {
+    setIsPdfModalOpen(false);
+    setSelectedPdfUrl("");
   };
 
   const handleBack = () => {
@@ -104,13 +149,11 @@ const LessonList = () => {
             {course && (
               <div className="course-header">
                 <div className="course-header-content">
-                  {course.picture_url && (
-                    <img
-                      src={course.picture_url}
-                      alt={course.course_name}
-                      className="course-header-image"
-                    />
-                  )}
+                  <img
+                    src="/course.jpg"
+                    alt={course.course_name}
+                    className="course-header-image"
+                  />
                   <div className="course-header-info">
                     <h1 className="course-title">{course.course_name}</h1>
                     {course.description && (
@@ -123,9 +166,6 @@ const LessonList = () => {
                         <span className="course-level-badge">
                           {course.level}
                         </span>
-                      )}
-                      {course.is_free && (
-                        <span className="course-free-badge">Miễn phí</span>
                       )}
                     </div>
                   </div>
@@ -154,19 +194,11 @@ const LessonList = () => {
                       <div className="lesson-number">{index + 1}</div>
                       
                       <div className="lesson-image-container">
-                        {lesson.picture_url ? (
-                          <img
-                            src={lesson.picture_url}
-                            alt={lesson.lesson_name}
-                            className="lesson-image"
-                          />
-                        ) : (
-                          <div className="lesson-image-placeholder">
-                            <VideoCameraOutlined
-                              style={{ fontSize: 32, color: "#ccc" }}
-                            />
-                          </div>
-                        )}
+                        <img
+                          src="/course.jpg"
+                          alt={lesson.lesson_name}
+                          className="lesson-image"
+                        />
                       </div>
 
                       <div className="lesson-content">
@@ -179,11 +211,6 @@ const LessonList = () => {
                           </p>
                         )}
 
-                        <div className="lesson-meta">
-                          {lesson.is_free && (
-                            <span className="lesson-free">Miễn phí</span>
-                          )}
-                        </div>
                       </div>
 
                       <div className="lesson-footer">
@@ -201,6 +228,27 @@ const LessonList = () => {
       </div>
 
       <Footer />
+
+      {/* PDF Modal */}
+      {isPdfModalOpen && (
+        <div className="pdf-modal-overlay" onClick={handleClosePdfModal}>
+          <div className="pdf-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="pdf-modal-header">
+              <h3>Xem tài liệu</h3>
+              <button className="pdf-modal-close" onClick={handleClosePdfModal}>
+                <CloseOutlined />
+              </button>
+            </div>
+            <div className="pdf-modal-body">
+              <embed
+                src={`${selectedPdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                type="application/pdf"
+                className="pdf-viewer"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
