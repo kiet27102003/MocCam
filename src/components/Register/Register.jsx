@@ -31,6 +31,49 @@ const Register = () => {
     return phoneRegex.test(phone);
   };
 
+  const validateFullName = (fullName) => {
+    const cleaned = fullName.trim();
+    
+    // Kiểm tra độ dài tối thiểu
+    if (cleaned.length < 3) {
+      return false;
+    }
+    
+    // Chỉ cho phép chữ cái (bao gồm tiếng Việt có dấu), khoảng trắng, và dấu gạch ngang
+    // Pattern này cho phép: a-z, A-Z, các ký tự tiếng Việt có dấu, khoảng trắng, dấu gạch ngang
+    const nameRegex = /^[a-zA-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ\s-]+$/;
+    
+    if (!nameRegex.test(cleaned)) {
+      return false;
+    }
+    
+    // Tách thành các từ và lọc bỏ từ rỗng
+    const words = cleaned.split(/\s+/).filter(word => word.length > 0);
+    
+    // Phải có ít nhất 2 từ
+    if (words.length < 2) {
+      return false;
+    }
+    
+    // Mỗi từ phải:
+    // - Có ít nhất 2 ký tự
+    // - Chứa ít nhất 1 chữ cái (không chỉ số hoặc ký tự đặc biệt)
+    const letterRegex = /[a-zA-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƯỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/;
+    
+    for (const word of words) {
+      // Mỗi từ phải có ít nhất 2 ký tự
+      if (word.length < 2) {
+        return false;
+      }
+      // Mỗi từ phải chứa ít nhất 1 chữ cái
+      if (!letterRegex.test(word)) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -50,6 +93,12 @@ const Register = () => {
     // Validation
     if (!formData.full_name || !formData.email || !formData.password || !formData.phone_number) {
       setError("Vui lòng nhập đầy đủ thông tin!");
+      setLoading(false);
+      return;
+    }
+
+    if (!validateFullName(formData.full_name)) {
+      setError("Họ và tên không hợp lệ! Vui lòng nhập đầy đủ họ và tên (ít nhất 2 từ, mỗi từ có ít nhất 2 ký tự và chứa chữ cái).");
       setLoading(false);
       return;
     }

@@ -16,6 +16,7 @@ import {
   ExclamationCircleOutlined,
   CalendarOutlined
 } from '@ant-design/icons';
+import { message } from 'antd';
 import './UserManagement.css';
 import RoleContext from '../../../contexts/RoleContext';
 import { ROLES } from '../../../constants/roleConstants';
@@ -328,6 +329,18 @@ const UserManagement = () => {
         },
       });
 
+      // Đọc response data
+      let responseData = {};
+      const responseText = await response.text();
+      if (responseText) {
+        try {
+          responseData = JSON.parse(responseText);
+        } catch (parseError) {
+          // Response không phải JSON, sử dụng text làm message
+          responseData = { message: responseText };
+        }
+      }
+
       if (response.ok) {
         // Remove user from the list
         setUsers(users.filter(user => 
@@ -335,13 +348,27 @@ const UserManagement = () => {
         ));
         setShowDeleteConfirm(false);
         setUserToDelete(null);
+        message.success(responseData.message || '✅ Xóa người dùng thành công');
       } else {
-        console.error('Failed to delete user');
-        // You can add error handling here (show notification, etc.)
+        const errorMessage = responseData.message || `Không thể xóa người dùng (${response.status})`;
+        const errorReason = responseData.reason || '';
+        
+        console.error('Failed to delete user:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData: responseData
+        });
+        
+        // Hiển thị error message chi tiết từ backend
+        if (errorReason) {
+          message.error(`${errorMessage}. ${errorReason}`, 5);
+        } else {
+          message.error(errorMessage, 5);
+        }
       }
     } catch (error) {
       console.error('Error deleting user:', error);
-      // You can add error handling here (show notification, etc.)
+      message.error('Đã xảy ra lỗi khi xóa người dùng. Vui lòng thử lại.');
     } finally {
       setDeleting(false);
     }

@@ -313,7 +313,19 @@
                 <button id="startSongBtn">▶️ Bắt đầu</button>
                 <button id="stopSongBtn" disabled>⏹ Dừng</button>
             </div>
+            <div id="speedControl" style="margin-top: 10px;">
+                <label for="speedSelect">Tốc độ: </label>
+                <select id="speedSelect">
+                    <option value="0.75">0.75x</option>
+                    <option value="1.0" selected>1.0x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2.0">2.0x</option>
+                </select>
+            </div>
+
         </div>
+
 
         <div class="status-bar">
             <div class="status-card">
@@ -419,6 +431,7 @@
         // === MỚI: BIẾN RHYTHM GAME ===
         let currentSong = null;
         let isPlayingSong = false;
+        let songSpeed = 1.0; // tốc độ bài hát, 1.0 = bình thường
         let isGameOver = false;
         let songStartTime = 0;
         let fallingNotes = []; // các nốt đang rơi
@@ -755,7 +768,7 @@
         // === NỐT CHẠY NGANG (TỪ TRÁI → PHẢI) ===
         function drawFallingNotes(ctx, width, height) {
             if (!isPlayingSong) return;
-            const elapsed = performance.now() - songStartTime;
+            const elapsed = (performance.now() - songStartTime) * songSpeed;
 
             // Tốc độ chạy ngang (pixel mỗi ms)
             const speedX = width * 0.00025;
@@ -1325,7 +1338,14 @@
                 showError('Lỗi khởi tạo: ' + err.message);
             }
         }
+        // === GẮN SỰ KIỆN THAY ĐỔI TỐC ĐỘ BÀI HÁT ===
+        document.getElementById('speedSelect').addEventListener('change', (e) => {
+            songSpeed = parseFloat(e.target.value);
+            console.log("Tốc độ bài hát:", songSpeed + "x");
+        });
 
+
+        // === GẮN SỰ KIỆN CHUYỂN CAMERA ===
         switchCameraBtn.addEventListener('click', async () => {
         const selectedCamera = cameraSelect.value;
         if (selectedCamera && selectedCamera !== currentCamera && !isSwitching) {
